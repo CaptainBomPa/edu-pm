@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="BackendServer" type="SpringBootApplicationConfigurationType"
+                   factoryName="Spring Boot" nameIsGenerated="true">
+        <module name="ProjectManager.pm-backend.main"/>
+        <option name="SPRING_BOOT_MAIN_CLASS" value="com.edu.pm.backend.BackendServer"/>
+        <method v="2">
+            <option name="Make" enabled="true"/>
+        </method>
+    </configuration>
+</component>

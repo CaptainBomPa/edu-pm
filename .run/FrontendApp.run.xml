@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="FrontendApp" type="SpringBootApplicationConfigurationType"
+                   factoryName="Spring Boot" nameIsGenerated="true">
+        <module name="ProjectManager.pm-frontend.main"/>
+        <option name="SPRING_BOOT_MAIN_CLASS" value="com.edu.pm.frontend.FrontendApp"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.edu.pm.frontend.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <method v="2">
+            <option name="Make" enabled="true"/>
+        </method>
+    </configuration>
+</component>

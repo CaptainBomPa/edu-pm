@@ -1,0 +1,5 @@
+rootProject.name = 'ProjectManager'
+include 'pm-backend'
+include 'pm-commons'
+include 'pm-frontend'
+
