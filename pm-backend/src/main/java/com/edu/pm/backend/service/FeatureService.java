@@ -1,0 +1,55 @@
+package com.edu.pm.backend.service;
+
+import com.edu.pm.backend.commons.dto.FeatureDTO;
+import com.edu.pm.backend.commons.mappers.FeatureMapper;
+import com.edu.pm.backend.commons.mappers.ProjectMapper;
+import com.edu.pm.backend.model.Feature;
+import com.edu.pm.backend.repository.FeatureRepository;
+import jakarta.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+
+import static com.edu.pm.backend.commons.mappers.FeatureMapper.dtoToModel;
+import static com.edu.pm.backend.commons.mappers.FeatureMapper.modelToDTO;
+
+@Service
+@RequiredArgsConstructor
+public class FeatureService {
+
+    private final FeatureRepository repository;
+
+    public FeatureDTO add(FeatureDTO dto) {
+        Feature feature = dtoToModel(dto);
+        feature = repository.save(feature);
+        return modelToDTO(feature);
+    }
+
+    public FeatureDTO update(FeatureDTO dto) {
+        Feature featureFromDB = repository.findById(dto.getId()).orElseThrow();
+        featureFromDB.setFeatureName(dto.getFeatureName());
+        featureFromDB.setDescription(dto.getDescription());
+        featureFromDB.setProject(ProjectMapper.dtoToModel(dto.getProject()));
+        return modelToDTO(repository.save(featureFromDB));
+    }
+
+    public FeatureDTO remove(Integer id) {
+        Feature feature = findById(id);
+        if (feature == null) {
+            throw new IllegalArgumentException("Entity not found");
+        }
+        repository.delete(feature);
+        return modelToDTO(feature);
+    }
+
+    @Nullable
+    public Feature findById(Integer id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public Collection<FeatureDTO> findAll() {
+        return repository.findAll().stream().map(FeatureMapper::modelToDTO).toList();
+    }
+
+}
