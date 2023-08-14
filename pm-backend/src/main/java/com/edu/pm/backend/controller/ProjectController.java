@@ -6,15 +6,23 @@ import com.edu.pm.backend.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
 public class ProjectController {
 
     private final ProjectService projectService;
+
+    @GetMapping(value = "/project/get-all")
+    public ResponseEntity<Collection<ProjectDTO>> getAll() {
+        return ResponseEntity.ok(projectService.findAll());
+    }
 
     @PostMapping(value = "/project/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ProjectDTO> update(@RequestBody ProjectDTO dto) {

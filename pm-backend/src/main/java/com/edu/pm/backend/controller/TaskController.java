@@ -6,15 +6,23 @@ import com.edu.pm.backend.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
+
+    @GetMapping(value = "/task/get-all")
+    public ResponseEntity<Collection<TaskDTO>> getAll() {
+        return ResponseEntity.ok(taskService.findAll());
+    }
 
     @PostMapping(value = "/task/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TaskDTO> update(@RequestBody TaskDTO dto) {

@@ -6,15 +6,23 @@ import com.edu.pm.backend.service.UserStoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
 public class UserStoryController {
 
     private final UserStoryService userStoryService;
+
+    @GetMapping(value = "/userStory/get-all")
+    public ResponseEntity<Collection<UserStoryDTO>> getAll() {
+        return ResponseEntity.ok(userStoryService.findAll());
+    }
 
     @PostMapping(value = "/userStory/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserStoryDTO> update(@RequestBody UserStoryDTO dto) {

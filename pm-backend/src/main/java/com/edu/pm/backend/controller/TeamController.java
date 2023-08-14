@@ -6,15 +6,23 @@ import com.edu.pm.backend.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
 public class TeamController {
 
     private final TeamService teamService;
+
+    @GetMapping(value = "/team/get-all")
+    public ResponseEntity<Collection<TeamDTO>> getAll() {
+        return ResponseEntity.ok(teamService.findAll());
+    }
 
     @PostMapping(value = "/team/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TeamDTO> update(@RequestBody TeamDTO dto) {
