@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class IdentityDTO {
 
     @Schema(example = "15", requiredMode = Schema.RequiredMode.REQUIRED)

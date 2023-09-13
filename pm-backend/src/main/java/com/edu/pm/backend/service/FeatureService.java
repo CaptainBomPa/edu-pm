@@ -1,15 +1,19 @@
 package com.edu.pm.backend.service;
 
 import com.edu.pm.backend.commons.dto.FeatureDTO;
+import com.edu.pm.backend.commons.dto.UserStoryDTO;
 import com.edu.pm.backend.commons.mappers.FeatureMapper;
 import com.edu.pm.backend.commons.mappers.ProjectMapper;
+import com.edu.pm.backend.commons.mappers.UserStoryMapper;
 import com.edu.pm.backend.model.Feature;
-import com.edu.pm.backend.repository.FeatureRepository;
+import com.edu.pm.backend.repository.cache.FeatureCache;
+import com.edu.pm.backend.repository.cache.UserStoryCache;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 import static com.edu.pm.backend.commons.mappers.FeatureMapper.dtoToModel;
 import static com.edu.pm.backend.commons.mappers.FeatureMapper.modelToDTO;
@@ -18,20 +22,24 @@ import static com.edu.pm.backend.commons.mappers.FeatureMapper.modelToDTO;
 @RequiredArgsConstructor
 public class FeatureService {
 
-    private final FeatureRepository repository;
+    private final FeatureCache cache;
+    private final UserStoryCache userStoryCache;
 
     public FeatureDTO add(FeatureDTO dto) {
         Feature feature = dtoToModel(dto);
-        feature = repository.save(feature);
+        feature = cache.add(feature);
         return modelToDTO(feature);
     }
 
     public FeatureDTO update(FeatureDTO dto) {
-        Feature featureFromDB = repository.findById(dto.getId()).orElseThrow();
+        Feature featureFromDB = cache.getById(dto.getId());
+        if (featureFromDB == null) {
+            throw new IllegalArgumentException("Entity not found");
+        }
         featureFromDB.setFeatureName(dto.getFeatureName());
         featureFromDB.setDescription(dto.getDescription());
         featureFromDB.setProject(ProjectMapper.dtoToModel(dto.getProject()));
-        return modelToDTO(repository.save(featureFromDB));
+        return modelToDTO(cache.add(featureFromDB));
     }
 
     public FeatureDTO remove(Integer id) {
@@ -39,13 +47,13 @@ public class FeatureService {
         if (feature == null) {
             throw new IllegalArgumentException("Entity not found");
         }
-        repository.delete(feature);
+        cache.remove(feature);
         return modelToDTO(feature);
     }
 
     @Nullable
     public Feature findById(Integer id) {
-        return repository.findById(id).orElse(null);
+        return cache.getById(id);
     }
 
     @Nullable
@@ -58,7 +66,14 @@ public class FeatureService {
     }
 
     public Collection<FeatureDTO> findAll() {
-        return repository.findAll().stream().map(FeatureMapper::modelToDTO).toList();
+        return cache.getAll().stream().map(FeatureMapper::modelToDTO).toList();
+    }
+
+    public List<UserStoryDTO> getUserStories(Integer featureId) {
+        return userStoryCache.getAll().stream()
+                .filter(userStory -> userStory.getFeature().getId().equals(featureId))
+                .map(UserStoryMapper::modelToDTO)
+                .toList();
     }
 
 }

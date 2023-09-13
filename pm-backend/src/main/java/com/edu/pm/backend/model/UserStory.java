@@ -27,7 +27,7 @@ public class UserStory {
     @ManyToOne
     private Feature feature;
 
-    @OneToOne
+    @ManyToOne
     @Nullable
     private User assignedUser;
 

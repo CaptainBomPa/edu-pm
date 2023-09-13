@@ -2,19 +2,19 @@ package com.edu.pm.backend.controller;
 
 import com.edu.pm.backend.commons.dto.FeatureDTO;
 import com.edu.pm.backend.commons.dto.IdentityDTO;
+import com.edu.pm.backend.commons.dto.UserStoryDTO;
 import com.edu.pm.backend.service.FeatureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping(path = "/api")
 public class FeatureController {
 
     private final FeatureService featureService;
@@ -41,5 +41,11 @@ public class FeatureController {
     public ResponseEntity<FeatureDTO> getById(@RequestBody IdentityDTO dto) {
         return ResponseEntity.ok(featureService.findByIdDTO((dto.getId())));
     }
+
+    @PostMapping(value = "/feature/getUSById", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<UserStoryDTO>> getUserStories(@RequestBody IdentityDTO featureId) {
+        return ResponseEntity.ok(featureService.getUserStories(featureId.getId()));
+    }
+
 
 }

@@ -3,7 +3,7 @@ package com.edu.pm.backend.service;
 import com.edu.pm.backend.commons.dto.TeamDTO;
 import com.edu.pm.backend.commons.mappers.TeamMapper;
 import com.edu.pm.backend.model.Team;
-import com.edu.pm.backend.repository.TeamRepository;
+import com.edu.pm.backend.repository.cache.TeamCache;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,18 +17,21 @@ import static com.edu.pm.backend.commons.mappers.TeamMapper.modelToDTO;
 @RequiredArgsConstructor
 public class TeamService {
 
-    private final TeamRepository repository;
+    private final TeamCache cache;
 
     public TeamDTO add(TeamDTO dto) {
         Team team = TeamMapper.dtoToModel(dto);
-        team = repository.save(team);
+        team = cache.add(team);
         return modelToDTO(team);
     }
 
     public TeamDTO update(TeamDTO dto) {
-        Team teamFromDB = repository.findById(dto.getId()).orElseThrow();
+        Team teamFromDB = cache.getById(dto.getId());
+        if (teamFromDB == null) {
+            throw new IllegalArgumentException("Entity not found");
+        }
         teamFromDB.setTeamName(dto.getTeamName());
-        return modelToDTO(repository.save(teamFromDB));
+        return modelToDTO(cache.add(teamFromDB));
     }
 
     public TeamDTO remove(Integer id) {
@@ -36,13 +39,13 @@ public class TeamService {
         if (team == null) {
             throw new IllegalArgumentException("Entity not found");
         }
-        repository.delete(team);
+        cache.remove(team);
         return modelToDTO(team);
     }
 
     @Nullable
     public Team findById(Integer id) {
-        return repository.findById(id).orElse(null);
+        return cache.getById(id);
     }
 
     @Nullable
@@ -55,6 +58,6 @@ public class TeamService {
     }
 
     public Collection<TeamDTO> findAll() {
-        return repository.findAll().stream().map(TeamMapper::modelToDTO).toList();
+        return cache.getAll().stream().map(TeamMapper::modelToDTO).toList();
     }
 }
