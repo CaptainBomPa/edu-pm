@@ -1,5 +1,6 @@
 package com.edu.pm.backend.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +27,11 @@ public class UserStory {
     @ManyToOne
     private Feature feature;
 
+    @OneToOne
+    @Nullable
+    private User assignedUser;
+
+    @ManyToOne
+    @Nullable
+    private Iteration iteration;
 }

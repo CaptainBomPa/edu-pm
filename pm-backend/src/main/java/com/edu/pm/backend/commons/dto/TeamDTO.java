@@ -8,6 +8,5 @@ import lombok.Data;
 public class TeamDTO {
 
     private Integer id;
-    private ProjectDTO project;
     private String teamName;
 }

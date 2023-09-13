@@ -12,7 +12,6 @@ public class TeamMapper {
         return Team.builder()
                 .id(dto.getId())
                 .teamName(dto.getTeamName())
-                .project(ProjectMapper.dtoToModel(dto.getProject()))
                 .build();
     }
 
@@ -20,7 +19,6 @@ public class TeamMapper {
         return TeamDTO.builder()
                 .id(team.getId())
                 .teamName(team.getTeamName())
-                .project(ProjectMapper.modelToDTO(team.getProject()))
                 .build();
     }
 }

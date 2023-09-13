@@ -1,16 +1,20 @@
 package com.edu.pm.backend.model;
 
+import com.edu.pm.backend.model.enums.Role;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,6 +22,7 @@ import java.util.Collections;
 @Table(name = "users")
 @Builder
 @AllArgsConstructor
+@Slf4j
 public class User implements UserDetails {
 
     @Id
@@ -31,14 +36,32 @@ public class User implements UserDetails {
     private String password;
 
     @Column
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private List<Role> roles;
 
     @ManyToOne
+    @Nullable
     private Team team;
+
+    @OneToMany
+    @Column
+    @Nullable
+    private List<Project> projects;
+
+    public void addRole(@NotNull Role role) {
+        this.roles.add(role);
+    }
+
+    public void removeRole(@NotNull Role role) {
+        boolean isRemoved = this.roles.remove(role);
+        if (!isRemoved) {
+            log.warn("Role {} from user {} was not removed", role, username);
+        }
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
+        return roles.stream().map(item -> new SimpleGrantedAuthority(item.name())).toList();
     }
 
     @Override

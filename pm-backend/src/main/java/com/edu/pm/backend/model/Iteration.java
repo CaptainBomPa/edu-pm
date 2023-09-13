@@ -5,18 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.joda.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Team {
+public class Iteration {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer itNumber;
 
     @Column
-    private String teamName;
+    private LocalDateTime startDate;
+
+    @Column
+    private LocalDateTime endDate;
 }

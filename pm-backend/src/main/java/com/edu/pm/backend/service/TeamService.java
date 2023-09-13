@@ -1,7 +1,6 @@
 package com.edu.pm.backend.service;
 
 import com.edu.pm.backend.commons.dto.TeamDTO;
-import com.edu.pm.backend.commons.mappers.ProjectMapper;
 import com.edu.pm.backend.commons.mappers.TeamMapper;
 import com.edu.pm.backend.model.Team;
 import com.edu.pm.backend.repository.TeamRepository;
@@ -29,7 +28,6 @@ public class TeamService {
     public TeamDTO update(TeamDTO dto) {
         Team teamFromDB = repository.findById(dto.getId()).orElseThrow();
         teamFromDB.setTeamName(dto.getTeamName());
-        teamFromDB.setProject(ProjectMapper.dtoToModel(dto.getProject()));
         return modelToDTO(repository.save(teamFromDB));
     }
 
