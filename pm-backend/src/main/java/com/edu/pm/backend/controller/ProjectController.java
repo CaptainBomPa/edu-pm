@@ -37,4 +37,8 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.remove(dto.getId()));
     }
 
+    @PostMapping(value = "/project/getById", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ProjectDTO> getById(@RequestBody IdentityDTO dto) {
+        return ResponseEntity.ok(projectService.findByIdDTO(dto.getId()));
+    }
 }

@@ -45,6 +45,15 @@ public class ProjectService {
         return repository.findById(id).orElse(null);
     }
 
+    @Nullable
+    public ProjectDTO findByIdDTO(Integer id) {
+        Project project = findById(id);
+        if (project != null) {
+            return modelToDTO(project);
+        }
+        return null;
+    }
+
     public Collection<ProjectDTO> findAll() {
         return repository.findAll().stream().map(ProjectMapper::modelToDTO).toList();
     }

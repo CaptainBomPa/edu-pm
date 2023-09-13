@@ -48,6 +48,15 @@ public class FeatureService {
         return repository.findById(id).orElse(null);
     }
 
+    @Nullable
+    public FeatureDTO findByIdDTO(Integer id) {
+        Feature feature = findById(id);
+        if (feature != null) {
+            return modelToDTO(feature);
+        }
+        return null;
+    }
+
     public Collection<FeatureDTO> findAll() {
         return repository.findAll().stream().map(FeatureMapper::modelToDTO).toList();
     }

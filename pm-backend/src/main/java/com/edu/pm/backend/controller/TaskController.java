@@ -36,4 +36,9 @@ public class TaskController {
     public ResponseEntity<TaskDTO> delete(@RequestBody IdentityDTO dto) {
         return ResponseEntity.ok(taskService.remove(dto.getId()));
     }
+
+    @PostMapping(value = "/task/getById", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<TaskDTO> getById(@RequestBody IdentityDTO dto) {
+        return ResponseEntity.ok(taskService.remove(dto.getId()));
+    }
 }

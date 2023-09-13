@@ -36,4 +36,9 @@ public class UserStoryController {
     public ResponseEntity<UserStoryDTO> delete(@RequestBody IdentityDTO dto) {
         return ResponseEntity.ok(userStoryService.remove(dto.getId()));
     }
+
+    @PostMapping(value = "/userStory/getById", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<UserStoryDTO> getById(@RequestBody IdentityDTO dto) {
+        return ResponseEntity.ok(userStoryService.findByIdDTO(dto.getId()));
+    }
 }

@@ -48,6 +48,15 @@ public class TaskService {
         return repository.findById(id).orElse(null);
     }
 
+    @Nullable
+    public TaskDTO findByIdDTO(Integer id) {
+        Task task = findById(id);
+        if (task != null) {
+            return modelToDTO(task);
+        }
+        return null;
+    }
+
     public Collection<TaskDTO> findAll() {
         return repository.findAll().stream().map(TaskMapper::modelToDTO).toList();
     }

@@ -37,4 +37,9 @@ public class FeatureController {
         return ResponseEntity.ok(featureService.remove(dto.getId()));
     }
 
+    @PostMapping(value = "/feature/getById", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<FeatureDTO> getById(@RequestBody IdentityDTO dto) {
+        return ResponseEntity.ok(featureService.findByIdDTO((dto.getId())));
+    }
+
 }

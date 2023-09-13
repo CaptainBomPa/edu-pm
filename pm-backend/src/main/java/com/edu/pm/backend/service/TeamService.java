@@ -47,6 +47,15 @@ public class TeamService {
         return repository.findById(id).orElse(null);
     }
 
+    @Nullable
+    public TeamDTO findByIdDTO(Integer id) {
+        Team team = findById(id);
+        if (team != null) {
+            return modelToDTO(team);
+        }
+        return null;
+    }
+
     public Collection<TeamDTO> findAll() {
         return repository.findAll().stream().map(TeamMapper::modelToDTO).toList();
     }

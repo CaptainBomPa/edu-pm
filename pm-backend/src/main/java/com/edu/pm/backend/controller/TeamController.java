@@ -36,4 +36,9 @@ public class TeamController {
     public ResponseEntity<TeamDTO> delete(@RequestBody IdentityDTO dto) {
         return ResponseEntity.ok(teamService.remove(dto.getId()));
     }
+
+    @PostMapping(value = "/team/getById", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<TeamDTO> getById(@RequestBody IdentityDTO dto) {
+        return ResponseEntity.ok(teamService.findByIdDTO(dto.getId()));
+    }
 }
