@@ -20,13 +20,18 @@ public class UserMapper {
     }
 
     public static UserDTO modelToDTO(User user) {
-        return UserDTO.builder()
+        UserDTO.UserDTOBuilder builder = UserDTO.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRoles())
-                .team(TeamMapper.modelToDTO(user.getTeam()))
-                .projects(ProjectMapper.projectModelToDtO(user.getProjects()))
-                .build();
+                .roles(user.getRoles());
+
+        if (user.getTeam() != null) {
+            builder.team(TeamMapper.modelToDTO(user.getTeam()));
+        }
+        if (user.getProjects() != null) {
+            builder.projects(ProjectMapper.projectModelToDtO(user.getProjects()));
+        }
+        return builder.build();
     }
 }
