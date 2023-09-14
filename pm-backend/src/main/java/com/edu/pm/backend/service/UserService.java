@@ -1,16 +1,21 @@
 package com.edu.pm.backend.service;
 
-import com.edu.pm.backend.commons.dto.ProjectDTO;
 import com.edu.pm.backend.commons.dto.UserDTO;
+import com.edu.pm.backend.commons.dto.auth.ChangePasswordDTO;
 import com.edu.pm.backend.commons.mappers.UserMapper;
+import com.edu.pm.backend.model.Project;
+import com.edu.pm.backend.model.Team;
 import com.edu.pm.backend.model.User;
 import com.edu.pm.backend.model.enums.Role;
 import com.edu.pm.backend.repository.UserRepository;
+import com.edu.pm.backend.repository.cache.ProjectCache;
+import com.edu.pm.backend.repository.cache.TeamCache;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -19,6 +24,8 @@ import java.util.Collection;
 public class UserService {
 
     private final UserRepository repository;
+    private final TeamCache teamCache;
+    private final ProjectCache projectCache;
     private final PasswordEncoder passwordEncoder;
 
     public UserDTO addUser(UserDTO userDTO) {
@@ -45,32 +52,75 @@ public class UserService {
     }
 
     @Nullable
-    public User findById(Integer id) {
-        return repository.findById(id).orElseThrow();
+    private User findById(Integer id) {
+        return repository.findById(id).orElse(null);
     }
 
-    public void changePassword(Integer userId, String oldPassword, String newPassword) {
+    public void changePassword(ChangePasswordDTO changePasswordDTO, String username) {
+        User user = repository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found in database"));
 
+        if (passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+            repository.save(user);
+        } else {
+            throw new IllegalArgumentException("Given old password is not matching");
+        }
     }
 
-    public void addRole(Integer userId, Role newRole) {
-
+    public UserDTO addRole(Integer userId, Role newRole) {
+        User user = findUserByIdOrThrow(userId);
+        user.addRole(newRole);
+        return UserMapper.modelToDTO(repository.save(user));
     }
 
-    public void removeRole(Integer userId, Role roleToRemove) {
-
+    public UserDTO removeRole(Integer userId, Role roleToRemove) {
+        User user = findUserByIdOrThrow(userId);
+        user.removeRole(roleToRemove);
+        return UserMapper.modelToDTO(repository.save(user));
     }
 
-    public void updateTeam(Integer userId, String newTeam) {
-
+    public UserDTO updateTeam(Integer userId, String newTeam) {
+        User user = findUserByIdOrThrow(userId);
+        Team team = teamCache.getAll().stream()
+                .filter(item -> item.getTeamName().equals(newTeam)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Team not found in database"));
+        user.setTeam(team);
+        return UserMapper.modelToDTO(repository.save(user));
     }
 
-    public void addProject(Integer userId, ProjectDTO projectDTO) {
-
+    public UserDTO addProject(Integer userId, Integer projectId) {
+        User user = findUserByIdOrThrow(userId);
+        Project project = projectCache.getById(projectId);
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found in database");
+        }
+        if (user.getProjects() != null) {
+            user.getProjects().add(project);
+        } else {
+            user.setProjects(new ArrayList<>());
+            user.getProjects().add(project);
+        }
+        return UserMapper.modelToDTO(repository.save(user));
     }
 
-    public void removeProject(Integer userId, ProjectDTO projectDTO) {
+    public UserDTO removeProject(Integer userId, Integer projectId) {
+        User user = findUserByIdOrThrow(userId);
+        Project project = projectCache.getById(projectId);
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found in database");
+        }
+        if (user.getProjects() != null) {
+            user.getProjects().remove(project);
+        }
+        return UserMapper.modelToDTO(repository.save(user));
+    }
 
+    private User findUserByIdOrThrow(Integer userId) {
+        User user = findById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found in database");
+        }
+        return user;
     }
 
 
