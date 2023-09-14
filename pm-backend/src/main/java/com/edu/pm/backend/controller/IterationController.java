@@ -14,6 +14,7 @@ import java.util.Collection;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
+@CrossOrigin(origins = "${pm.cross-origin}")
 public class IterationController {
 
     private final IterationService iterationService;

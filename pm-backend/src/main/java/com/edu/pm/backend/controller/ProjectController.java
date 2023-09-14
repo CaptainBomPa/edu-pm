@@ -13,6 +13,7 @@ import java.util.Collection;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
+@CrossOrigin(origins = "${pm.cross-origin}")
 public class ProjectController {
 
     private final ProjectService projectService;
