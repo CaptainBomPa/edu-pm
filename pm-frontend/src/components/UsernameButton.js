@@ -1,7 +1,7 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 export default function UsernameButton({firstName, lastName, setToken}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -13,33 +13,34 @@ export default function UsernameButton({firstName, lastName, setToken}) {
         setAnchorEl(null);
     };
     const handleLogout = () => {
-        setToken(null)
-    }
+        setToken(null);
+        sessionStorage.removeItem("token");
+    };
 
     return (
         <div>
             <Button
                 id="basic-button"
-                aria-controls={open ? 'basic-menu' : undefined}
+                aria-controls={open ? "basic-menu" : undefined}
                 aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
+                aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
-                sx={{color: 'white'}}
-        >
-            {firstName} {lastName}
-        </Button>
-        <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-                'aria-labelledby': 'basic-button',
-            }}
-        >
-            <MenuItem onClick={handleClose}>Settings</MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      </Menu>
-    </div>
-  );
+                sx={{color: "white"}}
+            >
+                {firstName} {lastName}
+            </Button>
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                }}
+            >
+                <MenuItem onClick={handleClose}>Settings</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+        </div>
+    );
 }

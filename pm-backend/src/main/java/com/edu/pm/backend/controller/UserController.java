@@ -20,6 +20,12 @@ public class UserController {
 
     private final UserService userService;
 
+    @CrossOrigin(origins = "${pm.cross-origin}")
+    @GetMapping(value = "/user/currentUserInfo")
+    public ResponseEntity<UserDTO> getCurrentUserInfo(Authentication authentication) {
+        return ResponseEntity.ok(userService.getCurrentUser(authentication.getName()));
+    }
+
     @GetMapping(value = "/user/get-all")
     public ResponseEntity<Collection<UserDTO>> getAll() {
         return ResponseEntity.ok(userService.getAll());

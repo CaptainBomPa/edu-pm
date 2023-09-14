@@ -36,7 +36,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 //        http.exceptionHandling().authenticationEntryPoint(PMAuthenticationEntryPoint);
-
         return http.build();
     }
 

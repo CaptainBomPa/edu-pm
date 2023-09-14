@@ -28,6 +28,10 @@ public class UserService {
     private final ProjectCache projectCache;
     private final PasswordEncoder passwordEncoder;
 
+    public UserDTO getCurrentUser(String username) {
+        return UserMapper.modelToDTO(repository.findByUsername(username).orElseThrow());
+    }
+
     public UserDTO addUser(UserDTO userDTO) {
         User user = User.builder()
                 .username(userDTO.getUsername())

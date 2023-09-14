@@ -8,7 +8,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Avatar from "@mui/material/Avatar";
 import UsernameButton from "./UsernameButton";
 
-export default function AppNavBar({onClick, setToken}) {
+export default function AppNavBar({onClick, setToken, firstName, lastName}) {
+  let avatar = null;
+  if (firstName !== null && lastName !== null) {
+    avatar =
+        firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+  }
+
   return (
       <Box sx={{flexGrow: 1}}>
         <AppBar position="static">
@@ -26,14 +32,14 @@ export default function AppNavBar({onClick, setToken}) {
             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
               PROJECT MANAGER
             </Typography>
-            <Avatar sx={{bgcolor: "gray"}}>FM</Avatar>
+            <Avatar sx={{bgcolor: "gray"}}>{avatar}</Avatar>
             <UsernameButton
-                firstName={"Filip"}
-                lastName={"Mróz"}
+                firstName={firstName}
+                lastName={lastName}
                 setToken={setToken}
             />
           </Toolbar>
-      </AppBar>
-    </Box>
+        </AppBar>
+      </Box>
   );
 }
