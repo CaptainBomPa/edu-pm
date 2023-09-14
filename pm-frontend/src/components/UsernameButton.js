@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function UsernameButton({firstName, lastName}) {
+export default function UsernameButton({firstName, lastName, setToken}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -12,16 +12,19 @@ export default function UsernameButton({firstName, lastName}) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const handleLogout = () => {
+        setToken(null)
+    }
 
     return (
-    <div>
-        <Button
-            id="basic-button"
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}
-            sx={{color: 'white'}}
+        <div>
+            <Button
+                id="basic-button"
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+                sx={{color: 'white'}}
         >
             {firstName} {lastName}
         </Button>
@@ -34,8 +37,8 @@ export default function UsernameButton({firstName, lastName}) {
                 'aria-labelledby': 'basic-button',
             }}
         >
-        <MenuItem onClick={handleClose}>Settings</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={handleClose}>Settings</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>
   );
