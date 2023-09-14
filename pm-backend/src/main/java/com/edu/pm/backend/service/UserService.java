@@ -56,8 +56,16 @@ public class UserService {
         return repository.findById(id).orElse(null);
     }
 
+    @Nullable
+    public User findByUsername(String username) {
+        return repository.findByUsername(username).orElse(null);
+    }
+
     public void changePassword(ChangePasswordDTO changePasswordDTO, String username) {
-        User user = repository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found in database"));
+        User user = findByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found in database");
+        }
 
         if (passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));

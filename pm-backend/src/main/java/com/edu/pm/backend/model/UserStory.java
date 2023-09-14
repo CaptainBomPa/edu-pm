@@ -29,6 +29,10 @@ public class UserStory {
 
     @ManyToOne
     @Nullable
+    private Team team;
+
+    @ManyToOne
+    @Nullable
     private User assignedUser;
 
     @ManyToOne
