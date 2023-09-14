@@ -34,4 +34,7 @@ public class UserStory {
     @ManyToOne
     @Nullable
     private Iteration iteration;
+
+    @Column
+    private Integer storyPoints;
 }

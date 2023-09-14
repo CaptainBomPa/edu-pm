@@ -9,20 +9,34 @@ public class UserStoryMapper {
     }
 
     public static UserStoryDTO modelToDTO(UserStory userStory) {
-        return UserStoryDTO.builder()
+        UserStoryDTO.UserStoryDTOBuilder builder = UserStoryDTO.builder()
                 .id(userStory.getId())
                 .userStoryName(userStory.getUserStoryName())
                 .description(userStory.getDescription())
-                .feature(FeatureMapper.modelToDTO(userStory.getFeature()))
-                .build();
+                .iteration(userStory.getIteration())
+                .storyPoints(userStory.getStoryPoints());
+        if (userStory.getFeature() != null) {
+            builder.feature(FeatureMapper.modelToDTO(userStory.getFeature()));
+        }
+        if (userStory.getAssignedUser() != null) {
+            builder.assignedUser(UserMapper.modelToDTO(userStory.getAssignedUser()));
+        }
+        return builder.build();
     }
 
     public static UserStory dtoToModel(UserStoryDTO dto) {
-        return UserStory.builder()
+        UserStory.UserStoryBuilder builder = UserStory.builder()
                 .id(dto.getId())
                 .userStoryName(dto.getUserStoryName())
                 .description(dto.getUserStoryName())
-                .feature(FeatureMapper.dtoToModel(dto.getFeature()))
-                .build();
+                .iteration(dto.getIteration())
+                .storyPoints(dto.getStoryPoints());
+        if (dto.getFeature() != null) {
+            builder.feature(FeatureMapper.dtoToModel(dto.getFeature()));
+        }
+        if (dto.getAssignedUser() != null) {
+            builder.assignedUser(UserMapper.dtoToModel(dto.getAssignedUser()));
+        }
+        return builder.build();
     }
 }

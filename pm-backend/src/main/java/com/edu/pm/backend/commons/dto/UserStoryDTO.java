@@ -1,5 +1,6 @@
 package com.edu.pm.backend.commons.dto;
 
+import com.edu.pm.backend.model.Iteration;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,7 @@ public class UserStoryDTO {
     private String userStoryName;
     private String description;
     private FeatureDTO feature;
+    private UserDTO assignedUser;
+    private Iteration iteration;
+    private Integer storyPoints;
 }

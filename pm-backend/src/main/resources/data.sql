@@ -20,13 +20,13 @@ INSERT INTO ITERATION(START_DATE, END_DATE)
 VALUES ('2023-09-01T12:00:01', '2023-09-14T12:00:00'),
        ('2023-09-14T12:00:01', '2023-09-28T12:00:00');
 
-INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, ITERATION_IT_NUMBER)
-VALUES ('As a user I want... 1-1', 'Lorem ipsum 1-1....', 1, 1),
-       ('As a user I want... 1-2', 'Lorem ipsum 1-2....', 1, 1),
-       ('As a user I want... 2-1', 'Lorem ipsum 2-1....', 2, 1),
-       ('As a user I want... 2-2', 'Lorem ipsum 2-2....', 2, 2),
-       ('As a user I want... 3-1', 'Lorem ipsum 3-1....', 3, 2),
-       ('As a user I want... 3-2', 'Lorem ipsum 3-2....', 3, 2);
+INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, ITERATION_IT_NUMBER, STORY_POINTS)
+VALUES ('As a user I want... 1-1', 'Lorem ipsum 1-1....', 1, 1, 1),
+       ('As a user I want... 1-2', 'Lorem ipsum 1-2....', 1, 1, 3),
+       ('As a user I want... 2-1', 'Lorem ipsum 2-1....', 2, 1, 5),
+       ('As a user I want... 2-2', 'Lorem ipsum 2-2....', 2, 2, 3),
+       ('As a user I want... 3-1', 'Lorem ipsum 3-1....', 3, 2, 3),
+       ('As a user I want... 3-2', 'Lorem ipsum 3-2....', 3, 2, 8);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
 VALUES ('Task US1', 'Do it', 1),
