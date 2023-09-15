@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ThemeProvider } from "@emotion/react";
-import { getLoginTheme } from "../components/WebTheme";
+import {ThemeProvider} from "@emotion/react";
+import {getLoginTheme} from "../components/WebTheme";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import Fade from "@mui/material/Fade";
@@ -80,29 +80,29 @@ export default function ChangePasswordTab({
         >
           <Fade in={updateOk || errorUpdate}>
             <Alert
-              sx={{
-                m: 1,
-                width: "40ch",
-                height: "5ch",
-                alignItems: "center",
-                fontSize: "120%",
-              }}
-              severity={updateOk === true ? "success" : "error"}
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setUpdateOk(false);
-                    setErrorUpdate(false);
-                  }}
-                >
+                sx={{
+                    m: 1,
+                    width: "40ch",
+                    height: "5ch",
+                    alignItems: "center",
+                    fontSize: "120%",
+                }}
+                severity={updateOk === true ? "success" : errorUpdate === true ? "error" : "info"}
+                action={
+                    <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                            setUpdateOk(false);
+                            setErrorUpdate(false);
+                        }}
+                    >
                   <CloseIcon fontSize="inherit" />
                 </IconButton>
               }
             >
-                {updateOk === true ? "Personal information are updated." : "Bad credentials, try again."}
+                {updateOk === true ? "Personal information are updated." : errorUpdate === true ? "Bad credentials, try again." : ""}
             </Alert>
           </Fade>
         </Box>

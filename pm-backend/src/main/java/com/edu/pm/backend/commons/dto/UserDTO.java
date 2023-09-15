@@ -18,4 +18,5 @@ public class UserDTO {
     private List<Role> roles;
     private TeamDTO team;
     private List<ProjectDTO> projects;
+    byte[] avatar;
 }

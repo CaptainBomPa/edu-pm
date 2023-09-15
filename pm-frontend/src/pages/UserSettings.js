@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { getUserInfo } from "../service/UsersInfo";
-import { createTheme, getContrastRatio } from "@mui/material/styles";
+import React from "react";
 import UserInformationTab from "./UserInformationTab";
-import WebTheme, { getLoginTheme } from "../components/WebTheme";
 
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -10,6 +7,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import ChangePasswordTab from "./ChangePasswordTab";
+import ChangeAvatarTab from "./ChangeAvatarTab";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -38,7 +36,7 @@ function a11yProps(index) {
   };
 }
 
-export default function UserSettings({ token, userDetails, setUserDetails }) {
+export default function UserSettings({token, userDetails, setUserDetails, userAvatar, setUserAvatar}) {
   let team = "";
   let firstName = "";
   let lastName = "";
@@ -85,14 +83,10 @@ export default function UserSettings({ token, userDetails, setUserDetails }) {
         <ChangePasswordTab userDetails={userDetails} token={token} setUserDetails={setUserDetails}/>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <ChangeAvatarTab />
+        <ChangeAvatarTab token={token} userAvatar={userAvatar} setUserAvatar={setUserAvatar}/>
       </CustomTabPanel>
     </Box>
   );
-}
-
-function ChangeAvatarTab() {
-  return <div>Change Avatar</div>;
 }
 
 CustomTabPanel.propTypes = {

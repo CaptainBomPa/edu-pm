@@ -18,6 +18,7 @@ public class UserMapper {
                 .projects(ProjectMapper.projectDTOListToModel(dto.getProjects()))
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
+                .avatar(dto.getAvatar())
                 .build();
     }
 
@@ -28,7 +29,8 @@ public class UserMapper {
                 .password(user.getPassword())
                 .roles(user.getRoles())
                 .firstName(user.getFirstName())
-                .lastName(user.getLastName());
+                .lastName(user.getLastName())
+                .avatar(user.getAvatar());
 
         if (user.getTeam() != null) {
             builder.team(TeamMapper.modelToDTO(user.getTeam()));

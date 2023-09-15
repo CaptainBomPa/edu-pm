@@ -2,9 +2,9 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem"
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
-export default function UsernameButton({firstName, lastName, setToken, isAdministrator}) {
+export default function UsernameButton({firstName, lastName, setToken, isAdministrator, handleLogout}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -13,9 +13,8 @@ export default function UsernameButton({firstName, lastName, setToken, isAdminis
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleLogout = () => {
-        setToken(null);
-        sessionStorage.removeItem("token");
+    const logout = () => {
+        handleLogout()
     };
 
     return (
@@ -40,8 +39,9 @@ export default function UsernameButton({firstName, lastName, setToken, isAdminis
                 }}
             >
                 {isAdministrator && <MenuItem onClick={handleClose}>Admin Page</MenuItem>}
-                <Link to="/settings" style={{textDecoration: 'none', color: 'inherit'}}><MenuItem onClick={handleClose}>Settings</MenuItem></Link>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                <Link to="/settings" style={{textDecoration: 'none', color: 'inherit'}}><MenuItem
+                    onClick={handleClose}>Settings</MenuItem></Link>
+                <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>
         </div>
     );

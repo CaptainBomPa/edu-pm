@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import TextField from "@mui/material/TextField";
-import { ThemeProvider } from "@emotion/react";
-import { getLoginTheme } from "../components/WebTheme";
+import {ThemeProvider} from "@emotion/react";
+import {getLoginTheme} from "../components/WebTheme";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { updateUserInfo } from "../service/UsersInfo";
+import {updateUserInfo} from "../service/UsersInfo";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import Fade from "@mui/material/Fade";
@@ -23,33 +23,37 @@ export default function UserInformationTab({
   const {
     username = "",
     firstName = "",
-    lastName = "",
-    team = "",
-    projects = [],
+      lastName = "",
+      team = "",
+      projects = [],
   } = userDetails || {};
 
-  const [isFormDirty, setIsFormDirty] = useState(false);
+    const [isFormDirty, setIsFormDirty] = useState(false);
 
-  const [currentUsername, setCurrentUsername] = useState(username);
-  const [currentFirstName, setCurrentFirstName] = useState(firstName);
-  const [currentLastName, setCurrentLastName] = useState(lastName);
+    const [currentUsername, setCurrentUsername] = useState(username);
+    const [currentFirstName, setCurrentFirstName] = useState(firstName);
+    const [currentLastName, setCurrentLastName] = useState(lastName);
+    const teamName = userDetails?.team?.teamName || "Team name not available";
+    const [assignedProjects, setAssginedProjects] = useState("Not assigned to any project");
+
+    useEffect(() => {
+        if (userDetails) {
+            setCurrentUsername(userDetails.username || "");
+            setCurrentFirstName(userDetails.firstName || "");
+            setCurrentLastName(userDetails.lastName || "");
+            setIsFormDirty(false);
+        }
+    }, [userDetails]);
 
   useEffect(() => {
-    if (userDetails) {
-      setCurrentUsername(userDetails.username || "");
-      setCurrentFirstName(userDetails.firstName || "");
-      setCurrentLastName(userDetails.lastName || "");
-      setIsFormDirty(false);
-    }
-  }, [userDetails]);
+      const isDirty =
+          currentUsername !== userDetails?.username ||
+          currentFirstName !== userDetails?.firstName ||
+          currentLastName !== userDetails?.lastName;
 
-  useEffect(() => {
-    const isDirty =
-      currentUsername !== userDetails?.username ||
-      currentFirstName !== userDetails?.firstName ||
-      currentLastName !== userDetails?.lastName;
+      setAssginedProjects(userDetails?.projects?.length === 0 ? "Not assigned to any project" : userDetails?.projects?.map((project) => ` ${project.projectName}`))
 
-    setIsFormDirty(isDirty);
+      setIsFormDirty(isDirty);
   }, [currentUsername, currentFirstName, currentLastName, userDetails]);
 
   const handleUsernameChange = (e) => {
@@ -92,41 +96,43 @@ export default function UserInformationTab({
   return (
     <form>
       <ThemeProvider theme={getLoginTheme()}>
-      <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "7ch",
-            marginTop: "2ch",
-          }}
-        >
-          <Fade in={updateOk || errorUpdate}>
-            <Alert
+          <Box
               sx={{
-                m: 1,
-                width: "40ch",
-                height: "5ch",
-                alignItems: "center",
-                fontSize: "120%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "7ch",
+                  marginTop: "2ch",
               }}
-              severity={updateOk === true ? "success" : "error"}
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setUpdateOk(false);
-                    setErrorUpdate(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
+          >
+              <Fade in={updateOk || errorUpdate}>
+            <Alert
+                sx={{
+                    m: 1,
+                    width: "40ch",
+                    height: "5ch",
+                    alignItems: "center",
+                    fontSize: "120%",
+                }}
+                severity={updateOk === true ? "success" : errorUpdate === true ? "error" : "info"}
+                action={
+                    <IconButton
+                        aria-label="close"
+                        color="inherit"
+                        size="small"
+                        onClick={() => {
+                            setUpdateOk(false);
+                            setErrorUpdate(false);
+                        }}
+                    >
+                        <CloseIcon fontSize="inherit"/>
+                    </IconButton>
+                }
             >
-                {updateOk === true ? "Personal information are updated." : "Bad credentials, try again."}
+                {updateOk === true
+                    ? "Personal information are updated."
+                    : errorUpdate === true ? "Bad credentials, try again." : ""}
             </Alert>
           </Fade>
         </Box>
@@ -169,39 +175,29 @@ export default function UserInformationTab({
             onChange={handleLastNameChange}
           />
           <TextField
-            disabled
-            sx={{ m: 1, width: "45ch" }}
-            id="outlined-basic"
-            label="Team Name"
-            variant="outlined"
-            type="text"
-            color="pmLoginTheme"
-            value={
-              userDetails !== null && userDetails !== undefined
-                ? userDetails.team.teamName || "Team name not available" 
-                : "Not assigned to any team"
-            }
+              disabled
+              sx={{m: 1, width: "45ch"}}
+              id="outlined-basic"
+              label="Team Name"
+              variant="outlined"
+              type="text"
+              color="pmLoginTheme"
+              value={teamName}
           />
-          <TextField
-            disabled
-            sx={{ m: 1, width: "45ch" }}
-            id="outlined-basic"
-            label="Assigned Projects"
-            variant="outlined"
-            type="text"
-            color="pmLoginTheme"
-            value={
-              userDetails === null || userDetails === undefined
-                ? ""
-                : userDetails.projects.length === 0
-                ? "Not assigned to any project"
-                : userDetails.projects.map(
-                    (project) => ` ${project.projectName}`
-                  )
-            }
-          />
-          <Button
-            variant="contained"
+            <TextField
+                disabled
+                multiline // Użyj multiline, aby obsługiwać wieloliniowy tekst
+                rows={2} // Określ liczbę widocznych wierszy
+                sx={{m: 1, width: "45ch"}}
+                id="outlined-basic"
+                label="Assigned Projects"
+                variant="outlined"
+                type="text"
+                color="pmLoginTheme"
+                value={assignedProjects}
+            />
+            <Button
+                variant="contained"
             sx={{ m: 1, width: "50ch" }}
             color="pmLoginTheme"
             onClick={handleUpdate}
@@ -209,23 +205,26 @@ export default function UserInformationTab({
           >
             Update
           </Button>
-          <Button
-            variant="outlined"
-            sx={{ m: 1, width: "50ch" }}
-            color="pmLoginTheme"
-            onClick={handleRestore}
-            disabled={!isFormDirty}
-          >
-            Restore previous information
-          </Button>
-          <br></br>
-                        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: "2ch"}}>
-                            {loading && (
-                                <CircularProgress
-                                    color="pmLoginTheme"
-                                />
-                            )}
-                        </Box>
+            <Button
+                variant="outlined"
+                sx={{m: 1, width: "50ch"}}
+                color="pmLoginTheme"
+                onClick={handleRestore}
+                disabled={!isFormDirty}
+            >
+                Restore previous information
+            </Button>
+            <br></br>
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: "2ch",
+                }}
+            >
+                {loading && <CircularProgress color="pmLoginTheme"/>}
+            </Box>
         </Box>
       </ThemeProvider>
     </form>
