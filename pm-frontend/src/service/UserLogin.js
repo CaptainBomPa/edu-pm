@@ -24,7 +24,7 @@ export async function loginUser(credentials, setErrorOpen, setLoading) {
       setErrorOpen(true);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
   setLoading(false);
 }

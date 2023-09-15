@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getUserInfo } from "../service/UsersInfo";
 import { createTheme, getContrastRatio } from "@mui/material/styles";
-import UserInformationTab from "./UserInformationSettings";
+import UserInformationTab from "./UserInformationTab";
 import WebTheme, { getLoginTheme } from "../components/WebTheme";
 
 import PropTypes from "prop-types";
@@ -37,8 +37,7 @@ function a11yProps(index) {
   };
 }
 
-export default function UserSettings({ token }) {
-  const [userDetails, setUserDetails] = React.useState(null);
+export default function UserSettings({ token, userDetails, setUserDetails }) {
   let team = "";
   let firstName = "";
   let lastName = "";
@@ -47,16 +46,8 @@ export default function UserSettings({ token }) {
   let isAdministrator = false;
   let projects;
 
-  if (userDetails === null) {
-    const fetchUserData = async (e) => {
-      const data = await getUserInfo({ token });
-      setUserDetails(data);
-    };
-    fetchUserData.apply();
-  }
-
-  if (userDetails !== null) {
-    team = userDetails.team.teamName;
+  if (userDetails !== null && userDetails !== undefined) {
+    // team = userDetails.team.teamName;
     firstName = userDetails.firstName;
     lastName = userDetails.lastName;
     password = userDetails.password;

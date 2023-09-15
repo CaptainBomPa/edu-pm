@@ -9,6 +9,7 @@ import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import Fade from "@mui/material/Fade";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function UserInformationTab({
   userDetails,
@@ -17,6 +18,7 @@ export default function UserInformationTab({
 }) {
   const [errorUpdate, setErrorUpdate] = useState(false);
   const [updateOk, setUpdateOk] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     username = "",
@@ -67,6 +69,7 @@ export default function UserInformationTab({
     userDetails.firstName = currentFirstName;
     userDetails.lastName = currentLastName;
     const updateUserData = async (e) => {
+      setLoading(true);
       const data = await updateUserInfo(userDetails, { token });
       if (data !== null) {
         setUpdateOk(true);
@@ -74,6 +77,7 @@ export default function UserInformationTab({
       } else if (data === null) {
         setErrorUpdate(true);
       }
+      setLoading(false);
     };
     updateUserData.apply();
   };
@@ -197,9 +201,9 @@ export default function UserInformationTab({
             type="text"
             color="pmLoginTheme"
             value={
-              userDetails === null || userDetails.team === null
-                ? "Not assigned to any team"
-                : userDetails.team.teamName || "Team name not available"
+              userDetails !== null && userDetails !== undefined
+                ? userDetails.team.teamName || "Team name not available" 
+                : "Not assigned to any team"
             }
           />
           <TextField
@@ -211,7 +215,7 @@ export default function UserInformationTab({
             type="text"
             color="pmLoginTheme"
             value={
-              userDetails === null
+              userDetails === null || userDetails === undefined
                 ? ""
                 : userDetails.projects.length === 0
                 ? "Not assigned to any project"
@@ -238,6 +242,14 @@ export default function UserInformationTab({
           >
             Restore previous information
           </Button>
+          <br></br>
+                        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: "2ch"}}>
+                            {loading && (
+                                <CircularProgress
+                                    color="pmLoginTheme"
+                                />
+                            )}
+                        </Box>
         </Box>
       </ThemeProvider>
     </form>
