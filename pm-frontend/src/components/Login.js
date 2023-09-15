@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import PropTypes from "prop-types";
+import {loginUser} from "../service/UserLogin";
 
 import {createTheme, getContrastRatio} from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -14,16 +15,10 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Typography from "@mui/material/Typography";
 import {ThemeProvider} from "@emotion/react";
-
-async function loginUser(credentials) {
-    return fetch("http://localhost:8080/api/auth/authenticate", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-    }).then((response) => response.json());
-}
+import Alert from "@mui/material/Alert";
+import CloseIcon from "@mui/icons-material/Close";
+import Fade from "@mui/material/Fade";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const loginTheme = createTheme({
     palette: {
@@ -37,17 +32,26 @@ const loginTheme = createTheme({
 });
 
 export default function Login({setToken}) {
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = await loginUser({
-            username,
-            password,
-        });
-        console.log(data.token);
-        setToken(data.token);
+        const data = await loginUser(
+            {
+                username,
+                password,
+            },
+            setErrorOpen,
+            setLoading
+        );
+        if (data !== null && data !== undefined) {
+            if (data.token !== null && data.token !== undefined) {
+                setToken(data.token);
+            }
+        }
     };
 
     const [showPassword, setShowPassword] = React.useState(false);
@@ -75,6 +79,41 @@ export default function Login({setToken}) {
                 >
                     PROJECT MANAGER
                 </Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "10ch",
+                    }}
+                >
+                    <Fade in={errorOpen}>
+                        <Alert
+                            sx={{
+                                m: 1,
+                                width: "32ch",
+                                height: "7ch",
+                                alignItems: "center",
+                            }}
+                            severity="error"
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="small"
+                                    onClick={() => {
+                                        setErrorOpen(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit"/>
+                                </IconButton>
+                            }
+                        >
+                            Bad credentials, try again.
+                        </Alert>
+                    </Fade>
+                </Box>
                 <Box
                     sx={{
                         display: "flex",
@@ -138,6 +177,14 @@ export default function Login({setToken}) {
                         >
                             Login
                         </Button>
+                        <br></br>
+                        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: "2ch"}}>
+                            {loading && (
+                                <CircularProgress
+                                    color="pmLoginTheme"
+                                />
+                            )}
+                        </Box>
                     </div>
                 </Box>
             </ThemeProvider>

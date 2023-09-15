@@ -12,9 +12,9 @@ INSERT INTO TEAM (TEAM_NAME)
 VALUES ('Team 1-1'),
        ('Team 1-2'),
        ('Team 2-1'),
-       ('Team 2-1'),
+       ('Team 2-2'),
        ('Team 3-1'),
-       ('Team 3-1');
+       ('Team 3-2');
 
 INSERT INTO ITERATION(START_DATE, END_DATE)
 VALUES ('2023-09-01T12:00:01', '2023-09-14T12:00:00'),
@@ -23,9 +23,9 @@ VALUES ('2023-09-01T12:00:01', '2023-09-14T12:00:00'),
        ('2023-10-12T12:00:01', '2023-10-26T12:00:00'),
        ('2023-10-26T12:00:01', '2023-11-10T12:00:00');
 
-INSERT INTO USERS (USERNAME, PASSWORD, TEAM_ID, ROLES)
-VALUES ('admin', '$2a$10$R2rNkxslm96X9a/hOUx05..X8EmTJ89tjlyylGvBlAbN0qAQNKiAS', 1, 'ADMINISTRATOR'),
-       ('user', '$2a$10$.bdr4pJ94f3sAUTBzy2G9eADtbMPyohOzo397uXUhKJ6EQZ93fqAK', 1, 'USER_READ');
+INSERT INTO USERS (USERNAME, PASSWORD, TEAM_ID, ROLES, FIRST_NAME, LAST_NAME)
+VALUES ('admin', '$2a$10$R2rNkxslm96X9a/hOUx05..X8EmTJ89tjlyylGvBlAbN0qAQNKiAS', 1, 'ADMINISTRATOR', 'Jan', 'Kowalski'),
+       ('user', '$2a$10$.bdr4pJ94f3sAUTBzy2G9eADtbMPyohOzo397uXUhKJ6EQZ93fqAK', 4, 'USER_READ', 'Adam', 'Nowak');
 
 INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, ITERATION_IT_NUMBER, STORY_POINTS, ASSIGNED_USER_ID)
 VALUES ('As a user I want... 1-1', 'Lorem ipsum 1-1....', 1, 1, 1, 1),
