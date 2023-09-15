@@ -32,6 +32,14 @@ public class UserService {
         return UserMapper.modelToDTO(repository.findByUsername(username).orElseThrow());
     }
 
+    public UserDTO updateUser(UserDTO userDTO) {
+        User user = repository.findById(userDTO.getId()).orElseThrow();
+        user.setUsername(userDTO.getUsername());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        return UserMapper.modelToDTO(repository.save(user));
+    }
+
     public UserDTO addUser(UserDTO userDTO) {
         User user = User.builder()
                 .username(userDTO.getUsername())

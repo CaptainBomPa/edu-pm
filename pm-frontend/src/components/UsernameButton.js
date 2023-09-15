@@ -1,7 +1,8 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import MenuItem from "@mui/material/MenuItem"
+import { Link } from "react-router-dom";
 
 export default function UsernameButton({firstName, lastName, setToken, isAdministrator}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -39,7 +40,7 @@ export default function UsernameButton({firstName, lastName, setToken, isAdminis
                 }}
             >
                 {isAdministrator && <MenuItem onClick={handleClose}>Admin Page</MenuItem>}
-                <MenuItem onClick={handleClose}>Settings</MenuItem>
+                <Link to="/settings" style={{textDecoration: 'none', color: 'inherit'}}><MenuItem onClick={handleClose}>Settings</MenuItem></Link>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
         </div>

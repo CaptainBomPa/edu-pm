@@ -26,3 +26,27 @@ export async function getUserInfo(token) {
         console.error(error);
     }
 }
+
+export async function updateUserInfo(userDetails, {token}) {
+    try {
+        const response = await fetch(
+            "http://localhost:8080/api/user/updateUserInfo",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(userDetails)
+            }
+        );
+        if (response.ok) {
+            return await response.json();
+        } else {
+            return null;
+        }
+    
+    } catch (error) {
+        console.error(error);
+    }
+}

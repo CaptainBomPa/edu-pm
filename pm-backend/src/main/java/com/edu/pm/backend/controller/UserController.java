@@ -26,6 +26,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getCurrentUser(authentication.getName()));
     }
 
+    @PostMapping(value = "/user/updateUserInfo")
+    public ResponseEntity<UserDTO> updateUserInfo(@RequestBody UserDTO userDTO, Authentication authentication) {
+        return ResponseEntity.ok(userService.updateUser(userDTO));
+    }
+
     @GetMapping(value = "/user/get-all")
     public ResponseEntity<Collection<UserDTO>> getAll() {
         return ResponseEntity.ok(userService.getAll());

@@ -8,6 +8,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Avatar from "@mui/material/Avatar";
 import UsernameButton from "./UsernameButton";
 import {getUserInfo} from "../service/UsersInfo";
+import { Link } from "react-router-dom";
 
 export default function AppNavBar({onClick, setToken, token}) {
   const [userDetails, setUserDetails] = React.useState(null);
@@ -27,7 +28,7 @@ export default function AppNavBar({onClick, setToken, token}) {
   }
 
   if (userDetails !== null) {
-    team = userDetails.team.teamName;
+    // team = userDetails.team.teamName;
     firstName = userDetails.firstName;
     lastName = userDetails.lastName;
     avatar =
@@ -56,7 +57,7 @@ export default function AppNavBar({onClick, setToken, token}) {
               <MenuIcon/>
             </IconButton>
             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-              PROJECT MANAGER - {team}
+              <Link to="/home" style={{textDecoration: 'none', color: 'inherit'}}>PROJECT MANAGER</Link>
             </Typography>
             <Avatar sx={{bgcolor: "gray"}}>{avatar}</Avatar>
             <UsernameButton
