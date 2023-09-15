@@ -9,6 +9,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import ChangePasswordTab from "./ChangePasswordTab";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -81,17 +82,13 @@ export default function UserSettings({ token, userDetails, setUserDetails }) {
         <UserInformationTab userDetails={userDetails} token={token} setUserDetails={setUserDetails}/>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <ChangePasswordTab />
+        <ChangePasswordTab userDetails={userDetails} token={token} setUserDetails={setUserDetails}/>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <ChangeAvatarTab />
       </CustomTabPanel>
     </Box>
   );
-}
-
-function ChangePasswordTab() {
-  return <div>Change Password</div>;
 }
 
 function ChangeAvatarTab() {

@@ -50,3 +50,28 @@ export async function updateUserInfo(userDetails, {token}) {
         console.error(error);
     }
 }
+
+export async function updatePassword({token}, oldPassword, newPassword) {
+    try {
+        const response = await fetch(
+            "http://localhost:8080/api/user/changePassword",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({"oldPassword": oldPassword, "newPassword": newPassword})
+            }
+        );
+        if (response.ok) {
+            const data = await response.json();
+            return data
+        } else {
+            return null;
+        }
+    
+    } catch (error) {
+        console.error(error);
+    }
+}

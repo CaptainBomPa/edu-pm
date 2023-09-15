@@ -92,26 +92,26 @@ export default function UserInformationTab({
   return (
     <form>
       <ThemeProvider theme={getLoginTheme()}>
-        <Box
+      <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            height: "10ch",
-            marginTop: "5ch",
+            height: "7ch",
+            marginTop: "2ch",
           }}
         >
-          <Fade in={updateOk}>
+          <Fade in={updateOk || errorUpdate}>
             <Alert
               sx={{
                 m: 1,
                 width: "40ch",
-                height: "7ch",
+                height: "5ch",
                 alignItems: "center",
                 fontSize: "120%",
               }}
-              severity="success"
+              severity={updateOk === true ? "success" : "error"}
               action={
                 <IconButton
                   aria-label="close"
@@ -119,30 +119,6 @@ export default function UserInformationTab({
                   size="small"
                   onClick={() => {
                     setUpdateOk(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              Personal information are updated.
-            </Alert>
-          </Fade>
-          <Fade in={errorUpdate}>
-            <Alert
-              sx={{
-                m: 1,
-                width: "32ch",
-                height: "7ch",
-                alignItems: "center",
-              }}
-              severity="error"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
                     setErrorUpdate(false);
                   }}
                 >
@@ -150,7 +126,7 @@ export default function UserInformationTab({
                 </IconButton>
               }
             >
-              Personal information are updated.
+                {updateOk === true ? "Personal information are updated." : "Bad credentials, try again."}
             </Alert>
           </Fade>
         </Box>
