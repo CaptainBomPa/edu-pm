@@ -1,12 +1,10 @@
 import React, {useState} from "react";
 import AppNavBar from "./components/AppNavBar";
-import NavigationList from "./components/NavigationList";
 import Login from "./components/Login";
 import useToken from "./useToken";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Nopage from "../src/pages/NoPage";
 import UserSettings from "../src/pages/UserSettings";
-import Collapse from '@mui/material/Collapse';
 import {getUserAvatar, getUserInfo} from "./service/UsersInfo";
 
 function App() {
@@ -54,7 +52,6 @@ function App() {
             userAvatar={userAvatar}
             handleLogout={handleLogout}
         />
-        <Collapse in={navOpen}><NavigationList/></Collapse>
       <Routes>
         <Route path="home" element={<Nopage/>}/>
         <Route path="settings"
