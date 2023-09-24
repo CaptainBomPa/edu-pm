@@ -37,23 +37,6 @@ function a11yProps(index) {
 }
 
 export default function UserSettings({token, userDetails, setUserDetails, userAvatar, setUserAvatar}) {
-  let team = "";
-  let firstName = "";
-  let lastName = "";
-  let password = "";
-  let username = "";
-  let isAdministrator = false;
-  let projects;
-
-  if (userDetails !== null && userDetails !== undefined) {
-    // team = userDetails.team.teamName;
-    firstName = userDetails.firstName;
-    lastName = userDetails.lastName;
-    password = userDetails.password;
-    username = userDetails.username;
-    projects = userDetails.projects;
-  }
-
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {

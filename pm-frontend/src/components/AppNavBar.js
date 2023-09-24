@@ -17,23 +17,12 @@ export default function AppNavBar({
                                     userAvatar,
                                     handleLogout,
                                   }) {
-  // Zmienne przeniesione na poziom komponentu, aby zachować ich stan
   const [team, setTeam] = React.useState("");
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [avatar, setAvatar] = React.useState("");
-  const [avatarUrl, setAvatarUrl] = React.useState();
   const [isAdministrator, setIsAdministrator] = React.useState(false);
 
-  React.useEffect(() => {
-    console.log("change");
-    console.log(userAvatar);
-    if (userAvatar && userAvatar.image) {
-      setAvatarUrl(`data:image/png;base64,${userAvatar.image}`);
-    }
-  }, [userAvatar]);
-
-  // Obsługa zmiany userDetails
   React.useEffect(() => {
     if (userDetails !== null && userDetails !== undefined) {
       if (userDetails.firstName) {
@@ -90,7 +79,6 @@ export default function AppNavBar({
             ) : (
                 <Avatar sx={{bgcolor: "gray"}}>{avatar}</Avatar>
             )}
-            {/* <Avatar sx={{ bgcolor: "gray" }} src={avatarUrl} /> */}
             <UsernameButton
                 firstName={firstName}
                 lastName={lastName}

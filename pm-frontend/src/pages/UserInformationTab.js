@@ -24,8 +24,6 @@ export default function UserInformationTab({
     username = "",
     firstName = "",
       lastName = "",
-      team = "",
-      projects = [],
   } = userDetails || {};
 
     const [isFormDirty, setIsFormDirty] = useState(false);
@@ -186,8 +184,8 @@ export default function UserInformationTab({
           />
             <TextField
                 disabled
-                multiline // Użyj multiline, aby obsługiwać wieloliniowy tekst
-                rows={2} // Określ liczbę widocznych wierszy
+                multiline
+                rows={2}
                 sx={{m: 1, width: "45ch"}}
                 id="outlined-basic"
                 label="Assigned Projects"

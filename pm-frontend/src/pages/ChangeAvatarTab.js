@@ -34,7 +34,6 @@ export default function ChangeAvatarTab({userAvatar, setUserAvatar, token}) {
         reader.readAsDataURL(selectedFile);
         setFile(selectedFile);
 
-        // Sprawdź rozmiar pliku i ustaw stan isFileTooLarge
         if (selectedFile.size > 1024 * 1024) {
             setIsFileTooLarge(true);
         } else {
@@ -166,7 +165,7 @@ export default function ChangeAvatarTab({userAvatar, setUserAvatar, token}) {
                     color="pmLoginTheme"
                     onClick={handleSaveImage}
                     style={{marginTop: "16px"}}
-                    disabled={!file || isFileTooLarge} // Blokowanie przycisku, jeśli plik jest za duży
+                    disabled={!file || isFileTooLarge}
                 >
                     Save as avatar
                 </Button>

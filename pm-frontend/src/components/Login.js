@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import PropTypes from "prop-types";
 import {loginUser} from "../service/UserLogin";
 
-import {createTheme, getContrastRatio} from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
@@ -19,20 +18,11 @@ import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import Fade from "@mui/material/Fade";
 import CircularProgress from "@mui/material/CircularProgress";
-
-const loginTheme = createTheme({
-    palette: {
-        pmLoginTheme: {
-            main: "#9723ef",
-            light: "#be79f2",
-            dark: "#5f0b9e",
-            contrastText: getContrastRatio("#9723ef", "#fff") > 4.5 ? "#fff" : "#111",
-        },
-    },
-});
+import {getLoginTheme} from "../components/WebTheme";
 
 export default function Login({setToken}) {
     const [errorOpen, setErrorOpen] = useState(false);
+    const [errorResponse, setErrorResponse] = useState(false);
     const [loading, setLoading] = useState(false);
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
@@ -45,7 +35,8 @@ export default function Login({setToken}) {
                 password,
             },
             setErrorOpen,
-            setLoading
+            setLoading,
+            setErrorResponse
         );
         if (data !== null && data !== undefined) {
             if (data.token !== null && data.token !== undefined) {
@@ -64,7 +55,7 @@ export default function Login({setToken}) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <ThemeProvider theme={loginTheme}>
+            <ThemeProvider theme={getLoginTheme()}>
                 <Typography
                     variant="h1"
                     gutterBottom
@@ -88,7 +79,7 @@ export default function Login({setToken}) {
                         height: "10ch",
                     }}
                 >
-                    <Fade in={errorOpen}>
+                    <Fade in={errorOpen || errorResponse}>
                         <Alert
                             sx={{
                                 m: 1,
@@ -104,13 +95,14 @@ export default function Login({setToken}) {
                                     size="small"
                                     onClick={() => {
                                         setErrorOpen(false);
+                                        setErrorResponse(false);
                                     }}
                                 >
                                     <CloseIcon fontSize="inherit"/>
                                 </IconButton>
                             }
                         >
-                            Bad credentials, try again.
+                            {errorOpen ? "Bad credentials, try again." : "Could not establish connection to server."}
                         </Alert>
                     </Fade>
                 </Box>
