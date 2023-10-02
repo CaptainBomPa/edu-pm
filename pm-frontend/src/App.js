@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Nopage from "../src/pages/NoPage";
 import UserSettings from "../src/pages/UserSettings";
 import {getUserAvatar, getUserInfo} from "./service/UsersInfo";
+import UserStoryTable from "./components/UserStoryTable"
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -54,6 +55,7 @@ function App() {
         />
       <Routes>
         <Route path="home" element={<Nopage/>}/>
+        <Route path="current-iteration" element={<UserStoryTable/>}/>
         <Route path="settings"
                element={<UserSettings token={token} userDetails={userDetails} setUserDetails={setUserDetails}
                                       userAvatar={userAvatar} setUserAvatar={setUserAvatar}/>}/>
