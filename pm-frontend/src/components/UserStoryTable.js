@@ -1,6 +1,11 @@
-import React, { createRef, useRef, useEffect, useState } from "react";
+import React, {
+  createRef,
+  useRef,
+  useEffect,
+  useState,
+  useLayoutEffect,
+} from "react";
 import PropTypes from "prop-types";
-import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,68 +22,46 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { ThemeProvider } from "@emotion/react";
 import { getLoginTheme } from "./WebTheme";
+import Collapse from "@mui/material/Collapse";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
+import UserStoryEditDialog from "./UserStoryEditDialog";
+import TaskEditDialog from "./TaskEditDialog";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { getUserStoriesIteration } from "../service/UserStoryUser";
 
-function createData(storyNameId, storyPoints, teamFeatureName, assignedUser) {
-  return {
-    storyNameId,
-    storyPoints,
-    teamFeatureName,
-    assignedUser,
-  };
-}
-
-const rows = [
-  createData(
-    "(1) Napraw to i tamto",
-    8,
-    "TF-8 Utrzymanie projektu",
-    "John Ohn"
-  ),
-  createData(
-    "(2) Napraw tamto i to",
-    5,
-    "TF-8 Utrzymanie projektu",
-    "Marie Iann"
-  ),
-  createData("(3) Napraw bugi", 8, "TF-8 Utrzymanie projektu", "Jan Kowalski"),
-  createData(
-    "(4) Dodaj coś nowego",
-    5,
-    "TF-3 Nowe rzeczy dla klienta nr.2",
-    "John Ohn"
-  ),
-  createData(
-    "(5) Dodaj coś superowego",
-    13,
-    "TF-4 Nowe rzeczy dla klienta nr.4",
-    "Marie Iann"
-  ),
-  createData(
-    "(6) Dodaj coś kolorowego",
-    8,
-    "TF-4 Nowe rzeczy dla klienta nr.4",
-    "Jan Kowalski"
-  ),
-];
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
+function descendingComparator(a, b) {
+  if (b < a) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (b > a) {
     return 1;
   }
   return 0;
 }
 
+function alphanumSort(a, b) {
+  const collator = new Intl.Collator(undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+  return collator.compare(a, b);
+}
+
 function getComparator(order, orderBy) {
+  if (orderBy === "featureName") {
+    return order === "desc"
+      ? (a, b) => alphanumSort(b.feature[orderBy], a.feature[orderBy])
+      : (a, b) => alphanumSort(a.feature[orderBy], b.feature[orderBy]);
+  }
   return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+    ? (a, b) => descendingComparator(a[orderBy], b[orderBy])
+    : (a, b) => -descendingComparator(a[orderBy], b[orderBy]);
 }
 
 function stableSort(array, comparator) {
@@ -95,11 +78,11 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "storyNameId",
+    id: "userStoryName",
     numeric: false,
     disablePadding: false,
     label: "(ID)\u00A0Story\u00A0Name",
-    field: "storyNameId",
+    field: "userStoryName",
   },
   {
     id: "storyPoints",
@@ -109,11 +92,11 @@ const headCells = [
     field: "storyPoints",
   },
   {
-    id: "teamFeatureName",
+    id: "featureName",
     numeric: false,
     disablePadding: false,
     label: "TF\u00A0Name",
-    field: "teamFeatureName",
+    field: "featureName",
   },
   {
     id: "assignedUser",
@@ -137,15 +120,19 @@ function EnhancedTableHead(props) {
     onRequestSort,
     onClickResizeColumn,
     columnRefs,
+    setColumnRefs,
   } = props;
+
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
+  
   return (
     <ThemeProvider theme={getLoginTheme()}>
       <TableHead className="tableHead">
         <TableRow>
+          <TableCell className="tableCell resizable" sx={{ width: "3%" }} />
           <TableCell padding="checkbox" className="tableCell resizable">
             <Checkbox
               color="pmLoginTheme"
@@ -157,6 +144,7 @@ function EnhancedTableHead(props) {
               }}
             />
           </TableCell>
+          <TableCell className="tableCell resizable" sx={{ width: "3%" }} />
           {headCells.map((headCell, colIndex) => (
             <TableCell
               className="tableCell resizable"
@@ -181,7 +169,7 @@ function EnhancedTableHead(props) {
               </TableSortLabel>
               <div
                 onMouseDown={() => onClickResizeColumn(colIndex)}
-                ref={columnRefs && columnRefs[colIndex]}
+                ref={columnRefs[colIndex]}
                 className={"resizeLine"}
               />
             </TableCell>
@@ -249,15 +237,30 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function UserStoryTable() {
+export default function UserStoryTable(props) {
+  const { token } = props;
+
+  const [data, setData] = useState([]);
+  const [visibleRows, setVisibleRows] = useState([]);
+
+  useEffect(() => {
+    getUserStoriesIteration(token)
+      .then((result) => {
+        setData(result);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("userStoryName");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -265,19 +268,19 @@ export default function UserStoryTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.storyNameId);
+      const newSelected = data?.map((n) => n.userStoryName);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, storyNameId) => {
-    const selectedIndex = selected.indexOf(storyNameId);
+  const handleClick = (event, userStoryName) => {
+    const selectedIndex = selected.indexOf(userStoryName);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, storyNameId);
+      newSelected = newSelected.concat(selected, userStoryName);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -301,21 +304,21 @@ export default function UserStoryTable() {
     setPage(0);
   };
 
-  const isSelected = (storyNameId) => selected.indexOf(storyNameId) !== -1;
+  const isSelected = (userStoryName) => selected.indexOf(userStoryName) !== -1;
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
-  const visibleRows = React.useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage]
-  );
+  useEffect(() => {
+    const filteredAndSortedData = stableSort(
+      data,
+      getComparator(order, orderBy)
+    ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    setVisibleRows(filteredAndSortedData);
+  }, [data, order, orderBy, page, rowsPerPage]);
 
-  const columnRefs = headCells.map(() => createRef());
+  const [columnRefs, setColumnRefs] = useState(headCells.map(() => createRef()));
+
   const isResizing = useRef(-1);
 
   useEffect(() => {
@@ -383,6 +386,7 @@ export default function UserStoryTable() {
       const columnIndex = isResizing.current;
       const columnRef = columnRefs[columnIndex].current;
 
+      columnRefs.current = headCells.map(() => createRef());
       if (columnRef && columnRef.parentElement) {
         const newWidth =
           e.clientX - columnRef.parentElement.getBoundingClientRect().left;
@@ -422,60 +426,20 @@ export default function UserStoryTable() {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={data.length}
                 onClickResizeColumn={onClickResizeColumn}
                 columnRefs={columnRefs}
+                setColumnRefs={setColumnRefs}
               />
               <TableBody>
                 {visibleRows.map((row, index) => {
-                  const isItemSelected = isSelected(row.storyNameId);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.storyNameId}
-                      selected={isItemSelected}
-                      sx={{ cursor: "pointer" }}
-                      className="tableRow"
-                    >
-                      <TableCell
-                        padding="checkbox"
-                        className="tableCell resizable"
-                      >
-                        <Checkbox
-                          onClick={(event) =>
-                            handleClick(event, row.storyNameId)
-                          }
-                          color="pmLoginTheme"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        className="tableCell resizable"
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                      >
-                        {row.storyNameId}
-                      </TableCell>
-                      <TableCell align="right" className="tableCell resizable">
-                        {row.storyPoints}
-                      </TableCell>
-                      <TableCell align="right" className="tableCell resizable">
-                        {row.teamFeatureName}
-                      </TableCell>
-                      <TableCell align="right" className="tableCell resizable">
-                        {row.assignedUser}
-                      </TableCell>
-                      <TableCell align="right" className="tableCell resizable"></TableCell>
-                    </TableRow>
+                    <Row
+                      row={row}
+                      index={index}
+                      isSelected={isSelected}
+                      handleClick={handleClick}
+                    />
                   );
                 })}
                 {emptyRows > 0 && (
@@ -491,9 +455,9 @@ export default function UserStoryTable() {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 50, 100, 200]}
+            rowsPerPageOptions={[10, 25, 50, 100, 200]}
             component="div"
-            count={rows.length}
+            count={data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -502,5 +466,196 @@ export default function UserStoryTable() {
         </Paper>
       </ThemeProvider>
     </Box>
+  );
+}
+
+function Row(props) {
+  const { row, index, handleClick, isSelected } = props;
+  const [open, setOpen] = React.useState(false);
+
+  const isItemSelected = isSelected(row.userStoryName);
+  const labelId = `enhanced-table-checkbox-${index}`;
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const [taskOpenEdit, setTaskOpenEdit] = React.useState(false);
+  const [taskOpenAdd, setTaskOpenAdd] = React.useState(false);
+
+  const handleEdit = (row) => {
+    setOpenEdit(!openEdit);
+  };
+
+  const handleTaskEdit = (taskRow) => {
+    setTaskOpenEdit(!taskOpenEdit);
+  };
+
+  const handleTaskAdd = () => {
+    setTaskOpenAdd(!taskOpenAdd);
+  };
+
+  return (
+    <React.Fragment>
+      {taskOpenEdit && (
+        <TaskEditDialog setOpenEdit={setTaskOpenEdit} edit={true} />
+      )}
+      {taskOpenAdd && (
+        <TaskEditDialog setOpenEdit={setTaskOpenAdd} edit={false} />
+      )}
+      {openEdit && <UserStoryEditDialog setOpenEdit={setOpenEdit} />}
+      <TableRow
+        hover
+        role="checkbox"
+        aria-checked={isItemSelected}
+        tabIndex={-1}
+        key={row.id}
+        selected={isItemSelected}
+        sx={{ cursor: "pointer", "& > *": { borderBottom: "unset" } }}
+        className="tableRow"
+      >
+        <TableCell
+          sx={{
+            width: "3%",
+            padding: "0",
+            textAlign: "center",
+            verticalAlign: "middle",
+          }}
+        >
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell
+          padding="checkbox"
+          className="tableCell resizable"
+          sx={{
+            width: "3%",
+            padding: "0",
+            textAlign: "center",
+            verticalAlign: "middle",
+          }}
+        >
+          <Checkbox
+            onClick={(event) => handleClick(event, row.userStoryName)}
+            color="pmLoginTheme"
+            checked={isItemSelected}
+            inputProps={{
+              "aria-labelledby": labelId,
+            }}
+          />
+        </TableCell>
+        <TableCell
+          className="tableCell resizable"
+          sx={{
+            width: "3%",
+            padding: "0",
+            textAlign: "center",
+            verticalAlign: "middle",
+          }}
+        >
+          <IconButton>
+            <ModeEditOutlineOutlinedIcon
+              color="pmLoginTheme"
+              onClick={() => handleEdit(row)}
+            />
+          </IconButton>
+        </TableCell>
+
+        <TableCell
+          className="tableCell resizable"
+          component="th"
+          id={labelId}
+          scope="row"
+        >
+          {row?.userStoryName}
+        </TableCell>
+        <TableCell align="right" className="tableCell resizable">
+          {row?.storyPoints}
+        </TableCell>
+        <TableCell align="right" className="tableCell resizable">
+          {row?.feature.featureName}
+        </TableCell>
+        <TableCell align="right" className="tableCell resizable">
+          {row?.assignedUser.firstName} {row?.assignedUser.lastName}
+        </TableCell>
+        <TableCell align="right" className="tableCell resizable"></TableCell>
+      </TableRow>
+
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Tasks
+                <IconButton>
+                  <AddCircleOutlineIcon
+                    sx={{ color: "green" }}
+                    onClick={() => handleTaskAdd()}
+                  />
+                </IconButton>
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ width: "3%" }} />
+                    <TableCell sx={{ width: "3%" }} />
+                    <TableCell sx={{ width: "20%" }}>Task number</TableCell>
+                    <TableCell>Title</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row &&
+                    row.tasks.map((task, index) => {
+                      return (
+                        <TableRow>
+                          <TableCell
+                            className="tableCell resizable"
+                            sx={{
+                              width: "3%",
+                              padding: "0",
+                              textAlign: "center",
+                              verticalAlign: "middle",
+                            }}
+                          >
+                            <IconButton>
+                              <ModeEditOutlineOutlinedIcon
+                                color="pmLoginTheme"
+                                onClick={() => handleTaskEdit(row)}
+                              />
+                            </IconButton>
+                          </TableCell>
+                          <TableCell
+                            className="tableCell resizable"
+                            sx={{
+                              width: "3%",
+                              padding: "0",
+                              textAlign: "center",
+                              verticalAlign: "middle",
+                            }}
+                          >
+                            <IconButton>
+                              <RemoveIcon sx={{ color: "red" }} />
+                            </IconButton>
+                          </TableCell>
+
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            sx={{ width: "20%" }}
+                          >
+                            {task.id}
+                          </TableCell>
+                          <TableCell>{task.taskName}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
   );
 }

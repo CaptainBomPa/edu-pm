@@ -17,7 +17,8 @@ body {
     user-select: none;
   }
   .tableCell {
-    border: 1px dashed #E0E0E0 !important;
+    border-top: 1px dashed #E0E0E0 !important;
+    border-right: 1px dashed #E0E0E0 !important;
     /* padding: 10px 0; */
     padding: 16px, 0px, 0px, 0px;
     &.resizable{

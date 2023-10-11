@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,4 +21,5 @@ public class UserStoryDTO {
     private UserDTO assignedUser;
     private Iteration iteration;
     private Integer storyPoints;
+    private Collection<TaskDTO> tasks;
 }

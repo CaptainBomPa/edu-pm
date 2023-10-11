@@ -55,7 +55,7 @@ function App() {
         />
       <Routes>
         <Route path="home" element={<Nopage/>}/>
-        <Route path="current-iteration" element={<UserStoryTable/>}/>
+        <Route path="current-iteration" element={<UserStoryTable token={token}/>}/>
         <Route path="settings"
                element={<UserSettings token={token} userDetails={userDetails} setUserDetails={setUserDetails}
                                       userAvatar={userAvatar} setUserAvatar={setUserAvatar}/>}/>

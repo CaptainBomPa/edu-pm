@@ -1,12 +1,12 @@
 package com.edu.pm.backend.service;
 
+import com.edu.pm.backend.commons.dto.TaskDTO;
 import com.edu.pm.backend.commons.dto.UserStoryDTO;
+import com.edu.pm.backend.commons.mappers.TaskMapper;
 import com.edu.pm.backend.commons.mappers.UserStoryMapper;
-import com.edu.pm.backend.model.Iteration;
-import com.edu.pm.backend.model.Team;
-import com.edu.pm.backend.model.User;
-import com.edu.pm.backend.model.UserStory;
+import com.edu.pm.backend.model.*;
 import com.edu.pm.backend.repository.IterationRepository;
+import com.edu.pm.backend.repository.TaskRepository;
 import com.edu.pm.backend.repository.cache.UserStoryCache;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class IterationService {
     private final IterationRepository repository;
     private final UserService userService;
     private final UserStoryCache userStoryCache;
+    private final TaskRepository taskRepository;
 
     /**
      * Iteration is nullable. If not given, then it takes the current iteration
@@ -36,17 +38,20 @@ public class IterationService {
             iterationToPass = getCurrentIteration();
         }
 
+        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
         if (forUser != null) {
             User user = userService.findByUsername(forUsername);
             assert user != null;
             return getUserStoriesForIterationAndTeam(iterationToPass, user.getTeam())
                     .stream()
                     .map(UserStoryMapper::modelToDTO)
+                    .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
                     .toList();
         } else {
             return getUserStoriesForIteration(iterationToPass)
                     .stream()
                     .map(UserStoryMapper::modelToDTO)
+                    .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
                     .toList();
         }
     }
@@ -61,7 +66,7 @@ public class IterationService {
     }
 
     private Collection<UserStory> getUserStoriesForIteration(Iteration iteration) {
-        return userStoryCache.getAllCached().stream()
+        return userStoryCache.getAll().stream()
                 .filter(userStory -> userStory.getIteration() != null)
                 .filter(userStory -> userStory.getIteration().getItNumber().equals(iteration.getItNumber()))
                 .toList();
