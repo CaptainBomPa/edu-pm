@@ -5,3 +5,4 @@
    front end można sobie to zliczać jakoś
 4. [X] Dodać kontrolery dla iteracji?? (raczej tak)
 5. [ ] Przetestować
+6. [ ] Swagger

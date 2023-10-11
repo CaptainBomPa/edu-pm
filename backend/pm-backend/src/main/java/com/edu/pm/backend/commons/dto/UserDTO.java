@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 public class UserDTO {
 
+    byte[] avatar;
     private Integer id;
     private String username;
     private String password;
@@ -18,5 +19,4 @@ public class UserDTO {
     private List<Role> roles;
     private TeamDTO team;
     private List<ProjectDTO> projects;
-    byte[] avatar;
 }
