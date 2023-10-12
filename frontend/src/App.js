@@ -1,26 +1,27 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import AppNavBar from "./components/AppNavBar";
 import Login from "./components/Login";
 import useToken from "./useToken";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Nopage from "../src/pages/NoPage";
 import UserSettings from "../src/pages/UserSettings";
-import {getUserAvatar, getUserInfo} from "./service/UsersInfo";
-import UserStoryTable from "./components/UserStoryTable"
+import { getUserAvatar, getUserInfo } from "./service/UsersInfo";
+import UserStoryTable from "./components/UserStoryTable";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
   const [userDetails, setUserDetails] = useState();
   const [userAvatar, setUserAvatar] = useState();
+  const navigate = useNavigate();
 
   const { token, setToken } = useToken();
-  if (token === null) {
-    return <Login setToken={setToken} />;
+  if (!token) {
+    return <Login setToken={setToken} navigate={navigate} />;
   }
 
-  if (userDetails === null || userDetails === undefined) {
+  if (!userDetails) {
     const fetchUserData = async (e) => {
-      const data = await getUserInfo({token});
+      const data = await getUserInfo({ token });
       setUserDetails(data);
     };
     fetchUserData.apply();
@@ -28,40 +29,52 @@ function App() {
 
   if (userAvatar === null || userDetails === undefined) {
     const fetchUserAvatar = async (e) => {
-      const data = await getUserAvatar({token});
+      const data = await getUserAvatar({ token });
       setUserAvatar(data);
     };
     fetchUserAvatar.apply();
   }
 
   const handleLogout = (e) => {
-    setUserDetails(null)
-    setUserAvatar(null)
-    setToken(null)
+    setUserDetails(null);
+    setUserAvatar(null);
+    setToken(null);
     sessionStorage.removeItem("token");
-  }
+  };
 
   return (
-      <BrowserRouter>
-        <AppNavBar
-            onClick={() => {
-              setNavOpen(!navOpen);
-            }}
-            setToken={setToken}
-            token={token}
-            userDetails={userDetails}
-            userAvatar={userAvatar}
-            handleLogout={handleLogout}
-        />
+    <div>
+      <AppNavBar
+        onClick={() => {
+          setNavOpen(!navOpen);
+        }}
+        setToken={setToken}
+        token={token}
+        userDetails={userDetails}
+        userAvatar={userAvatar}
+        handleLogout={handleLogout}
+      />
       <Routes>
-        <Route path="home" element={<Nopage/>}/>
-        <Route path="current-iteration" element={<UserStoryTable token={token}/>}/>
-        <Route path="settings"
-               element={<UserSettings token={token} userDetails={userDetails} setUserDetails={setUserDetails}
-                                      userAvatar={userAvatar} setUserAvatar={setUserAvatar}/>}/>
-        <Route path="*" element={<Nopage/>}/>
+        <Route path="home" element={<Nopage />} />
+        <Route
+          path="current-iteration"
+          element={<UserStoryTable token={token} userDetails={userDetails} />}
+        />
+        <Route
+          path="settings"
+          element={
+            <UserSettings
+              token={token}
+              userDetails={userDetails}
+              setUserDetails={setUserDetails}
+              userAvatar={userAvatar}
+              setUserAvatar={setUserAvatar}
+            />
+          }
+        />
+        <Route path="*" element={<Nopage />} />
       </Routes>
-    </BrowserRouter>
+    </div>
   );
 }
 

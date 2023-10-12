@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { ThemeProvider } from "@emotion/react";
 import { getLoginTheme } from "./WebTheme";
 
+// TODO - not implemented yet.
 export default function TaskEditDialog(props) {
   const { setOpenEdit, edit } = props;
 
@@ -33,8 +34,12 @@ export default function TaskEditDialog(props) {
             />
           </DialogContent>
           <DialogActions>
-            <Button color="pmLoginTheme" onClick={handleClose}>Update</Button>
-            <Button color="pmLoginTheme" onClick={handleClose}>Cancel</Button>
+            <Button color="pmLoginTheme" onClick={handleClose}>
+              Update
+            </Button>
+            <Button color="pmLoginTheme" onClick={handleClose}>
+              Cancel
+            </Button>
           </DialogActions>
         </Dialog>
       </ThemeProvider>

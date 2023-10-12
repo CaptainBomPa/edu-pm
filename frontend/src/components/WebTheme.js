@@ -1,5 +1,4 @@
 import { createTheme, getContrastRatio } from "@mui/material/styles";
-import TableRow from '@mui/material/TableRow';
 
 export default function WebTheme() {}
 

@@ -52,7 +52,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -91,47 +90,17 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function AppNavBar({
-  onClick,
-  setToken,
-  token,
-  userDetails,
-  userAvatar,
-  handleLogout,
-}) {
-  const [team, setTeam] = React.useState("");
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
+export default function AppNavBar({ userDetails, userAvatar, handleLogout }) {
   const [avatar, setAvatar] = React.useState("");
-  const [isAdministrator, setIsAdministrator] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const theme = getLoginTheme();
 
   React.useEffect(() => {
-    if (userDetails !== null && userDetails !== undefined) {
-      if (userDetails.firstName) {
-        setFirstName(userDetails.firstName);
-        setAvatar(
-          userDetails.firstName.charAt(0).toUpperCase() +
-            userDetails.lastName.charAt(0).toUpperCase()
-        );
-      }
-      if (userDetails.lastName) {
-        setLastName(userDetails.lastName);
-      }
-      if (userDetails.roles && userDetails.roles.some) {
-        setIsAdministrator(
-          userDetails.roles.some((element) => {
-            return element === "ADMINISTRATOR";
-          })
-        );
-      }
-      if (userDetails.team && userDetails.team.teamName) {
-        setTeam(userDetails.team.teamName);
-      }
-    }
+    setAvatar(
+      userDetails?.firstName.charAt(0).toUpperCase() +
+        userDetails?.lastName.charAt(0).toUpperCase()
+    );
   }, [userDetails]);
-
-  const theme = getLoginTheme();
-  const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -171,7 +140,7 @@ export default function AppNavBar({
               >
                 PROJECT MANAGER
               </Link>{" "}
-              - {team}
+              - {userDetails?.team.teamName}
             </Typography>
             {userAvatar && userAvatar.image && userAvatar.image.length > 2 ? (
               <Avatar
@@ -182,10 +151,11 @@ export default function AppNavBar({
               <Avatar sx={{ bgcolor: "gray" }}>{avatar}</Avatar>
             )}
             <UsernameButton
-              firstName={firstName}
-              lastName={lastName}
-              setToken={setToken}
-              isAdministrator={isAdministrator}
+              firstName={userDetails?.firstName}
+              lastName={userDetails?.lastName}
+              isAdministrator={userDetails?.roles.some((element) => {
+                return element === "ADMINISTRATOR";
+              })}
               handleLogout={handleLogout}
             />
           </Toolbar>
@@ -201,103 +171,65 @@ export default function AppNavBar({
             </IconButton>
           </DrawerHeader>
           <Divider />
-
-          <Link
-            to="/current-iteration"
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <ListItem disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  color: "#000000",
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                    color: "#9723EF",
-                  }}
-                >
-                  <AssignmentOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="My Current Iteration"
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-
-          <Link
-            to="/others-iteration"
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <ListItem disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  color: "#000000",
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                    color: "#9723EF",
-                  }}
-                >
-                  <AssignmentIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Other Teams Iteration"
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
-
+          <DrawerItem
+            linkTo="/current-iteration"
+            itemText="My Current Iteration"
+            handleDrawerClose={handleDrawerClose}
+            open={open}
+            icon={<AssignmentOutlinedIcon />}
+          />
+          <DrawerItem
+            linkTo="/others-iteration"
+            itemText="Other Teams Iteration"
+            handleDrawerClose={handleDrawerClose}
+            open={open}
+            icon={<AssignmentIcon />}
+          />
           <Divider />
-
-          <Link
-            to="/features"
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <ListItem disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  color: "#000000",
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                    color: "#9723EF",
-                  }}
-                >
-                  <TipsAndUpdatesOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Feature list"
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          </Link>
+          <DrawerItem
+            linkTo="/features"
+            itemText="Feature list"
+            handleDrawerClose={handleDrawerClose}
+            open={open}
+            icon={<TipsAndUpdatesOutlinedIcon />}
+          />
         </Drawer>
       </ThemeProvider>
     </Box>
+  );
+}
+
+function DrawerItem(props) {
+  const { linkTo, itemText, icon, handleDrawerClose, open } = props;
+
+  return (
+    <Link
+      to={linkTo}
+      style={{ textDecoration: "none", color: "inherit" }}
+      onClick={handleDrawerClose}
+    >
+      <ListItem disablePadding sx={{ display: "block" }}>
+        <ListItemButton
+          sx={{
+            minHeight: 48,
+            justifyContent: open ? "initial" : "center",
+            px: 2.5,
+            color: "#000000",
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: 0,
+              mr: open ? 3 : "auto",
+              justifyContent: "center",
+              color: "#9723EF",
+            }}
+          >
+            {icon}
+          </ListItemIcon>
+          <ListItemText primary={itemText} sx={{ opacity: open ? 1 : 0 }} />
+        </ListItemButton>
+      </ListItem>
+    </Link>
   );
 }

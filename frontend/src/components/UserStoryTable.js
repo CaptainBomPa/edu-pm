@@ -1,10 +1,4 @@
-import React, {
-  createRef,
-  useRef,
-  useEffect,
-  useState,
-  useLayoutEffect,
-} from "react";
+import React, { createRef, useRef, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -59,6 +53,11 @@ function getComparator(order, orderBy) {
       ? (a, b) => alphanumSort(b.feature[orderBy], a.feature[orderBy])
       : (a, b) => alphanumSort(a.feature[orderBy], b.feature[orderBy]);
   }
+  if (orderBy === "userStoryName") {
+    return order === "desc"
+      ? (a, b) => alphanumSort(b[orderBy], a[orderBy])
+      : (a, b) => alphanumSort(a[orderBy], b[orderBy]);
+  }
   return order === "desc"
     ? (a, b) => descendingComparator(a[orderBy], b[orderBy])
     : (a, b) => -descendingComparator(a[orderBy], b[orderBy]);
@@ -78,10 +77,17 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
+    id: "userStoryNameId",
+    numeric: true,
+    disablePadding: false,
+    label: "ID",
+    field: "userStoryNameId",
+  },
+  {
     id: "userStoryName",
     numeric: false,
     disablePadding: false,
-    label: "(ID)\u00A0Story\u00A0Name",
+    label: "\u00A0Story\u00A0Name",
     field: "userStoryName",
   },
   {
@@ -107,7 +113,7 @@ const headCells = [
   },
 ];
 
-const DEFAULT_MIN_WIDTH_CELL = 100;
+const DEFAULT_MIN_WIDTH_CELL = 75;
 const DEFAULT_MAX_WIDTH_CELL = 1000;
 
 function EnhancedTableHead(props) {
@@ -120,14 +126,12 @@ function EnhancedTableHead(props) {
     onRequestSort,
     onClickResizeColumn,
     columnRefs,
-    setColumnRefs,
   } = props;
 
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
-  
   return (
     <ThemeProvider theme={getLoginTheme()}>
       <TableHead className="tableHead">
@@ -152,6 +156,11 @@ function EnhancedTableHead(props) {
               align={"right"}
               padding={"normal"}
               sortDirection={orderBy === headCell.id ? order : false}
+              sx={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}
@@ -190,7 +199,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, userDetails } = props;
 
   return (
     <Toolbar
@@ -218,7 +227,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Iteration 12 Team 1-1
+          Iteration 12 {userDetails?.team?.teamName}
         </Typography>
       )}
 
@@ -238,7 +247,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function UserStoryTable(props) {
-  const { token } = props;
+  const { token, userDetails } = props;
 
   const [data, setData] = useState([]);
   const [visibleRows, setVisibleRows] = useState([]);
@@ -251,14 +260,14 @@ export default function UserStoryTable(props) {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [token]);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("userStoryName");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const dense = false;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -317,7 +326,9 @@ export default function UserStoryTable(props) {
     setVisibleRows(filteredAndSortedData);
   }, [data, order, orderBy, page, rowsPerPage]);
 
-  const [columnRefs, setColumnRefs] = useState(headCells.map(() => createRef()));
+  const [columnRefs, setColumnRefs] = useState(
+    headCells.map(() => createRef())
+  );
 
   const isResizing = useRef(-1);
 
@@ -329,7 +340,7 @@ export default function UserStoryTable(props) {
       document.onmousemove = null;
       document.onmouseup = null;
     };
-  }, []);
+  });
 
   function loadColumnInfoLocalStorage() {
     let columnsInfo = localStorage.getItem("columnsInfo");
@@ -412,7 +423,10 @@ export default function UserStoryTable(props) {
     <Box sx={{ width: "100% - 64px", marginLeft: "64px", marginTop: "64px" }}>
       <ThemeProvider theme={getLoginTheme()}>
         <Paper sx={{ width: "100%", mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            userDetails={userDetails}
+          />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -568,15 +582,52 @@ function Row(props) {
           id={labelId}
           scope="row"
         >
+          {row?.id}
+        </TableCell>
+        <TableCell
+          className="tableCell resizable"
+          component="th"
+          id={labelId}
+          scope="row"
+          sx={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
           {row?.userStoryName}
         </TableCell>
-        <TableCell align="right" className="tableCell resizable">
+        <TableCell
+          align="right"
+          className="tableCell resizable"
+          sx={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
           {row?.storyPoints}
         </TableCell>
-        <TableCell align="right" className="tableCell resizable">
+        <TableCell
+          align="right"
+          className="tableCell resizable"
+          sx={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
           {row?.feature.featureName}
         </TableCell>
-        <TableCell align="right" className="tableCell resizable">
+        <TableCell
+          align="right"
+          className="tableCell resizable"
+          sx={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
           {row?.assignedUser.firstName} {row?.assignedUser.lastName}
         </TableCell>
         <TableCell align="right" className="tableCell resizable"></TableCell>
@@ -608,7 +659,7 @@ function Row(props) {
                   {row &&
                     row.tasks.map((task, index) => {
                       return (
-                        <TableRow>
+                        <TableRow key={task.id}>
                           <TableCell
                             className="tableCell resizable"
                             sx={{

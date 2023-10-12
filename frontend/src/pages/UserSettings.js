@@ -36,7 +36,13 @@ function a11yProps(index) {
   };
 }
 
-export default function UserSettings({token, userDetails, setUserDetails, userAvatar, setUserAvatar}) {
+export default function UserSettings({
+  token,
+  userDetails,
+  setUserDetails,
+  userAvatar,
+  setUserAvatar,
+}) {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -60,13 +66,25 @@ export default function UserSettings({token, userDetails, setUserDetails, userAv
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <UserInformationTab userDetails={userDetails} token={token} setUserDetails={setUserDetails}/>
+        <UserInformationTab
+          userDetails={userDetails}
+          token={token}
+          setUserDetails={setUserDetails}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <ChangePasswordTab userDetails={userDetails} token={token} setUserDetails={setUserDetails}/>
+        <ChangePasswordTab
+          userDetails={userDetails}
+          token={token}
+          setUserDetails={setUserDetails}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <ChangeAvatarTab token={token} userAvatar={userAvatar} setUserAvatar={setUserAvatar}/>
+        <ChangeAvatarTab
+          token={token}
+          userAvatar={userAvatar}
+          setUserAvatar={setUserAvatar}
+        />
       </CustomTabPanel>
     </Box>
   );

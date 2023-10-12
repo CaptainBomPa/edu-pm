@@ -20,7 +20,7 @@ import Fade from "@mui/material/Fade";
 import CircularProgress from "@mui/material/CircularProgress";
 import {getLoginTheme} from "../components/WebTheme";
 
-export default function Login({setToken}) {
+export default function Login({setToken, navigate}) {
     const [errorOpen, setErrorOpen] = useState(false);
     const [errorResponse, setErrorResponse] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -38,10 +38,9 @@ export default function Login({setToken}) {
             setLoading,
             setErrorResponse
         );
-        if (data !== null && data !== undefined) {
-            if (data.token !== null && data.token !== undefined) {
-                setToken(data.token);
-            }
+        if (data?.token) {
+            setToken(data.token);
+            navigate('/home')
         }
     };
 
