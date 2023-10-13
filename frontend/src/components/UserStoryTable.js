@@ -27,7 +27,12 @@ import UserStoryEditDialog from "./UserStoryEditDialog";
 import TaskEditDialog from "./TaskEditDialog";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { getUserStoriesIteration, deleteUserStory, deleteMultipleUserStories, deleteTask } from "../service/UserStoryUser";
+import {
+  getUserStoriesIteration,
+  deleteUserStory,
+  deleteMultipleUserStories,
+  deleteTask,
+} from "../service/UserStoryUser";
 
 function descendingComparator(a, b) {
   if (b < a) {
@@ -234,7 +239,7 @@ function EnhancedTableToolbar(props) {
       {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton>
-            <DeleteIcon onClick={handleDelete}/>
+            <DeleteIcon onClick={handleDelete} />
           </IconButton>
         </Tooltip>
       )}
@@ -421,42 +426,42 @@ export default function UserStoryTable(props) {
 
   const handleDelete = async () => {
     if (selected.length === 1) {
-      console.log('single delete')
-      singleDeleteUserStory()
+      console.log("single delete");
+      singleDeleteUserStory();
     } else {
-      console.log('multiple delete')
-      multipleDeleteUserStory()
+      console.log("multiple delete");
+      multipleDeleteUserStory();
     }
-}
+  };
 
-const multipleDeleteUserStory = async () => {
-  const responseData = await deleteMultipleUserStories(token, selected);
-  if (responseData) {
-    const removedIds = responseData.map(item => item.id);
-    const updatedRows = data.filter(row => !removedIds.includes(row.id));
+  const multipleDeleteUserStory = async () => {
+    const responseData = await deleteMultipleUserStories(token, selected);
+    if (responseData) {
+      const removedIds = responseData.map((item) => item.id);
+      const updatedRows = data.filter((row) => !removedIds.includes(row.id));
 
-    setData(updatedRows);
-    setSelected([])
-  } else {
-      console.error('Not removed', selected);
-  }
-}
+      setData(updatedRows);
+      setSelected([]);
+    } else {
+      console.error("Not removed", selected);
+    }
+  };
 
-const singleDeleteUserStory = async () => {
+  const singleDeleteUserStory = async () => {
     const oneSelected = selected[0];
     const responseData = await deleteUserStory(token, oneSelected);
     if (responseData?.id === oneSelected) {
-        const index = data.findIndex(row => row.id === oneSelected);
-        if (index !== -1) {
-            const updatedRows = [...data];
-            updatedRows.splice(index, 1);
-            setData(updatedRows);
-            setSelected([])
-        }
+      const index = data.findIndex((row) => row.id === oneSelected);
+      if (index !== -1) {
+        const updatedRows = [...data];
+        updatedRows.splice(index, 1);
+        setData(updatedRows);
+        setSelected([]);
+      }
     } else {
-        console.error('Not removed', oneSelected);
+      console.error("Not removed", oneSelected);
     }
-}
+  };
 
   return (
     <Box sx={{ width: "100% - 64px", marginLeft: "64px", marginTop: "64px" }}>
@@ -533,13 +538,34 @@ function Row(props) {
   const [openEdit, setOpenEdit] = React.useState(false);
   const [taskOpenEdit, setTaskOpenEdit] = React.useState(false);
   const [taskOpenAdd, setTaskOpenAdd] = React.useState(false);
-  const [tasks, setTasks] = useState(row.tasks)
+  const [tasks, setTasks] = useState(row.tasks);
+
+  const handleUpdateTaskList = (newTask) => {
+    const updatedTasks = [...tasks, newTask];
+    setTasks(updatedTasks);
+  }
+
+  const handleUpdateTaskFromList = (updatedTask) => {
+    console.log(updatedTask.id)
+    const updatedTaskIndex = tasks.findIndex((task) => task.id === updatedTask.id);
+    console.log(updatedTaskIndex)
+    if (updatedTaskIndex !== -1) {
+      const updatedTasks = [...tasks];
+      updatedTasks[updatedTaskIndex] = updatedTask;
+      setTasks(updatedTasks);
+    } else {
+      setTasks([...tasks, updatedTask]);
+    }
+  };
 
   const handleEdit = (row) => {
     setOpenEdit(!openEdit);
   };
 
+  const [taskToEdit, setTaskToEdit] = useState();
+
   const handleTaskEdit = (taskRow) => {
+    setTaskToEdit(taskRow)
     setTaskOpenEdit(!taskOpenEdit);
   };
 
@@ -548,14 +574,14 @@ function Row(props) {
   };
 
   const handleTaskDelete = async (taskId) => {
-    console.log(token)
+    console.log(token);
     try {
       const response = await deleteTask(token, taskId);
       if (response) {
-        const updatedTasks = tasks.filter(task => task.id !== taskId);
-        setTasks(updatedTasks)
+        const updatedTasks = tasks.filter((task) => task.id !== taskId);
+        setTasks(updatedTasks);
       } else {
-        console.error(`Nie udało się usunąć zadania o ID: ${taskId}`);
+        console.error(`Could not remove: ${taskId}`);
       }
     } catch (error) {
       console.error(error);
@@ -565,10 +591,23 @@ function Row(props) {
   return (
     <React.Fragment>
       {taskOpenEdit && (
-        <TaskEditDialog setOpenEdit={setTaskOpenEdit} edit={true} />
+        <TaskEditDialog
+          setOpenEdit={setTaskOpenEdit}
+          edit={true}
+          token={token}
+          userStoryId={row.id}
+          previousTask={taskToEdit}
+          handleUpdateTaskFromList={handleUpdateTaskFromList}
+        />
       )}
       {taskOpenAdd && (
-        <TaskEditDialog setOpenEdit={setTaskOpenAdd} edit={false} />
+        <TaskEditDialog
+          setOpenEdit={setTaskOpenAdd}
+          edit={false}
+          token={token}
+          userStoryId={row.id}
+          handleUpdateTaskList={handleUpdateTaskList}
+        />
       )}
       {openEdit && <UserStoryEditDialog setOpenEdit={setOpenEdit} />}
       <TableRow
@@ -714,49 +753,49 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {tasks.map((task, index) => {
-                      return (
-                        <TableRow key={task.id}>
-                          <TableCell
-                            className="tableCell resizable"
-                            sx={{
-                              width: "3%",
-                              padding: "0",
-                              textAlign: "center",
-                              verticalAlign: "middle",
-                            }}
-                          >
-                            <IconButton>
-                              <ModeEditOutlineOutlinedIcon
-                                color="pmLoginTheme"
-                                onClick={() => handleTaskEdit(row)}
-                              />
-                            </IconButton>
-                          </TableCell>
-                          <TableCell
-                            className="tableCell resizable"
-                            sx={{
-                              width: "3%",
-                              padding: "0",
-                              textAlign: "center",
-                              verticalAlign: "middle",
-                            }}
-                          >
-                            <IconButton onClick={() => handleTaskDelete(task.id)}>
-                              <RemoveIcon sx={{ color: "red" }}/>
-                            </IconButton>
-                          </TableCell>
+                    return (
+                      <TableRow key={task.id}>
+                        <TableCell
+                          className="tableCell resizable"
+                          sx={{
+                            width: "3%",
+                            padding: "0",
+                            textAlign: "center",
+                            verticalAlign: "middle",
+                          }}
+                        >
+                          <IconButton>
+                            <ModeEditOutlineOutlinedIcon
+                              color="pmLoginTheme"
+                              onClick={() => handleTaskEdit(task)}
+                            />
+                          </IconButton>
+                        </TableCell>
+                        <TableCell
+                          className="tableCell resizable"
+                          sx={{
+                            width: "3%",
+                            padding: "0",
+                            textAlign: "center",
+                            verticalAlign: "middle",
+                          }}
+                        >
+                          <IconButton onClick={() => handleTaskDelete(task.id)}>
+                            <RemoveIcon sx={{ color: "red" }} />
+                          </IconButton>
+                        </TableCell>
 
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            sx={{ width: "20%" }}
-                          >
-                            {task.id}
-                          </TableCell>
-                          <TableCell>{task.taskName}</TableCell>
-                        </TableRow>
-                      );
-                    })}
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          sx={{ width: "20%" }}
+                        >
+                          {task.id}
+                        </TableCell>
+                        <TableCell>{task.taskName}</TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </Box>

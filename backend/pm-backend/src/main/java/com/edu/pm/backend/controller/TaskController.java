@@ -1,6 +1,7 @@
 package com.edu.pm.backend.controller;
 
 import com.edu.pm.backend.commons.dto.IdentityDTO;
+import com.edu.pm.backend.commons.dto.TaskAddDTO;
 import com.edu.pm.backend.commons.dto.TaskDTO;
 import com.edu.pm.backend.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +24,14 @@ public class TaskController {
         return ResponseEntity.ok(taskService.findAll());
     }
 
-    @PostMapping(value = "/task/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<TaskDTO> update(@RequestBody TaskDTO dto) {
-        if (dto.getId() != null) {
-            return ResponseEntity.ok(taskService.update(dto));
-        }
+    @PutMapping(value = "/task/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<TaskDTO> add(@RequestBody TaskAddDTO dto) {
         return ResponseEntity.ok(taskService.add(dto));
+    }
+
+    @PostMapping(value = "/task/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<TaskDTO> update(@RequestBody TaskAddDTO dto) {
+        return ResponseEntity.ok(taskService.update(dto));
     }
 
     @DeleteMapping(value = "/task/delete/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})

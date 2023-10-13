@@ -84,3 +84,51 @@ export async function deleteTask(token, id) {
         console.error(error);
     }
 }
+
+export async function addTask(token, taskData) {
+    try {
+      const response = await fetch('http://localhost:8080/api/task/add', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(taskData),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        return result;
+      } else {
+        console.error(`${response.status}`);
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  export async function updateTask(token, taskData) {
+    try {
+      const response = await fetch('http://localhost:8080/api/task/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(taskData),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        return result;
+      } else {
+        console.error(`${response.status}`);
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
