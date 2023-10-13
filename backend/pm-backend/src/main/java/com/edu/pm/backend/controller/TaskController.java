@@ -31,9 +31,9 @@ public class TaskController {
         return ResponseEntity.ok(taskService.add(dto));
     }
 
-    @PostMapping(value = "/task/delete", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<TaskDTO> delete(@RequestBody IdentityDTO dto) {
-        return ResponseEntity.ok(taskService.remove(dto.getId()));
+    @DeleteMapping(value = "/task/delete/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<TaskDTO> delete(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(taskService.remove(id));
     }
 
     @PostMapping(value = "/task/getById", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})

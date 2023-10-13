@@ -27,7 +27,7 @@ import UserStoryEditDialog from "./UserStoryEditDialog";
 import TaskEditDialog from "./TaskEditDialog";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { getUserStoriesIteration } from "../service/UserStoryUser";
+import { getUserStoriesIteration, deleteUserStory, deleteMultipleUserStories, deleteTask } from "../service/UserStoryUser";
 
 function descendingComparator(a, b) {
   if (b < a) {
@@ -199,7 +199,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, userDetails } = props;
+  const { numSelected, userDetails, handleDelete } = props;
 
   return (
     <Toolbar
@@ -234,7 +234,7 @@ function EnhancedTableToolbar(props) {
       {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton>
-            <DeleteIcon />
+            <DeleteIcon onClick={handleDelete}/>
           </IconButton>
         </Tooltip>
       )}
@@ -277,19 +277,19 @@ export default function UserStoryTable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = data?.map((n) => n.userStoryName);
+      const newSelected = data?.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, userStoryName) => {
-    const selectedIndex = selected.indexOf(userStoryName);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, userStoryName);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -313,7 +313,7 @@ export default function UserStoryTable(props) {
     setPage(0);
   };
 
-  const isSelected = (userStoryName) => selected.indexOf(userStoryName) !== -1;
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
@@ -419,6 +419,45 @@ export default function UserStoryTable(props) {
     setCursorDocument(true);
   };
 
+  const handleDelete = async () => {
+    if (selected.length === 1) {
+      console.log('single delete')
+      singleDeleteUserStory()
+    } else {
+      console.log('multiple delete')
+      multipleDeleteUserStory()
+    }
+}
+
+const multipleDeleteUserStory = async () => {
+  const responseData = await deleteMultipleUserStories(token, selected);
+  if (responseData) {
+    const removedIds = responseData.map(item => item.id);
+    const updatedRows = data.filter(row => !removedIds.includes(row.id));
+
+    setData(updatedRows);
+    setSelected([])
+  } else {
+      console.error('Not removed', selected);
+  }
+}
+
+const singleDeleteUserStory = async () => {
+    const oneSelected = selected[0];
+    const responseData = await deleteUserStory(token, oneSelected);
+    if (responseData?.id === oneSelected) {
+        const index = data.findIndex(row => row.id === oneSelected);
+        if (index !== -1) {
+            const updatedRows = [...data];
+            updatedRows.splice(index, 1);
+            setData(updatedRows);
+            setSelected([])
+        }
+    } else {
+        console.error('Not removed', oneSelected);
+    }
+}
+
   return (
     <Box sx={{ width: "100% - 64px", marginLeft: "64px", marginTop: "64px" }}>
       <ThemeProvider theme={getLoginTheme()}>
@@ -426,6 +465,7 @@ export default function UserStoryTable(props) {
           <EnhancedTableToolbar
             numSelected={selected.length}
             userDetails={userDetails}
+            handleDelete={handleDelete}
           />
           <TableContainer>
             <Table
@@ -453,6 +493,7 @@ export default function UserStoryTable(props) {
                       index={index}
                       isSelected={isSelected}
                       handleClick={handleClick}
+                      token={token}
                     />
                   );
                 })}
@@ -484,14 +525,15 @@ export default function UserStoryTable(props) {
 }
 
 function Row(props) {
-  const { row, index, handleClick, isSelected } = props;
+  const { row, index, handleClick, isSelected, token } = props;
   const [open, setOpen] = React.useState(false);
 
-  const isItemSelected = isSelected(row.userStoryName);
+  const isItemSelected = isSelected(row.id);
   const labelId = `enhanced-table-checkbox-${index}`;
   const [openEdit, setOpenEdit] = React.useState(false);
   const [taskOpenEdit, setTaskOpenEdit] = React.useState(false);
   const [taskOpenAdd, setTaskOpenAdd] = React.useState(false);
+  const [tasks, setTasks] = useState(row.tasks)
 
   const handleEdit = (row) => {
     setOpenEdit(!openEdit);
@@ -503,6 +545,21 @@ function Row(props) {
 
   const handleTaskAdd = () => {
     setTaskOpenAdd(!taskOpenAdd);
+  };
+
+  const handleTaskDelete = async (taskId) => {
+    console.log(token)
+    try {
+      const response = await deleteTask(token, taskId);
+      if (response) {
+        const updatedTasks = tasks.filter(task => task.id !== taskId);
+        setTasks(updatedTasks)
+      } else {
+        console.error(`Nie udało się usunąć zadania o ID: ${taskId}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -551,7 +608,7 @@ function Row(props) {
           }}
         >
           <Checkbox
-            onClick={(event) => handleClick(event, row.userStoryName)}
+            onClick={(event) => handleClick(event, row.id)}
             color="pmLoginTheme"
             checked={isItemSelected}
             inputProps={{
@@ -656,8 +713,7 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row &&
-                    row.tasks.map((task, index) => {
+                  {tasks.map((task, index) => {
                       return (
                         <TableRow key={task.id}>
                           <TableCell
@@ -685,8 +741,8 @@ function Row(props) {
                               verticalAlign: "middle",
                             }}
                           >
-                            <IconButton>
-                              <RemoveIcon sx={{ color: "red" }} />
+                            <IconButton onClick={() => handleTaskDelete(task.id)}>
+                              <RemoveIcon sx={{ color: "red" }}/>
                             </IconButton>
                           </TableCell>
 

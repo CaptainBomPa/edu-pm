@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -41,4 +43,7 @@ public class UserStory {
 
     @Column
     private Integer storyPoints;
+
+    @OneToMany(mappedBy = "userStory", cascade = CascadeType.ALL)
+    private List<Task> tasks;
 }

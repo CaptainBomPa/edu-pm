@@ -25,5 +25,6 @@ public class Task {
     private String description;
 
     @ManyToOne
+    @JoinColumn(name = "USER_STORY_ID")
     private UserStory userStory;
 }

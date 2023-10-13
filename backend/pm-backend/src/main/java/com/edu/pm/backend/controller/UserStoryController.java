@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,17 +24,22 @@ public class UserStoryController {
         return ResponseEntity.ok(userStoryService.findAll());
     }
 
+    @DeleteMapping(value = "/userStory/delete/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<UserStoryDTO> delete(@PathVariable("id") Integer userStoryId) {
+        return ResponseEntity.ok(userStoryService.remove(userStoryId));
+    }
+
+    @PostMapping(value = "/userStory/deleteMultiple", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<Collection<UserStoryDTO>> deleteMultiple(@RequestBody List<Integer> ids) {
+        return ResponseEntity.ok(userStoryService.removeMultiple(ids));
+    }
+
     @PostMapping(value = "/userStory/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserStoryDTO> update(@RequestBody UserStoryDTO dto) {
         if (dto.getId() != null) {
             return ResponseEntity.ok(userStoryService.update(dto));
         }
         return ResponseEntity.ok(userStoryService.add(dto));
-    }
-
-    @PostMapping(value = "/userStory/delete", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserStoryDTO> delete(@RequestBody IdentityDTO dto) {
-        return ResponseEntity.ok(userStoryService.remove(dto.getId()));
     }
 
     @PostMapping(value = "/userStory/getById", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})

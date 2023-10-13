@@ -12,6 +12,7 @@ import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +43,14 @@ public class UserStoryService {
         userStoryFromDB.setDescription(dto.getDescription());
         userStoryFromDB.setFeature(FeatureMapper.dtoToModel(dto.getFeature()));
         return modelToDTO(userStoryCache.add(userStoryFromDB));
+    }
+
+    public List<UserStoryDTO> removeMultiple(List<Integer> ids) {
+        List<UserStoryDTO> deletedEntities = new ArrayList<>();
+        for (Integer id : ids) {
+            deletedEntities.add(remove(id));
+        }
+        return deletedEntities;
     }
 
     public UserStoryDTO remove(Integer id) {
