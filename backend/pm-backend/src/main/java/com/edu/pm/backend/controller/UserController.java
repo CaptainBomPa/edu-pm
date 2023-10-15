@@ -36,6 +36,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getAll());
     }
 
+    @GetMapping(value = "/user/get-all-avatars")
+    public ResponseEntity<Collection<UserDTO>> getAllWithAvatars() {
+        return ResponseEntity.ok(userService.getAllWithAvatars());
+    }
+
     @PostMapping(value = "/user/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserDTO> update(@RequestBody UserDTO dto) {
         return ResponseEntity.ok(userService.addUser(dto));

@@ -8,29 +8,38 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 @RequiredArgsConstructor
 public class AvatarService {
 
-    private final UserRepository userRepository;
+    private final String uploadDirectory = "uploads/avatars/";
 
-    public AvatarDTO uploadAvatar(String username, MultipartFile multipartFile) throws IOException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found in database"));
+    public byte[] getAvatarForUserId(Integer id) {
+        String[] extensionsToTry = {".jpg", ".jpeg", ".png"};
 
-        byte[] imageBytes = multipartFile.getBytes();
-        user.setAvatar(imageBytes);
-        User savedUser = userRepository.save(user);
-        AvatarDTO dto = new AvatarDTO();
-        dto.setImage(savedUser.getAvatar());
-        return dto;
-    }
+        for (String extension : extensionsToTry) {
+            String fileName = "avatar_" + id + extension;
+            File avatarFile = new File(uploadDirectory + fileName);
 
-    public AvatarDTO getUserAvatar(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow();
-        AvatarDTO avatarDTO = new AvatarDTO();
-        avatarDTO.setImage(user.getAvatar());
-        return avatarDTO;
+            if (avatarFile.exists()) {
+                try {
+                    return Files.readAllBytes(avatarFile.toPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return null;
     }
 }
+
+
+
+
+
+

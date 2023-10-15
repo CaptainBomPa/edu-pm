@@ -27,6 +27,7 @@ public class UserService {
     private final TeamCache teamCache;
     private final ProjectCache projectCache;
     private final PasswordEncoder passwordEncoder;
+    private final AvatarService avatarService;
 
     public UserDTO getCurrentUser(String username) {
         return UserMapper.modelToDTO(repository.findByUsername(username).orElseThrow());
@@ -61,6 +62,17 @@ public class UserService {
 
     public Collection<UserDTO> getAll() {
         return repository.findAll().stream().map(UserMapper::modelToDTO).toList();
+    }
+
+    public Collection<UserDTO> getAllWithAvatars() {
+        Collection<UserDTO> usersWithAvatar = getAll();
+        usersWithAvatar.forEach(userDTO -> {
+            byte[] optionalImg = avatarService.getAvatarForUserId(userDTO.getId());
+            if (optionalImg != null) {
+                userDTO.setAvatar(optionalImg);
+            }
+        });
+        return usersWithAvatar;
     }
 
     @Nullable

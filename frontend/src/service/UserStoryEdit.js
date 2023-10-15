@@ -24,7 +24,7 @@ export async function getAllFeatures(token) {
 
 export async function getAllUsers(token) {
   try {
-    const response = await fetch("http://localhost:8080/api/user/get-all", {
+    const response = await fetch("http://localhost:8080/api/user/get-all-avatars", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

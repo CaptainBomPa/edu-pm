@@ -16,7 +16,8 @@ import {
   addUserStory,
 } from "../service/UserStoryEdit";
 import Autocomplete from "@mui/material/Autocomplete";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
 
 export default function UserStoryEditDialog(props) {
   const { setOpen, edit, userStory, token, handleChangeUpdateRow } = props;
@@ -68,7 +69,10 @@ export default function UserStoryEditDialog(props) {
         handleChangeUpdateRow(newStory);
       })
       .catch((error) => {
-        console.error("Błąd podczas aktualizacji historii użytkownika: ", error);
+        console.error(
+          "Błąd podczas aktualizacji historii użytkownika: ",
+          error
+        );
       });
   };
 
@@ -99,7 +103,12 @@ export default function UserStoryEditDialog(props) {
   };
 
   const isFormValid = () => {
-    if (!userStoryName.trim() || !storyPoints || !selectedFeature || !selectedOwner) {
+    if (
+      !userStoryName.trim() ||
+      !storyPoints ||
+      !selectedFeature ||
+      !selectedOwner
+    ) {
       return false;
     }
     return true;
@@ -172,12 +181,42 @@ export default function UserStoryEditDialog(props) {
                 }
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 renderInput={(params) => (
-                  <TextField {...params} label="Owner" color="pmLoginTheme" />
+                  <TextField
+                    {...params}
+                    label="Owner"
+                    color="pmLoginTheme"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: "new-password",
+                    }}
+                  />
                 )}
                 sx={{ marginTop: "20px" }}
                 color="pmLoginTheme"
                 value={selectedOwner}
                 onChange={(e, newValue) => setSelectedOwner(newValue)}
+                renderOption={(props, option) => (
+                  <Box
+                    component="li"
+                    sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+                    {...props}
+                  >
+                    {option?.avatar ? (
+                      <Avatar
+                        sx={{ bgcolor: "gray" }}
+                        src={`data:image/png;base64,${option.avatar}`}
+                      />
+                    ) : (
+                      <Avatar sx={{ bgcolor: "gray" }}>
+                        {option.firstName.charAt(0).toUpperCase() +
+                          option.lastName.charAt(0).toUpperCase()}
+                      </Avatar>
+                    )}
+                    <span style={{ marginLeft: "12px" }}>
+                      {option.firstName + " " + option.lastName}
+                    </span>
+                  </Box>
+                )}
               />
             </DialogContent>
             <DialogActions>

@@ -54,10 +54,6 @@ public class User implements UserDetails {
     @Nullable
     private List<Project> projects;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] avatar;
-
     public void addRole(@NotNull Role role) {
         this.roles.add(role);
     }
