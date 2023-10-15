@@ -33,7 +33,7 @@ public class UserStory {
     @Nullable
     private Team team;
 
-    @ManyToOne
+    @OneToOne
     @Nullable
     private User assignedUser;
 

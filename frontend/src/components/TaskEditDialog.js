@@ -72,7 +72,6 @@ export default function TaskEditDialog(props) {
       console.error(error);
     }
   };
-  console.log(previousTask);
   return (
     <div>
       <ThemeProvider theme={getLoginTheme()}>

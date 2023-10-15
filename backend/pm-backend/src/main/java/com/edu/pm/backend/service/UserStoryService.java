@@ -5,7 +5,9 @@ import com.edu.pm.backend.commons.dto.UserStoryDTO;
 import com.edu.pm.backend.commons.mappers.FeatureMapper;
 import com.edu.pm.backend.commons.mappers.UserStoryMapper;
 import com.edu.pm.backend.model.Feature;
+import com.edu.pm.backend.model.User;
 import com.edu.pm.backend.model.UserStory;
+import com.edu.pm.backend.repository.UserRepository;
 import com.edu.pm.backend.repository.cache.FeatureCache;
 import com.edu.pm.backend.repository.cache.UserStoryCache;
 import jakarta.annotation.Nullable;
@@ -27,6 +29,7 @@ public class UserStoryService {
 
     private final UserStoryCache userStoryCache;
     private final FeatureCache featureCache;
+    private final UserRepository userRepository;
 
     public UserStoryDTO add(UserStoryDTO dto) {
         UserStory userStory = dtoToModel(dto);
@@ -40,8 +43,11 @@ public class UserStoryService {
             throw new IllegalArgumentException("Entity not found");
         }
         userStoryFromDB.setUserStoryName(dto.getUserStoryName());
-        userStoryFromDB.setDescription(dto.getDescription());
+//        TODO not handled yet
+//        userStoryFromDB.setDescription(dto.getDescription());
         userStoryFromDB.setFeature(FeatureMapper.dtoToModel(dto.getFeature()));
+        userStoryFromDB.setAssignedUser(userRepository.findById(dto.getAssignedUser().getId()).orElseThrow());
+        userStoryFromDB.setStoryPoints(dto.getStoryPoints());
         return modelToDTO(userStoryCache.add(userStoryFromDB));
     }
 

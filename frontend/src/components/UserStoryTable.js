@@ -63,6 +63,11 @@ function getComparator(order, orderBy) {
       ? (a, b) => alphanumSort(b[orderBy], a[orderBy])
       : (a, b) => alphanumSort(a[orderBy], b[orderBy]);
   }
+  if (orderBy === "userStoryNameId") {
+    return order === "desc"
+      ? (a, b) => descendingComparator(b.id, a.id)
+      : (a, b) => descendingComparator(a.id, b.id);
+  }
   return order === "desc"
     ? (a, b) => descendingComparator(a[orderBy], b[orderBy])
     : (a, b) => -descendingComparator(a[orderBy], b[orderBy]);
@@ -204,7 +209,19 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, userDetails, handleDelete } = props;
+  const { numSelected, userDetails, handleDelete, token, data, setData } = props;
+
+  const [openAdd, setOpenAdd] = useState(false);
+
+  const handleAddUserStory = () => {
+    setOpenAdd(!openAdd);
+  }
+
+  const handleAddUpdateRow = (newRow) => {
+    const updatedData = [...data, newRow];
+    setData(updatedData);
+    setOpenAdd(false);
+  }
 
   return (
     <Toolbar
@@ -233,6 +250,15 @@ function EnhancedTableToolbar(props) {
           component="div"
         >
           Iteration 12 {userDetails?.team?.teamName}
+          <Tooltip title="Add new User Story">
+          <IconButton>
+                  <AddCircleOutlineIcon
+                    sx={{ color: "green" }}
+                    onClick={() => handleAddUserStory()}
+                  />
+                </IconButton>
+          </Tooltip>
+          
         </Typography>
       )}
 
@@ -243,6 +269,8 @@ function EnhancedTableToolbar(props) {
           </IconButton>
         </Tooltip>
       )}
+
+      {openAdd && <UserStoryEditDialog setOpen={setOpenAdd} edit={false} token={token} handleChangeUpdateRow={handleAddUpdateRow} />}
     </Toolbar>
   );
 }
@@ -267,8 +295,8 @@ export default function UserStoryTable(props) {
       });
   }, [token]);
 
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("userStoryName");
+  const [order, setOrder] = React.useState("desc");
+  const [orderBy, setOrderBy] = React.useState("userStoryNameId");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -426,10 +454,8 @@ export default function UserStoryTable(props) {
 
   const handleDelete = async () => {
     if (selected.length === 1) {
-      console.log("single delete");
       singleDeleteUserStory();
     } else {
-      console.log("multiple delete");
       multipleDeleteUserStory();
     }
   };
@@ -463,6 +489,11 @@ export default function UserStoryTable(props) {
     }
   };
 
+  const handleUpdateRow = (updatedRow) => {
+    const updatedData = data.map((row) => (row.id === updatedRow.id ? updatedRow : row));
+    setData(updatedData);
+  }
+
   return (
     <Box sx={{ width: "100% - 64px", marginLeft: "64px", marginTop: "64px" }}>
       <ThemeProvider theme={getLoginTheme()}>
@@ -471,6 +502,9 @@ export default function UserStoryTable(props) {
             numSelected={selected.length}
             userDetails={userDetails}
             handleDelete={handleDelete}
+            token={token}
+            data={data}
+            setData={setData}
           />
           <TableContainer>
             <Table
@@ -499,6 +533,7 @@ export default function UserStoryTable(props) {
                       isSelected={isSelected}
                       handleClick={handleClick}
                       token={token}
+                      handleUpdateRow={handleUpdateRow}
                     />
                   );
                 })}
@@ -530,7 +565,7 @@ export default function UserStoryTable(props) {
 }
 
 function Row(props) {
-  const { row, index, handleClick, isSelected, token } = props;
+  const { row, index, handleClick, isSelected, token, handleUpdateRow } = props;
   const [open, setOpen] = React.useState(false);
 
   const isItemSelected = isSelected(row.id);
@@ -546,9 +581,7 @@ function Row(props) {
   }
 
   const handleUpdateTaskFromList = (updatedTask) => {
-    console.log(updatedTask.id)
     const updatedTaskIndex = tasks.findIndex((task) => task.id === updatedTask.id);
-    console.log(updatedTaskIndex)
     if (updatedTaskIndex !== -1) {
       const updatedTasks = [...tasks];
       updatedTasks[updatedTaskIndex] = updatedTask;
@@ -562,6 +595,12 @@ function Row(props) {
     setOpenEdit(!openEdit);
   };
 
+  const handleChangeUpdateRow = (updatedRow) => {
+    handleUpdateRow(updatedRow)
+      setOpenEdit(false); 
+  }
+
+
   const [taskToEdit, setTaskToEdit] = useState();
 
   const handleTaskEdit = (taskRow) => {
@@ -574,7 +613,6 @@ function Row(props) {
   };
 
   const handleTaskDelete = async (taskId) => {
-    console.log(token);
     try {
       const response = await deleteTask(token, taskId);
       if (response) {
@@ -609,7 +647,7 @@ function Row(props) {
           handleUpdateTaskList={handleUpdateTaskList}
         />
       )}
-      {openEdit && <UserStoryEditDialog setOpenEdit={setOpenEdit} />}
+      {openEdit && <UserStoryEditDialog setOpen={setOpenEdit} edit={true} userStory={row} token={token} handleChangeUpdateRow={handleChangeUpdateRow} />}
       <TableRow
         hover
         role="checkbox"

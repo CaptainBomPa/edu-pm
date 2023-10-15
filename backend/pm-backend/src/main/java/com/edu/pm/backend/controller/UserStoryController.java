@@ -36,9 +36,11 @@ public class UserStoryController {
 
     @PostMapping(value = "/userStory/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserStoryDTO> update(@RequestBody UserStoryDTO dto) {
-        if (dto.getId() != null) {
-            return ResponseEntity.ok(userStoryService.update(dto));
-        }
+        return ResponseEntity.ok(userStoryService.update(dto));
+    }
+
+    @PutMapping(value = "/userStory/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<UserStoryDTO> add(@RequestBody UserStoryDTO dto) {
         return ResponseEntity.ok(userStoryService.add(dto));
     }
 

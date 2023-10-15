@@ -66,8 +66,9 @@ public class UserStoryCache {
     }
 
     public Set<UserStory> getAll() {
-        Set<UserStory> userStories = getAllCached();
-        userStories.addAll(getAllDatabase());
-        return userStories;
+//        Set<UserStory> userStories = getAllCached();
+//        userStories.addAll(getAllDatabase());
+//        return userStories;
+        return getAllDatabase();
     }
 }
