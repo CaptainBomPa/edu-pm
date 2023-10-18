@@ -5,7 +5,6 @@ import com.edu.pm.backend.commons.dto.UserStoryDTO;
 import com.edu.pm.backend.commons.mappers.FeatureMapper;
 import com.edu.pm.backend.commons.mappers.UserStoryMapper;
 import com.edu.pm.backend.model.Feature;
-import com.edu.pm.backend.model.User;
 import com.edu.pm.backend.model.UserStory;
 import com.edu.pm.backend.repository.UserRepository;
 import com.edu.pm.backend.repository.cache.FeatureCache;
@@ -44,14 +43,14 @@ public class UserStoryService {
         }
         userStoryFromDB.setUserStoryName(dto.getUserStoryName());
         userStoryFromDB.setDescription(dto.getDescription());
-            userStoryFromDB.setFeature(FeatureMapper.dtoToModel(dto.getFeature()));
-            userStoryFromDB.setAssignedUser(userRepository.findById(dto.getAssignedUser().getId()).orElseThrow());
-            userStoryFromDB.setStoryPoints(dto.getStoryPoints());
-            userStoryFromDB.setState(dto.getState());
-            if (!dto.isBlocked()) {
-                userStoryFromDB.setBlocked(false);
-                userStoryFromDB.setBlockReason(null);
-            } else {
+        userStoryFromDB.setFeature(FeatureMapper.dtoToModel(dto.getFeature()));
+        userStoryFromDB.setAssignedUser(userRepository.findById(dto.getAssignedUser().getId()).orElseThrow());
+        userStoryFromDB.setStoryPoints(dto.getStoryPoints());
+        userStoryFromDB.setState(dto.getState());
+        if (!dto.isBlocked()) {
+            userStoryFromDB.setBlocked(false);
+            userStoryFromDB.setBlockReason(null);
+        } else {
             userStoryFromDB.setBlocked(true);
             userStoryFromDB.setBlockReason(dto.getBlockReason());
         }

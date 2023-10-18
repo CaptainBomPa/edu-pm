@@ -27,7 +27,7 @@ public class UserStory {
     @Column
     private Integer storyPoints;
 
-    @Column (length = 250, columnDefinition = "varchar(250) default 'NEW'")
+    @Column(length = 250, columnDefinition = "varchar(250) default 'NEW'")
     @Enumerated(value = EnumType.STRING)
     private UserStoryState state = UserStoryState.NEW;
 
