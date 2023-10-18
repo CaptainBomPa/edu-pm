@@ -43,11 +43,19 @@ public class UserStoryService {
             throw new IllegalArgumentException("Entity not found");
         }
         userStoryFromDB.setUserStoryName(dto.getUserStoryName());
-//        TODO not handled yet
-//        userStoryFromDB.setDescription(dto.getDescription());
-        userStoryFromDB.setFeature(FeatureMapper.dtoToModel(dto.getFeature()));
-        userStoryFromDB.setAssignedUser(userRepository.findById(dto.getAssignedUser().getId()).orElseThrow());
-        userStoryFromDB.setStoryPoints(dto.getStoryPoints());
+        userStoryFromDB.setDescription(dto.getDescription());
+            userStoryFromDB.setFeature(FeatureMapper.dtoToModel(dto.getFeature()));
+            userStoryFromDB.setAssignedUser(userRepository.findById(dto.getAssignedUser().getId()).orElseThrow());
+            userStoryFromDB.setStoryPoints(dto.getStoryPoints());
+            userStoryFromDB.setState(dto.getState());
+            if (!dto.isBlocked()) {
+                userStoryFromDB.setBlocked(false);
+                userStoryFromDB.setBlockReason(null);
+            } else {
+            userStoryFromDB.setBlocked(true);
+            userStoryFromDB.setBlockReason(dto.getBlockReason());
+        }
+
         return modelToDTO(userStoryCache.add(userStoryFromDB));
     }
 

@@ -1,5 +1,6 @@
 package com.edu.pm.backend.model;
 
+import com.edu.pm.backend.model.enums.UserStoryState;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,14 @@ public class UserStory {
     private String userStoryName;
 
     @Column
-    private String description;
+    private Integer storyPoints;
+
+    @Column (length = 250, columnDefinition = "varchar(250) default 'NEW'")
+    @Enumerated(value = EnumType.STRING)
+    private UserStoryState state = UserStoryState.NEW;
+
+    @OneToMany(mappedBy = "userStory", cascade = CascadeType.ALL)
+    private List<Task> tasks;
 
     @ManyToOne
     private Feature feature;
@@ -42,8 +50,12 @@ public class UserStory {
     private Iteration iteration;
 
     @Column
-    private Integer storyPoints;
+    private String description;
 
-    @OneToMany(mappedBy = "userStory", cascade = CascadeType.ALL)
-    private List<Task> tasks;
+    @Column(columnDefinition = "boolean default false")
+    private boolean blocked = false;
+
+    @Column
+    private String blockReason;
+
 }

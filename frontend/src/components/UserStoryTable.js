@@ -121,6 +121,13 @@ const headCells = [
     label: "Owner",
     field: "assignedUser",
   },
+  {
+    id: "storyState",
+    numeric: false,
+    disablePadding: false,
+    label: "State",
+    field: "storyState",
+  },
 ];
 
 const DEFAULT_MIN_WIDTH_CELL = 75;
@@ -294,6 +301,8 @@ export default function UserStoryTable(props) {
         console.error(error);
       });
   }, [token]);
+
+  console.log(data)
 
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("userStoryNameId");
@@ -764,6 +773,17 @@ function Row(props) {
         >
           {row?.assignedUser.firstName} {row?.assignedUser.lastName}
         </TableCell>
+        <TableCell
+          align="right"
+          className="tableCell resizable"
+          sx={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {formatUserStoryState(row?.state)}
+        </TableCell>
         <TableCell align="right" className="tableCell resizable"></TableCell>
       </TableRow>
 
@@ -842,4 +862,27 @@ function Row(props) {
       </TableRow>
     </React.Fragment>
   );
+}
+
+function formatUserStoryState(state) {
+  switch (state) {
+    case "NEW":
+      return "New";
+    case "DEFINED":
+      return "Defined";
+    case "IN_PROGRESS":
+      return "In Progress";
+    case "READY":
+      return "Ready";
+    case "TEST":
+      return "Test";
+    case "TEST_READY":
+      return "Test Ready";
+    case "ACCEPTED":
+      return "Accepted";
+    case "CLOSED":
+      return "Closed";
+    default:
+      return state;
+  }
 }

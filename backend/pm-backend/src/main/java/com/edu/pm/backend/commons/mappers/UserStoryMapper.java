@@ -14,7 +14,10 @@ public class UserStoryMapper {
                 .userStoryName(userStory.getUserStoryName())
                 .description(userStory.getDescription())
                 .iteration(userStory.getIteration())
-                .storyPoints(userStory.getStoryPoints());
+                .storyPoints(userStory.getStoryPoints())
+                .state(userStory.getState())
+                .blocked(userStory.isBlocked())
+                .blockReason(userStory.getBlockReason());
         if (userStory.getFeature() != null) {
             builder.feature(FeatureMapper.modelToDTO(userStory.getFeature()));
         }
@@ -30,7 +33,10 @@ public class UserStoryMapper {
                 .userStoryName(dto.getUserStoryName())
                 .description(dto.getUserStoryName())
                 .iteration(dto.getIteration())
-                .storyPoints(dto.getStoryPoints());
+                .storyPoints(dto.getStoryPoints())
+                .state(dto.getState())
+                .blocked(dto.isBlocked())
+                .blockReason(dto.getBlockReason());
         if (dto.getFeature() != null) {
             builder.feature(FeatureMapper.dtoToModel(dto.getFeature()));
         }

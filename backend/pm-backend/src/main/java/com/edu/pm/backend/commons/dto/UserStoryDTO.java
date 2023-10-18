@@ -1,6 +1,7 @@
 package com.edu.pm.backend.commons.dto;
 
 import com.edu.pm.backend.model.Iteration;
+import com.edu.pm.backend.model.enums.UserStoryState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,7 @@ public class UserStoryDTO {
     private Iteration iteration;
     private Integer storyPoints;
     private Collection<TaskDTO> tasks;
+    private UserStoryState state;
+    private boolean blocked;
+    private String blockReason;
 }
