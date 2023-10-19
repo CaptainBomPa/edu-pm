@@ -74,6 +74,7 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
+  if (!array) return array;
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -268,7 +269,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Iteration {data[0]?.iteration.itNumber} {userDetails?.team?.teamName}
+          Iteration {data && data[0]?.iteration.itNumber} {userDetails?.team?.teamName}
           <Tooltip title="Add new User Story">
             <IconButton>
               <AddCircleOutlineIcon
@@ -320,7 +321,7 @@ export default function UserStoryTable(props) {
       });
   }, [token]);
 
-  console.log(data);
+  console.log("przekazane tutaj",  data);
 
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("userStoryNameId");
@@ -541,7 +542,7 @@ export default function UserStoryTable(props) {
             data={data}
             setData={setData}
             currentTeamId={userDetails?.team?.id}
-            currentIterationId={data[0]?.iteration?.itNumber}
+            currentIterationId={data && data[0]?.iteration?.itNumber}
           />
           <TableContainer>
             <Table
@@ -556,7 +557,7 @@ export default function UserStoryTable(props) {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={data.length}
+                rowCount={data?.length}
                 onClickResizeColumn={onClickResizeColumn}
                 columnRefs={columnRefs}
                 setColumnRefs={setColumnRefs}
@@ -589,7 +590,7 @@ export default function UserStoryTable(props) {
           <TablePagination
             rowsPerPageOptions={[10, 25, 50, 100, 200]}
             component="div"
-            count={data.length}
+            count={data?.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -847,7 +848,7 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {tasks.map((task, index) => {
+                  {tasks?.map((task, index) => {
                     return (
                       <TableRow key={task.id}>
                         <TableCell

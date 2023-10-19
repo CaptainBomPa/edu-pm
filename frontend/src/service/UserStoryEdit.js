@@ -1,135 +1,93 @@
+import axios from "axios";
+
 export default function UserStoryEdit() {}
 
 export async function getAllFeatures(token) {
   try {
-    const response = await fetch("http://localhost:8080/api/feature/get-all", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.ok) {
-      const result = await response.json();
-      return result;
+    const response = await axios.get(
+      "http://localhost:8080/api/feature/get-all"
+    );
+    if (response.status === 200) {
+      return response.data;
     } else {
-      console.error(`Błąd HTTP: ${response.status}`);
-      return null;
+      console.error(`Error ${response.status}`);
     }
   } catch (error) {
-    console.error("Błąd podczas pobierania iteracji:", error);
-    return null;
+    console.error(error);
   }
 }
 
 export async function getAllUsers(token) {
   try {
-    const response = await fetch("http://localhost:8080/api/user/get-all-avatars", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.ok) {
-      const result = await response.json();
-      return result;
+    const response = await axios.get(
+      "http://localhost:8080/api/user/get-all-avatars"
+    );
+    if (response.status === 200) {
+      return response.data;
     } else {
-      console.error(`Błąd HTTP: ${response.status}`);
-      return null;
+      console.error(`Error ${response.status}`);
     }
   } catch (error) {
-    console.error("Błąd podczas pobierania iteracji:", error);
-    return null;
+    console.error(error);
   }
 }
 
 export async function getAllTeams(token) {
   try {
-    const response = await fetch("http://localhost:8080/api/team/get-all", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.ok) {
-      const result = await response.json();
-      return result;
+    const response = await axios.get("http://localhost:8080/api/team/get-all");
+    if (response.status === 200) {
+      return response.data;
     } else {
-      console.error(`Błąd HTTP: ${response.status}`);
-      return null;
+      console.error(`Error ${response.status}`);
     }
   } catch (error) {
-    console.error("Błąd podczas pobierania drużyn:", error);
-    return null;
+    console.error(error);
   }
 }
 
 export async function getAllIterations(token) {
   try {
-    const response = await fetch("http://localhost:8080/api/iteration/get-all", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.ok) {
-      const result = await response.json();
-      return result;
+    const response = await axios.get(
+      "http://localhost:8080/api/iteration/get-all"
+    );
+    if (response.status === 200) {
+      return response.data;
     } else {
-      console.error(`Błąd HTTP: ${response.status}`);
-      return null;
+      console.error(`Error ${response.status}`);
     }
   } catch (error) {
-    console.error("Błąd podczas pobierania iteracji:", error);
-    return null;
+    console.error(error);
   }
 }
 
 export async function updateStory(story, token) {
   try {
-    const response = await fetch("http://localhost:8080/api/userStory/update", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(story),
-    });
-    if (response.ok) {
-      const updatedStory = await response.json();
-      return updatedStory;
+    const response = await axios.post(
+      "http://localhost:8080/api/userStory/update",
+      story
+    );
+    if (response.status === 200) {
+      return response.data;
     } else {
-      console.error(`Błąd HTTP: ${response.status}`);
-      return null;
+      console.error(`Error ${response.status}`);
     }
   } catch (error) {
-    console.error("Błąd podczas aktualizacji historii użytkownika:", error);
-    return null;
+    console.error(error);
   }
 }
 
 export async function addUserStory(userStory, token) {
   try {
-    const response = await fetch("http://localhost:8080/api/userStory/add", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(userStory),
-    });
-    if (response.ok) {
-      const addedStory = await response.json();
-      return addedStory;
+    const response = await axios.put(
+      "http://localhost:8080/api/userStory/add",
+      userStory
+    );
+    if (response.status === 200) {
+      return response.data;
     } else {
-      console.error(`Błąd HTTP: ${response.status}`);
-      return null;
+      console.error(`Error ${response.status}`);
     }
   } catch (error) {
-    console.error("Błąd podczas dodawania historii użytkownika:", error);
-    return null;
+    console.error(error);
   }
 }

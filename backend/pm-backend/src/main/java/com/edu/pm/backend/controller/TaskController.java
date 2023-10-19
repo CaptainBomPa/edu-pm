@@ -34,7 +34,7 @@ public class TaskController {
         return ResponseEntity.ok(taskService.update(dto));
     }
 
-    @DeleteMapping(value = "/task/delete/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @DeleteMapping(value = "/task/delete/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TaskDTO> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(taskService.remove(id));
     }

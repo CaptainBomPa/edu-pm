@@ -50,11 +50,10 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
     if (newPassword === confirmNewPassword) {
       const dataUpdatePassword = async (e) => {
         setLoading(true);
-        const data = await updatePassword({ token }, oldPassword, newPassword);
-        if (data !== null) {
+        const status = await updatePassword({ token }, oldPassword, newPassword);
+        if (status === 200) {
           setUpdateOk(true);
-          setUserDetails(data);
-        } else if (data === null) {
+        } else {
           setErrorUpdate(true);
         }
         setLoading(false);

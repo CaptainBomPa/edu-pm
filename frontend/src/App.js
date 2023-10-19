@@ -7,6 +7,7 @@ import Nopage from "../src/pages/NoPage";
 import UserSettings from "../src/pages/UserSettings";
 import { getUserAvatar, getUserInfo } from "./service/UsersInfo";
 import UserStoryTable from "./components/UserStoryTable";
+import axios from "axios";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -14,9 +15,12 @@ function App() {
   const [userAvatar, setUserAvatar] = useState();
   const navigate = useNavigate();
 
+  axios.defaults.headers.common["Content-Type"] = "application/json";
   const { token, setToken } = useToken();
   if (!token) {
     return <Login setToken={setToken} navigate={navigate} />;
+  } else {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
 
   if (!userDetails) {

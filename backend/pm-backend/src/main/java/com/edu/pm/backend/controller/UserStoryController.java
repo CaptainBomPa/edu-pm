@@ -19,12 +19,12 @@ public class UserStoryController {
 
     private final UserStoryService userStoryService;
 
-    @GetMapping(value = "/userStory/get-all")
+    @GetMapping(value = "/userStory/get-all", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Collection<UserStoryDTO>> getAll() {
         return ResponseEntity.ok(userStoryService.findAll());
     }
 
-    @DeleteMapping(value = "/userStory/delete/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @DeleteMapping(value = "/userStory/delete/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserStoryDTO> delete(@PathVariable("id") Integer userStoryId) {
         return ResponseEntity.ok(userStoryService.remove(userStoryId));
     }
@@ -44,7 +44,7 @@ public class UserStoryController {
         return ResponseEntity.ok(userStoryService.add(dto));
     }
 
-    @PostMapping(value = "/userStory/getById", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/userStory/getById", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserStoryDTO> getById(@RequestBody IdentityDTO dto) {
         return ResponseEntity.ok(userStoryService.findByIdDTO(dto.getId()));
     }
