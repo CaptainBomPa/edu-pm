@@ -24,6 +24,7 @@ public class UserStoryDTO {
     private Integer storyPoints;
     private Collection<TaskDTO> tasks;
     private UserStoryState state;
+    private TeamDTO team;
     private boolean blocked;
     private String blockReason;
 }

@@ -28,6 +28,10 @@ public class IterationService {
     private final UserStoryCache userStoryCache;
     private final TaskRepository taskRepository;
 
+    public Collection<Iteration> getAll() {
+        return repository.findAll();
+    }
+
     /**
      * Iteration is nullable. If not given, then it takes the current iteration
      * Username is nullable. If not given, then in takes all user stories for all teams.

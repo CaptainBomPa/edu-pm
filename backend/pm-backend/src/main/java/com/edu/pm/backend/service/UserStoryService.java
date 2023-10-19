@@ -6,6 +6,8 @@ import com.edu.pm.backend.commons.mappers.FeatureMapper;
 import com.edu.pm.backend.commons.mappers.UserStoryMapper;
 import com.edu.pm.backend.model.Feature;
 import com.edu.pm.backend.model.UserStory;
+import com.edu.pm.backend.repository.IterationRepository;
+import com.edu.pm.backend.repository.TeamRepository;
 import com.edu.pm.backend.repository.UserRepository;
 import com.edu.pm.backend.repository.cache.FeatureCache;
 import com.edu.pm.backend.repository.cache.UserStoryCache;
@@ -29,6 +31,8 @@ public class UserStoryService {
     private final UserStoryCache userStoryCache;
     private final FeatureCache featureCache;
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
+    private final IterationRepository iterationRepository;
 
     public UserStoryDTO add(UserStoryDTO dto) {
         UserStory userStory = dtoToModel(dto);
@@ -44,15 +48,33 @@ public class UserStoryService {
         userStoryFromDB.setUserStoryName(dto.getUserStoryName());
         userStoryFromDB.setDescription(dto.getDescription());
         userStoryFromDB.setFeature(FeatureMapper.dtoToModel(dto.getFeature()));
-        userStoryFromDB.setAssignedUser(userRepository.findById(dto.getAssignedUser().getId()).orElseThrow());
         userStoryFromDB.setStoryPoints(dto.getStoryPoints());
         userStoryFromDB.setState(dto.getState());
+
+        if (dto.getAssignedUser() != null) {
+            userStoryFromDB.setAssignedUser(userRepository.findById(dto.getAssignedUser().getId()).orElseThrow());
+        } else {
+            userStoryFromDB.setAssignedUser(null);
+        }
+
         if (!dto.isBlocked()) {
             userStoryFromDB.setBlocked(false);
             userStoryFromDB.setBlockReason(null);
         } else {
             userStoryFromDB.setBlocked(true);
             userStoryFromDB.setBlockReason(dto.getBlockReason());
+        }
+
+        if (dto.getTeam() != null) {
+            userStoryFromDB.setTeam(teamRepository.findById(dto.getTeam().getId()).orElseThrow());
+        } else {
+            userStoryFromDB.setTeam(null);
+        }
+
+        if (dto.getIteration() != null) {
+            userStoryFromDB.setIteration(iterationRepository.findById(dto.getIteration().getItNumber()).orElseThrow());
+        } else {
+            userStoryFromDB.setIteration(null);
         }
 
         return modelToDTO(userStoryCache.add(userStoryFromDB));

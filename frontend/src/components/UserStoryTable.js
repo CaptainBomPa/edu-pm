@@ -216,19 +216,31 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, userDetails, handleDelete, token, data, setData } = props;
+  const {
+    numSelected,
+    userDetails,
+    handleDelete,
+    token,
+    data,
+    setData,
+    currentTeamId,
+    currentIterationId
+  } = props;
 
   const [openAdd, setOpenAdd] = useState(false);
 
   const handleAddUserStory = () => {
     setOpenAdd(!openAdd);
-  }
+  };
 
   const handleAddUpdateRow = (newRow) => {
-    const updatedData = [...data, newRow];
-    setData(updatedData);
-    setOpenAdd(false);
-  }
+    if (currentTeamId === newRow.assignedUser.team.id && 
+        currentIterationId === newRow.iteration.itNumber) {
+      const updatedData = [...data, newRow];
+      setData(updatedData);
+      setOpenAdd(false);
+    }
+  };
 
   return (
     <Toolbar
@@ -256,16 +268,15 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Iteration 12 {userDetails?.team?.teamName}
+          Iteration {data[0]?.iteration.itNumber} {userDetails?.team?.teamName}
           <Tooltip title="Add new User Story">
-          <IconButton>
-                  <AddCircleOutlineIcon
-                    sx={{ color: "green" }}
-                    onClick={() => handleAddUserStory()}
-                  />
-                </IconButton>
+            <IconButton>
+              <AddCircleOutlineIcon
+                sx={{ color: "green" }}
+                onClick={() => handleAddUserStory()}
+              />
+            </IconButton>
           </Tooltip>
-          
         </Typography>
       )}
 
@@ -277,7 +288,14 @@ function EnhancedTableToolbar(props) {
         </Tooltip>
       )}
 
-      {openAdd && <UserStoryEditDialog setOpen={setOpenAdd} edit={false} token={token} handleChangeUpdateRow={handleAddUpdateRow} />}
+      {openAdd && (
+        <UserStoryEditDialog
+          setOpen={setOpenAdd}
+          edit={false}
+          token={token}
+          handleChangeUpdateRow={handleAddUpdateRow}
+        />
+      )}
     </Toolbar>
   );
 }
@@ -302,7 +320,7 @@ export default function UserStoryTable(props) {
       });
   }, [token]);
 
-  console.log(data)
+  console.log(data);
 
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("userStoryNameId");
@@ -499,9 +517,17 @@ export default function UserStoryTable(props) {
   };
 
   const handleUpdateRow = (updatedRow) => {
-    const updatedData = data.map((row) => (row.id === updatedRow.id ? updatedRow : row));
-    setData(updatedData);
-  }
+    if (userDetails?.team?.id === updatedRow.team.id &&  
+        data[0]?.iteration?.itNumber === updatedRow.iteration.itNumber) {
+      const updatedData = data.map((row) =>
+        row.id === updatedRow.id ? updatedRow : row
+      );
+      setData(updatedData);
+    } else {
+      const updatedData = data.filter((row) => row.id !== updatedRow.id);
+      setData(updatedData);
+    }
+  };
 
   return (
     <Box sx={{ width: "100% - 64px", marginLeft: "64px", marginTop: "64px" }}>
@@ -514,6 +540,8 @@ export default function UserStoryTable(props) {
             token={token}
             data={data}
             setData={setData}
+            currentTeamId={userDetails?.team?.id}
+            currentIterationId={data[0]?.iteration?.itNumber}
           />
           <TableContainer>
             <Table
@@ -587,10 +615,12 @@ function Row(props) {
   const handleUpdateTaskList = (newTask) => {
     const updatedTasks = [...tasks, newTask];
     setTasks(updatedTasks);
-  }
+  };
 
   const handleUpdateTaskFromList = (updatedTask) => {
-    const updatedTaskIndex = tasks.findIndex((task) => task.id === updatedTask.id);
+    const updatedTaskIndex = tasks.findIndex(
+      (task) => task.id === updatedTask.id
+    );
     if (updatedTaskIndex !== -1) {
       const updatedTasks = [...tasks];
       updatedTasks[updatedTaskIndex] = updatedTask;
@@ -605,15 +635,14 @@ function Row(props) {
   };
 
   const handleChangeUpdateRow = (updatedRow) => {
-    handleUpdateRow(updatedRow)
-      setOpenEdit(false); 
-  }
-
+    handleUpdateRow(updatedRow);
+    setOpenEdit(false);
+  };
 
   const [taskToEdit, setTaskToEdit] = useState();
 
   const handleTaskEdit = (taskRow) => {
-    setTaskToEdit(taskRow)
+    setTaskToEdit(taskRow);
     setTaskOpenEdit(!taskOpenEdit);
   };
 
@@ -656,7 +685,15 @@ function Row(props) {
           handleUpdateTaskList={handleUpdateTaskList}
         />
       )}
-      {openEdit && <UserStoryEditDialog setOpen={setOpenEdit} edit={true} userStory={row} token={token} handleChangeUpdateRow={handleChangeUpdateRow} />}
+      {openEdit && (
+        <UserStoryEditDialog
+          setOpen={setOpenEdit}
+          edit={true}
+          userStory={row}
+          token={token}
+          handleChangeUpdateRow={handleChangeUpdateRow}
+        />
+      )}
       <TableRow
         hover
         role="checkbox"

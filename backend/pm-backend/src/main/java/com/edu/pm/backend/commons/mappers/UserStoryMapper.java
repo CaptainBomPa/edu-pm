@@ -24,6 +24,9 @@ public class UserStoryMapper {
         if (userStory.getAssignedUser() != null) {
             builder.assignedUser(UserMapper.modelToDTO(userStory.getAssignedUser()));
         }
+        if (userStory.getTeam() != null) {
+            builder.team(TeamMapper.modelToDTO(userStory.getTeam()));
+        }
         return builder.build();
     }
 
@@ -42,6 +45,9 @@ public class UserStoryMapper {
         }
         if (dto.getAssignedUser() != null) {
             builder.assignedUser(UserMapper.dtoToModel(dto.getAssignedUser()));
+        }
+        if (dto.getTeam() != null) {
+            builder.team(TeamMapper.dtoToModel(dto.getTeam()));
         }
         return builder.build();
     }

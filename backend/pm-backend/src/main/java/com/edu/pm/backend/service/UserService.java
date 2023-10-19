@@ -1,5 +1,6 @@
 package com.edu.pm.backend.service;
 
+import com.edu.pm.backend.commons.dto.ProjectDTO;
 import com.edu.pm.backend.commons.dto.UserDTO;
 import com.edu.pm.backend.commons.dto.auth.ChangePasswordDTO;
 import com.edu.pm.backend.commons.mappers.UserMapper;
@@ -7,6 +8,8 @@ import com.edu.pm.backend.model.Project;
 import com.edu.pm.backend.model.Team;
 import com.edu.pm.backend.model.User;
 import com.edu.pm.backend.model.enums.Role;
+import com.edu.pm.backend.repository.ProjectRepository;
+import com.edu.pm.backend.repository.TeamRepository;
 import com.edu.pm.backend.repository.UserRepository;
 import com.edu.pm.backend.repository.cache.ProjectCache;
 import com.edu.pm.backend.repository.cache.TeamCache;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -25,7 +29,9 @@ public class UserService {
 
     private final UserRepository repository;
     private final TeamCache teamCache;
+    private final TeamRepository teamRepository;
     private final ProjectCache projectCache;
+    private final ProjectRepository projectRepository;
     private final PasswordEncoder passwordEncoder;
     private final AvatarService avatarService;
 
@@ -42,12 +48,25 @@ public class UserService {
     }
 
     public UserDTO addUser(UserDTO userDTO) {
-        User user = User.builder()
+        User.UserBuilder userBuilder = User.builder()
                 .username(userDTO.getUsername())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
-                .roles(userDTO.getRoles())
-                .build();
-        User savedUser = repository.save(user);
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .roles(userDTO.getRoles());
+        if (userDTO.getTeam() != null) {
+            userBuilder.team(teamRepository.findById(userDTO.getTeam().getId()).orElseThrow());
+        }
+//        if (userDTO.getProjects() != null) {
+//            List<Project> projects = new ArrayList<>();
+//            for (ProjectDTO projectDTO : userDTO.getProjects()) {
+//                projectRepository.findById(projectDTO.getId()).ifPresent(projects::add);
+//            }
+//            userBuilder.projects(projects);
+//        }
+
+
+        User savedUser = repository.save(userBuilder.build());
         return UserMapper.modelToDTO(savedUser);
     }
 

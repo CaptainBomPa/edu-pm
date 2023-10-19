@@ -44,6 +44,50 @@ export async function getAllUsers(token) {
   }
 }
 
+export async function getAllTeams(token) {
+  try {
+    const response = await fetch("http://localhost:8080/api/team/get-all", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    } else {
+      console.error(`Błąd HTTP: ${response.status}`);
+      return null;
+    }
+  } catch (error) {
+    console.error("Błąd podczas pobierania drużyn:", error);
+    return null;
+  }
+}
+
+export async function getAllIterations(token) {
+  try {
+    const response = await fetch("http://localhost:8080/api/iteration/get-all", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    } else {
+      console.error(`Błąd HTTP: ${response.status}`);
+      return null;
+    }
+  } catch (error) {
+    console.error("Błąd podczas pobierania iteracji:", error);
+    return null;
+  }
+}
+
 export async function updateStory(story, token) {
   try {
     const response = await fetch("http://localhost:8080/api/userStory/update", {

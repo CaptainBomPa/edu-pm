@@ -14,6 +14,8 @@ import {
   getAllUsers,
   updateStory,
   addUserStory,
+  getAllTeams,
+  getAllIterations,
 } from "../service/UserStoryEdit";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Box, Typography } from "@mui/material";
@@ -50,11 +52,14 @@ export default function UserStoryEditDialog(props) {
   const [selectedFeature, setSelectedFeature] = useState(
     userStory ? userStory.feature : null
   );
+  const [selectedTeam, setSelectedTeam] = useState(
+    userStory ? userStory.team : null
+  );
   const [selectedOwner, setSelectedOwner] = useState(
     userStory ? userStory.assignedUser : null
   );
   const [storyState, setStoryState] = useState(
-    userStory ? userStory.state : null
+    userStory ? userStory.state : "NEW"
   );
   const [storyDescription, setStoryDescription] = useState(
     userStory ? userStory.description : null
@@ -65,9 +70,20 @@ export default function UserStoryEditDialog(props) {
   const [storyBlockReason, setStoryBlockReason] = useState(
     userStory ? userStory.blockReason : null
   );
+  const [storyIteration, setStoryIteration] = useState(
+    userStory ? userStory.iteration : null
+  );
 
   const [features, setFeatures] = useState([]);
   const [owners, setOwners] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [iterations, setIterations] = useState([]);
+  const [visibleOwners, setVisibleOwners] = useState([]);
+  
+  // if (selectedOwner && teams ) {
+  //   setVisibleOwners(owners.filter((owner) => owner.team.id === selectedTeam.id))
+  // }
+
   useEffect(() => {
     getAllFeatures(token)
       .then((features) => {
@@ -76,14 +92,26 @@ export default function UserStoryEditDialog(props) {
       .catch((error) => {
         console.error(error);
       });
+    getAllTeams(token)
+      .then((teams) => {
+        setTeams(teams);
+    });
     getAllUsers(token)
       .then((users) => {
         setOwners(users);
+        setVisibleOwners(users.filter((user) => user.team?.id === selectedTeam?.id))
       })
-      .catch((error) => {
-        console.error(error);
-      });
+    getAllIterations(token)
+      .then((iterations) => {
+        setIterations(iterations);
+      })
   }, [token]);
+
+  const handleVisibleOwners = (team) => {
+    if (selectedTeam === team) return;
+    setSelectedOwner(null);
+    setVisibleOwners(owners.filter((owner) => owner.team.id === team.id));
+  }
 
   const handleUpdate = () => {
     const updatedStory = {
@@ -96,6 +124,8 @@ export default function UserStoryEditDialog(props) {
       description: storyDescription,
       blocked: storyBlocked,
       blockReason: storyBlockReason,
+      team: selectedTeam,
+      iteration: storyIteration,
     };
 
     updateStory(updatedStory, token)
@@ -116,6 +146,12 @@ export default function UserStoryEditDialog(props) {
       storyPoints,
       feature: selectedFeature,
       assignedUser: selectedOwner,
+      state: storyState,
+      description: storyDescription,
+      blocked: storyBlocked,
+      blockReason: storyBlockReason,
+      team: selectedTeam,
+      iteration: storyIteration,
     };
 
     addUserStory(newStory, token)
@@ -202,6 +238,29 @@ export default function UserStoryEditDialog(props) {
                 />
                 <Autocomplete
                   margin="normal"
+                  id="iteration-autocomplete"
+                  options={iterations.sort((a, b) => {
+                    const numberA = parseInt(a.itNumber, 10);
+                    const numberB = parseInt(b.itNumber, 10);
+                    return numberB - numberA;
+                  })}
+                  fullWidth
+                  getOptionLabel={(option) => "Iteration " + option.itNumber}
+                  isOptionEqualToValue={(option, value) =>
+                    option.itNumber === value.itNumber
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Iteration" color="pmLoginTheme" />
+                  )}
+                  sx={{ marginTop: "12px" }}
+                  color="pmLoginTheme"
+                  value={storyIteration}
+                  onChange={(e, newValue) => {
+                    setStoryIteration(newValue)
+                  }}
+                />
+                <Autocomplete
+                  margin="normal"
                   id="team-feature-autocomplete"
                   options={features}
                   fullWidth
@@ -223,8 +282,28 @@ export default function UserStoryEditDialog(props) {
                 />
                 <Autocomplete
                   margin="normal"
+                  id="team-autocomplete"
+                  options={teams}
+                  fullWidth
+                  getOptionLabel={(option) => option.teamName}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Team" color="pmLoginTheme" />
+                  )}
+                  sx={{ marginTop: "12px" }}
+                  color="pmLoginTheme"
+                  value={selectedTeam}
+                  onChange={(e, newValue) => {
+                    handleVisibleOwners(newValue)
+                    setSelectedTeam(newValue)
+                  }}
+                />
+                <Autocomplete
+                  margin="normal"
                   id="owner-autocomplete"
-                  options={owners}
+                  options={visibleOwners}
                   fullWidth
                   getOptionLabel={(owner) =>
                     owner.firstName + " " + owner.lastName
@@ -243,7 +322,7 @@ export default function UserStoryEditDialog(props) {
                       }}
                     />
                   )}
-                  sx={{ marginTop: "20px" }}
+                  sx={{ marginTop: "12px" }}
                   color="pmLoginTheme"
                   value={selectedOwner}
                   onChange={(e, newValue) => setSelectedOwner(newValue)}
@@ -334,13 +413,13 @@ export default function UserStoryEditDialog(props) {
               <DialogContent
                 fullWidth
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
+                  display: "flex",
+                  flexDirection: "column",
                   flex: 1,
                 }}
               >
                 <TextField
-                label="Description"
+                  label="Description"
                   color="pmLoginTheme"
                   margin="normal"
                   fullWidth
@@ -348,7 +427,7 @@ export default function UserStoryEditDialog(props) {
                   value={storyDescription}
                   onChange={(e) => setStoryDescription(e.target.value)}
                   sx={{
-                    height: { sm: 1000, md: 450 },
+                    height: { sm: 1000, md: 500 },
                     "& .MuiInputBase-root": {
                       position: "relative",
                       height: "100%",

@@ -11,10 +11,10 @@ VALUES ('New search algorithm to beat Google', 'We need to aim high, and beat th
 INSERT INTO TEAM (TEAM_NAME)
 VALUES ('Team Bulldogs'),
        ('Team Lions'),
-       ('Team Eagles'),
-       ('Team Cats'),
-       ('Team Snakes'),
-       ('Team Spiders');
+       ('Team Eagles');
+--        ('Team Cats'),
+--        ('Team Snakes'),
+--        ('Team Spiders');
 
 INSERT INTO ITERATION(START_DATE, END_DATE)
 VALUES ('2023-09-01T12:00:01', '2023-09-14T12:00:00'),
@@ -25,7 +25,17 @@ VALUES ('2023-09-01T12:00:01', '2023-09-14T12:00:00'),
 
 INSERT INTO USERS (USERNAME, PASSWORD, TEAM_ID, ROLES, FIRST_NAME, LAST_NAME)
 VALUES ('admin', '$2a$10$R2rNkxslm96X9a/hOUx05..X8EmTJ89tjlyylGvBlAbN0qAQNKiAS', 1, 'ADMINISTRATOR', 'Jan', 'Kowalski'),
-       ('user', '$2a$10$.bdr4pJ94f3sAUTBzy2G9eADtbMPyohOzo397uXUhKJ6EQZ93fqAK', 4, 'USER_READ', 'Adam', 'Nowak');
+       ('user', '$2a$10$.bdr4pJ94f3sAUTBzy2G9eADtbMPyohOzo397uXUhKJ6EQZ93fqAK', 1, 'USER_WRITE', 'Adam', 'Nowak'),
+       ('user1', '$2a$10$rCCbi2RNkNPycu8WIJyKCeidli6kvZEnU7XQHsUtiyz/Li7f0yp2e', 1,'USER_WRITE', 'Krzysztof', 'Nowak'),
+       ('user2', '$2a$10$QqOTJhnIGGSg/mqoxkScxutbWudW4hFTWLK0tEhHAKWGET5wHplaS', 1, 'USER_WRITE', 'John', 'Smith'),
+       ('user3', '$2a$10$AULhsFKeUaSmGH2RVzgmWOp.LVqN.GCK4Tr8QeqIGxRHwP7/m0AfC', 2, 'USER_WRITE', 'Michael', 'Anderson'),
+       ('user4', '$2a$10$Yx70ZocViQHQ/3GeBkyoae3zDCdGnig7uxRR6vaXuouc7LpLzWw.6', 2, 'USER_WRITE', 'Christopher', 'Martinez'),
+       ('user5', '$2a$10$QrjBFWm9SjwpBFFCbb.n.ujAIij8392v7Gtazf1R6YnRyI2N.Rmwy', 2, 'USER_WRITE', 'Sophia', 'Brown'),
+       ('user6', '$2a$10$.yg0sg/fPvEHTV3jqYF4VuhWY5H34IIPy.y/iWZWsWazKkemibGkq', 2, 'USER_WRITE', 'Jennifer', 'Miller'),
+       ('user7', '$2a$10$Znw2pC9ZSYy1NYiXUaYnleyLe8y6q2wvovG/J4SsZRSpiCNqtKsre', 3, 'USER_WRITE', 'Benjamin', 'Hall'),
+       ('user8', '$2a$10$6mw/SkwJwUBR/fAYL09gq.VwLqy9TotXOoO7DqCuwy0uGIao01vbi', 3, 'USER_WRITE', 'Emma', 'Clark'),
+       ('user9', '$2a$10$/ZONodOoDdOCxllx7diEnOspRuffJpjUCyIpGBi1KuosIHViCzsjO', 3, 'USER_WRITE', 'Joshua', 'Walker'),
+       ('user10', '$2a$10$gSJ2MxbT93qOk4KxpSTEPe9gZ3swguhoE5ltA608KWoLiw3OD8oOW', 3, 'USER_WRITE', 'Jacob', 'Turner');
 
 -- INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, ITERATION_IT_NUMBER, STORY_POINTS, ASSIGNED_USER_ID,
 --                         TEAM_ID)
