@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export default function UserLogin() {
 }
 
@@ -5,22 +7,18 @@ export async function loginUser(credentials, setErrorOpen, setLoading, setErrorR
   setLoading(true);
   setErrorOpen(false);
   setErrorResponse(false);
+  
   try {
-    const response = await fetch(
-        "http://localhost:8080/api/auth/authenticate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
-        }
+    const response = await axios.post(
+      "http://localhost:8080/api/auth/authenticate", credentials
     );
-    if (response.ok) {
-      const data = await response.json();
-      return data;
+    if (response.status === 200) {
+      return response.data;
     } else if (response.status === 401) {
       setErrorOpen(true);
+    } else {
+      setErrorResponse(true)
+      console.error(`Error ${response.status}`);
     }
   } catch (error) {
     setErrorResponse(true)

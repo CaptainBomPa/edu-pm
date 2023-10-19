@@ -321,8 +321,6 @@ export default function UserStoryTable(props) {
       });
   }, [token]);
 
-  console.log("przekazane tutaj",  data);
-
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("userStoryNameId");
   const [selected, setSelected] = React.useState([]);
