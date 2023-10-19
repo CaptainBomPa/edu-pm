@@ -10,6 +10,7 @@ import com.edu.pm.backend.model.User;
 import com.edu.pm.backend.model.UserStory;
 import com.edu.pm.backend.repository.IterationRepository;
 import com.edu.pm.backend.repository.TaskRepository;
+import com.edu.pm.backend.repository.TeamRepository;
 import com.edu.pm.backend.repository.cache.UserStoryCache;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class IterationService {
     private final UserService userService;
     private final UserStoryCache userStoryCache;
     private final TaskRepository taskRepository;
+    private final TeamRepository teamRepository;
 
     public Collection<Iteration> getAll() {
         return repository.findAll();
@@ -86,5 +88,13 @@ public class IterationService {
                 .toList();
     }
 
-
+    public Collection<UserStoryDTO> getCurrentIterationForTeamId(Integer teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow();
+        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
+        return getUserStoriesForIterationAndTeam(getCurrentIteration(), team)
+                .stream()
+                .map(UserStoryMapper::modelToDTO)
+                .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
+                .toList();
+    }
 }

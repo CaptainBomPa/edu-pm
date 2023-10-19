@@ -26,8 +26,8 @@ public class IterationController {
     }
 
     @GetMapping(value = "/iteration/currentForTeamId/{id}")
-    public ResponseEntity<Collection<UserStoryDTO>> getUserStoriesForTeamId(@PathVariable("id") final String teamId) {
-        return null;
+    public ResponseEntity<Collection<UserStoryDTO>> getUserStoriesForTeamId(@PathVariable("id") final Integer teamId) {
+        return ResponseEntity.ok(iterationService.getCurrentIterationForTeamId(teamId));
     }
 
     @GetMapping(value = "/iteration/currentAll")
