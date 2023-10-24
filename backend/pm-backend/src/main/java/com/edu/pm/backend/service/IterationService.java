@@ -97,4 +97,15 @@ public class IterationService {
                 .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
                 .toList();
     }
+
+    public Collection<UserStoryDTO> getStoriesForIterationAndTeam(Integer iterationId, Integer teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow();
+        Iteration iteration = repository.findById(iterationId).orElseThrow();
+        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
+        return getUserStoriesForIterationAndTeam(iteration, team)
+                .stream()
+                .map(UserStoryMapper::modelToDTO)
+                .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
+                .toList();
+    }
 }

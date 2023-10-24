@@ -148,7 +148,7 @@ export default function AppNavBar({ userDetails, userAvatar, handleLogout }) {
                 src={`data:image/png;base64,${userAvatar.image}`}
               />
             ) : (
-              <Avatar sx={{ bgcolor: "gray" }}>{avatar}</Avatar>
+              <Avatar sx={{ bgcolor: "gray" }}>{typeof avatar === "string" ? avatar : ""}</Avatar>
             )}
             <UsernameButton
               firstName={userDetails?.firstName}
@@ -173,14 +173,14 @@ export default function AppNavBar({ userDetails, userAvatar, handleLogout }) {
           <Divider />
           <DrawerItem
             linkTo="/current-iteration"
-            itemText="My Current Iteration"
+            itemText="My Iteration"
             handleDrawerClose={handleDrawerClose}
             open={open}
             icon={<AssignmentOutlinedIcon />}
           />
           <DrawerItem
-            linkTo="/others-iteration"
-            itemText="Other Teams Iteration"
+            linkTo="/iterations"
+            itemText="Iterations"
             handleDrawerClose={handleDrawerClose}
             open={open}
             icon={<AssignmentIcon />}

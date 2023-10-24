@@ -154,7 +154,7 @@ function EnhancedTableHead(props) {
     <ThemeProvider theme={getLoginTheme()}>
       <TableHead className="tableHead">
         <TableRow>
-          <TableCell className="tableCell resizable" sx={{ width: "3%" }} />
+          <TableCell className="tableCell resizable" sx={{ width: "64px" }} />
           <TableCell padding="checkbox" className="tableCell resizable">
             <Checkbox
               color="pmLoginTheme"
@@ -166,7 +166,7 @@ function EnhancedTableHead(props) {
               }}
             />
           </TableCell>
-          <TableCell className="tableCell resizable" sx={{ width: "3%" }} />
+          <TableCell className="tableCell resizable" sx={{ width: "64px" }} />
           {headCells.map((headCell, colIndex) => (
             <TableCell
               className="tableCell resizable"
@@ -225,7 +225,9 @@ function EnhancedTableToolbar(props) {
     data,
     setData,
     currentTeamId,
-    currentIterationId
+    currentIterationId,
+    iteration,
+    team,
   } = props;
 
   const [openAdd, setOpenAdd] = useState(false);
@@ -269,12 +271,11 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Iteration {data && data[0]?.iteration.itNumber} {userDetails?.team?.teamName}
+          Iteration {iteration?.itNumber} {team?.teamName}
           <Tooltip title="Add new User Story">
-            <IconButton>
+            <IconButton onClick={() => handleAddUserStory()}>
               <AddCircleOutlineIcon
                 sx={{ color: "green" }}
-                onClick={() => handleAddUserStory()}
               />
             </IconButton>
           </Tooltip>
@@ -283,8 +284,8 @@ function EnhancedTableToolbar(props) {
 
       {numSelected > 0 && (
         <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon onClick={handleDelete} />
+          <IconButton onClick={handleDelete}>
+            <DeleteIcon  />
           </IconButton>
         </Tooltip>
       )}
@@ -306,20 +307,9 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function UserStoryTable(props) {
-  const { token, userDetails } = props;
+  const { token, userDetails, data, setData, team, iteration } = props;
 
-  const [data, setData] = useState([]);
   const [visibleRows, setVisibleRows] = useState([]);
-
-  useEffect(() => {
-    getUserStoriesIteration(token)
-      .then((result) => {
-        setData(result);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [token]);
 
   const [order, setOrder] = React.useState("desc");
   const [orderBy, setOrderBy] = React.useState("userStoryNameId");
@@ -539,8 +529,10 @@ export default function UserStoryTable(props) {
             token={token}
             data={data}
             setData={setData}
-            currentTeamId={userDetails?.team?.id}
-            currentIterationId={data && data[0]?.iteration?.itNumber}
+            currentTeamId={team?.id}
+            currentIterationId={iteration?.itNumber}
+            team={team}
+            iteration={iteration}
           />
           <TableContainer>
             <Table
@@ -559,11 +551,14 @@ export default function UserStoryTable(props) {
                 onClickResizeColumn={onClickResizeColumn}
                 columnRefs={columnRefs}
                 setColumnRefs={setColumnRefs}
+                iteration={iteration}
+                team={team}
               />
               <TableBody>
                 {visibleRows.map((row, index) => {
                   return (
                     <Row
+                      key={row.id}
                       row={row}
                       index={index}
                       isSelected={isSelected}
@@ -705,7 +700,7 @@ function Row(props) {
       >
         <TableCell
           sx={{
-            width: "3%",
+            width: "64px",
             padding: "0",
             textAlign: "center",
             verticalAlign: "middle",
@@ -723,7 +718,7 @@ function Row(props) {
           padding="checkbox"
           className="tableCell resizable"
           sx={{
-            width: "3%",
+            width: "64px",
             padding: "0",
             textAlign: "center",
             verticalAlign: "middle",
@@ -741,16 +736,15 @@ function Row(props) {
         <TableCell
           className="tableCell resizable"
           sx={{
-            width: "3%",
+            width: "64px",
             padding: "0",
             textAlign: "center",
             verticalAlign: "middle",
           }}
         >
-          <IconButton>
+          <IconButton onClick={() => handleEdit(row)}>
             <ModeEditOutlineOutlinedIcon
               color="pmLoginTheme"
-              onClick={() => handleEdit(row)}
             />
           </IconButton>
         </TableCell>
@@ -829,18 +823,17 @@ function Row(props) {
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
                 Tasks
-                <IconButton>
+                <IconButton onClick={() => handleTaskAdd()}>
                   <AddCircleOutlineIcon
                     sx={{ color: "green" }}
-                    onClick={() => handleTaskAdd()}
                   />
                 </IconButton>
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ width: "3%" }} />
-                    <TableCell sx={{ width: "3%" }} />
+                    <TableCell sx={{ width: "64px" }} />
+                    <TableCell sx={{ width: "64px" }} />
                     <TableCell sx={{ width: "20%" }}>Task number</TableCell>
                     <TableCell>Title</TableCell>
                   </TableRow>
@@ -852,23 +845,22 @@ function Row(props) {
                         <TableCell
                           className="tableCell resizable"
                           sx={{
-                            width: "3%",
+                            width: "64px",
                             padding: "0",
                             textAlign: "center",
                             verticalAlign: "middle",
                           }}
                         >
-                          <IconButton>
+                          <IconButton onClick={() => handleTaskEdit(task)}>
                             <ModeEditOutlineOutlinedIcon
                               color="pmLoginTheme"
-                              onClick={() => handleTaskEdit(task)}
                             />
                           </IconButton>
                         </TableCell>
                         <TableCell
                           className="tableCell resizable"
                           sx={{
-                            width: "3%",
+                            width: "64px",
                             padding: "0",
                             textAlign: "center",
                             verticalAlign: "middle",

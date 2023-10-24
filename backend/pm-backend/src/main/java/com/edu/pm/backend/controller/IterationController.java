@@ -30,6 +30,12 @@ public class IterationController {
         return ResponseEntity.ok(iterationService.getCurrentIterationForTeamId(teamId));
     }
 
+    @GetMapping(value = "/iteration/team/{teamId}/iteration/{iterationId}")
+    public ResponseEntity<Collection<UserStoryDTO>> getStoriesForIterationAndTeam(@PathVariable("iterationId") final Integer iterationId,
+                                                                                  @PathVariable("teamId") final Integer teamId) {
+        return ResponseEntity.ok(iterationService.getStoriesForIterationAndTeam(iterationId, teamId));
+    }
+
     @GetMapping(value = "/iteration/currentAll")
     public ResponseEntity<Collection<UserStoryDTO>> getAllUserStories() {
         return ResponseEntity.ok(iterationService.getUserStories(null, null));

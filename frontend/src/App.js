@@ -8,6 +8,8 @@ import UserSettings from "../src/pages/UserSettings";
 import { getUserAvatar, getUserInfo } from "./service/UsersInfo";
 import UserStoryTable from "./components/UserStoryTable";
 import axios from "axios";
+import OtherUserStoryIterations from "./components/OtherUserStoryIterations";
+import CurrentTeamIteration from "./components/CurrentTeamIteration";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -62,7 +64,11 @@ function App() {
         <Route path="home" element={<Nopage />} />
         <Route
           path="current-iteration"
-          element={<UserStoryTable token={token} userDetails={userDetails} />}
+          element={<CurrentTeamIteration token={token} userDetails={userDetails} />}
+        />
+        <Route
+          path="iterations"
+          element={<OtherUserStoryIterations token={token} userDetails={userDetails} />}
         />
         <Route
           path="settings"

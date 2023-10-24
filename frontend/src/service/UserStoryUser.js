@@ -14,6 +14,21 @@ export async function getUserStoriesIteration(token) {
   }
 }
 
+export async function getUserStoriesIterationTeam(teamId, iterationId) {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/iteration/team/${teamId}/iteration/${iterationId}`
+    );
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error(`Error ${response.status}`);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function deleteUserStory(token, id) {
   try {
     const response = await axios.delete(
