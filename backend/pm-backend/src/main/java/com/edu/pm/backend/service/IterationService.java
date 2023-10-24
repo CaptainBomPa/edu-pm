@@ -30,6 +30,8 @@ public class IterationService {
     private final TaskRepository taskRepository;
     private final TeamRepository teamRepository;
 
+    //TODO later maybe clean this service...
+
     public Collection<Iteration> getAll() {
         return repository.findAll();
     }
@@ -104,6 +106,44 @@ public class IterationService {
         Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
         return getUserStoriesForIterationAndTeam(iteration, team)
                 .stream()
+                .map(UserStoryMapper::modelToDTO)
+                .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
+                .toList();
+    }
+
+    public Collection<UserStoryDTO> getBacklogItemsForUser(String name) {
+        User forUser = userService.findByUsername(name);
+        if (forUser != null) {
+            Team team = teamRepository.findById(forUser.getTeam().getId()).orElseThrow();
+            Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
+            return userStoryCache.getAll().stream()
+                    .filter(userStory -> userStory.getTeam() != null)
+                    .filter(userStory -> userStory.getTeam().getId().equals(team.getId()))
+                    .filter(userStory -> userStory.getIteration() == null)
+                    .map(UserStoryMapper::modelToDTO)
+                    .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
+                    .toList();
+        }
+        return null;
+    }
+
+    public Collection<UserStoryDTO> getBacklogItemsForTeamId(Integer teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow();
+        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
+        return userStoryCache.getAll().stream()
+                .filter(userStory -> userStory.getTeam() != null)
+                .filter(userStory -> userStory.getTeam().getId().equals(team.getId()))
+                .filter(userStory -> userStory.getIteration() == null)
+                .map(UserStoryMapper::modelToDTO)
+                .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
+                .toList();
+    }
+
+    public Collection<UserStoryDTO> getProjectBacklog() {
+        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
+        return userStoryCache.getAll().stream()
+                .filter(userStory -> userStory.getTeam() == null)
+                .filter(userStory -> userStory.getIteration() == null)
                 .map(UserStoryMapper::modelToDTO)
                 .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
                 .toList();

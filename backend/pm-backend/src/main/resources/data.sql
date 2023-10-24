@@ -105,6 +105,39 @@ VALUES ('Improved search result filtering',
        ('User profile customization',
         'Allowing users to customize their profiles with personal information and themes.', 1, 4, 1, 11, 3);
 
+-- backlog stories - team id 1
+INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, STORY_POINTS, TEAM_ID)
+VALUES ('Fix bugs in API', 'Do it asap', 1, 8, 1),
+       ('Fix bugs in frontend', 'Do it asap', 1, 5, 1),
+       ('Upgrade libraries in frontend', 'Do it asap', 1, 3, 1),
+       ('Upgrade libraries in backend', 'Do it asap', 1, 8, 1),
+       ('Create documentation', 'Do it asap', 1, 8, 1);
+
+-- backlog stories - team id 2
+INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, STORY_POINTS, TEAM_ID)
+VALUES ('Create more bugs in API', 'Do it asap', 1, 8, 2),
+       ('Create more bugs in frontend', 'Do it asap', 1, 5, 2),
+       ('Delete old libraries in frontend', 'Do it asap', 1, 3, 2),
+       ('Delete old libraries in backend', 'Do it asap', 1, 8, 2),
+       ('Create much more documentation', 'Do it asap', 1, 8, 2),
+       ('Write documentation for new workers', 'Do it asap', 1, 13, 2),
+       ('Meet with customer for new details', 'Do it asap', 1, 8, 2);
+
+-- backlog stories - team id 3
+INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, STORY_POINTS, TEAM_ID)
+VALUES ('Cleanup code in AP', 'Do it asap', 1, 8, 3),
+       ('Cleanup code in frontend', 'Do it asap', 1, 5, 3),
+       ('Create new build gradle', 'Do it asap', 1, 3, 3),
+       ('Fix problems in npm', 'Do it asap', 1, 8, 3),
+       ('Document everything on developer wikipedia', 'Do it asap', 1, 8, 3);
+
+-- backlog stories - project items - without team
+INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, STORY_POINTS)
+VALUES ('Think how to make more money on our project', 'Do it asap', 1, 8),
+       ('How to find more clients', 'Do it asap', 1, 5),
+       ('How to make our program more efficient', 'Do it asap', 1, 3);
+
+
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
 VALUES ('Implement Feature 1', 'Implement new feature as specified', 1),
        ('QA Testing', 'Perform quality assurance testing for Feature 1', 1),
@@ -112,7 +145,7 @@ VALUES ('Implement Feature 1', 'Implement new feature as specified', 1),
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
 VALUES ('Implement Feature 2', 'Implement new feature as specified', 2),
-    ('QA Tests', 'Conduct quality assurance tests for Feature 2', 2),
+       ('QA Tests', 'Conduct quality assurance tests for Feature 2', 2),
     ('Code Review', 'Perform a code review for Feature 2', 2);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)

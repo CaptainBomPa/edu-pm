@@ -10,6 +10,9 @@ import UserStoryTable from "./components/UserStoryTable";
 import axios from "axios";
 import OtherUserStoryIterations from "./components/OtherUserStoryIterations";
 import CurrentTeamIteration from "./components/CurrentTeamIteration";
+import BacklogCurrentUser from "./components/BacklogCurrentUser";
+import BacklogSelectTeam from "./components/BacklogSelectTeam";
+import BacklogProject from "./components/BacklogProject";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -64,11 +67,27 @@ function App() {
         <Route path="home" element={<Nopage />} />
         <Route
           path="current-iteration"
-          element={<CurrentTeamIteration token={token} userDetails={userDetails} />}
+          element={
+            <CurrentTeamIteration token={token} userDetails={userDetails} />
+          }
         />
         <Route
           path="iterations"
-          element={<OtherUserStoryIterations token={token} userDetails={userDetails} />}
+          element={
+            <OtherUserStoryIterations token={token} userDetails={userDetails} />
+          }
+        />
+        <Route
+          path="my-backlog"
+          element={<BacklogCurrentUser userDetails={userDetails} />}
+        />
+        <Route
+          path="backlogs"
+          element={<BacklogSelectTeam userDetails={userDetails} />}
+        />
+        <Route
+          path="project-backlog"
+          element={<BacklogProject userDetails={userDetails} />}
         />
         <Route
           path="settings"

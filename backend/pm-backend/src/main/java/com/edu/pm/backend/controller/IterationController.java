@@ -36,6 +36,21 @@ public class IterationController {
         return ResponseEntity.ok(iterationService.getStoriesForIterationAndTeam(iterationId, teamId));
     }
 
+    @GetMapping(value = "/iteration/backlog/currentForUser")
+    public ResponseEntity<Collection<UserStoryDTO>> getBacklogItemsForUser(Authentication authentication) {
+        return ResponseEntity.ok(iterationService.getBacklogItemsForUser(authentication.getName()));
+    }
+
+    @GetMapping(value = "/iteration/backlog/teamId/{teamId}")
+    public ResponseEntity<Collection<UserStoryDTO>> getBacklogItemsForTeam(@PathVariable("teamId") final Integer teamId) {
+        return ResponseEntity.ok(iterationService.getBacklogItemsForTeamId(teamId));
+    }
+
+    @GetMapping(value = "/iteration/backlog/project")
+    public ResponseEntity<Collection<UserStoryDTO>> getProjectBacklog() {
+        return ResponseEntity.ok(iterationService.getProjectBacklog());
+    }
+
     @GetMapping(value = "/iteration/currentAll")
     public ResponseEntity<Collection<UserStoryDTO>> getAllUserStories() {
         return ResponseEntity.ok(iterationService.getUserStories(null, null));

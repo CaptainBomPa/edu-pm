@@ -28,7 +28,6 @@ import TaskEditDialog from "./TaskEditDialog";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveIcon from "@mui/icons-material/Remove";
 import {
-  getUserStoriesIteration,
   deleteUserStory,
   deleteMultipleUserStories,
   deleteTask,
@@ -237,7 +236,7 @@ function EnhancedTableToolbar(props) {
   };
 
   const handleAddUpdateRow = (newRow) => {
-    if (currentTeamId === newRow.assignedUser.team.id && 
+    if (currentTeamId === newRow.assignedUser?.team?.id && 
         currentIterationId === newRow.iteration.itNumber) {
       const updatedData = [...data, newRow];
       setData(updatedData);
@@ -271,7 +270,7 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          Iteration {iteration?.itNumber} {team?.teamName}
+          {iteration ? "Iteration" : "Backlog"} {iteration?.itNumber} {team?.teamName}
           <Tooltip title="Add new User Story">
             <IconButton onClick={() => handleAddUserStory()}>
               <AddCircleOutlineIcon
@@ -506,7 +505,7 @@ export default function UserStoryTable(props) {
   };
 
   const handleUpdateRow = (updatedRow) => {
-    if (userDetails?.team?.id === updatedRow.team.id &&  
+    if (userDetails?.team?.id === updatedRow.team?.id &&  
         data[0]?.iteration?.itNumber === updatedRow.iteration.itNumber) {
       const updatedData = data.map((row) =>
         row.id === updatedRow.id ? updatedRow : row
@@ -790,7 +789,7 @@ function Row(props) {
             textOverflow: "ellipsis",
           }}
         >
-          {row?.feature.featureName}
+          {row?.feature?.featureName}
         </TableCell>
         <TableCell
           align="right"
@@ -801,7 +800,7 @@ function Row(props) {
             textOverflow: "ellipsis",
           }}
         >
-          {row?.assignedUser.firstName} {row?.assignedUser.lastName}
+          {row?.assignedUser?.firstName} {row?.assignedUser?.lastName}
         </TableCell>
         <TableCell
           align="right"

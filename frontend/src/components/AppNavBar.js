@@ -23,6 +23,11 @@ import { ThemeProvider } from "@emotion/react";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import TipsAndUpdatesOutlinedIcon from "@mui/icons-material/TipsAndUpdatesOutlined";
+import BackpackIcon from "@mui/icons-material/Backpack";
+import BackpackOutlinedIcon from "@mui/icons-material/BackpackOutlined";
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+import BackpackTwoToneIcon from "@mui/icons-material/BackpackTwoTone";
 
 const drawerWidth = 240;
 
@@ -148,7 +153,9 @@ export default function AppNavBar({ userDetails, userAvatar, handleLogout }) {
                 src={`data:image/png;base64,${userAvatar.image}`}
               />
             ) : (
-              <Avatar sx={{ bgcolor: "gray" }}>{typeof avatar === "string" ? avatar : ""}</Avatar>
+              <Avatar sx={{ bgcolor: "gray" }}>
+                {typeof avatar === "string" ? avatar : ""}
+              </Avatar>
             )}
             <UsernameButton
               firstName={userDetails?.firstName}
@@ -187,12 +194,50 @@ export default function AppNavBar({ userDetails, userAvatar, handleLogout }) {
           />
           <Divider />
           <DrawerItem
+            linkTo="/my-backlog"
+            itemText="My Backlog"
+            handleDrawerClose={handleDrawerClose}
+            open={open}
+            icon={<BackpackOutlinedIcon />}
+          />
+          <DrawerItem
+            linkTo="/backlogs"
+            itemText="Backlogs"
+            handleDrawerClose={handleDrawerClose}
+            open={open}
+            icon={<BackpackIcon />}
+          />
+          <DrawerItem
+            linkTo="/project-backlog"
+            itemText="Project Backlog"
+            handleDrawerClose={handleDrawerClose}
+            open={open}
+            icon={<BackpackTwoToneIcon />}
+          />
+          <Divider />
+          <DrawerItem
             linkTo="/features"
             itemText="Feature list"
             handleDrawerClose={handleDrawerClose}
             open={open}
             icon={<TipsAndUpdatesOutlinedIcon />}
           />
+          <Divider />
+          <DrawerItem
+            linkTo="/team-stats"
+            itemText="Team Statistics"
+            handleDrawerClose={handleDrawerClose}
+            open={open}
+            icon={<AssessmentOutlinedIcon />}
+          />
+          <DrawerItem
+            linkTo="/project-stats"
+            itemText="Project Statistics"
+            handleDrawerClose={handleDrawerClose}
+            open={open}
+            icon={<AssessmentIcon />}
+          />
+          <Divider />
         </Drawer>
       </ThemeProvider>
     </Box>
