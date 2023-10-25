@@ -2,16 +2,26 @@ import { createTheme, getContrastRatio } from "@mui/material/styles";
 
 export default function WebTheme() {}
 
-export function getLoginTheme() {
+const darkThemeColors = {
+  background: "#232323",
+  text: "#fff",
+};
+
+export function getLoginTheme(isDarkMode) {
+  const colors = isDarkMode ? darkThemeColors : {
+    background: "#fff",
+    text: "#111",
+  };
+
   return createTheme({
     palette: {
       pmLoginTheme: {
         main: "#9723ef",
-        light: "#be79f2",
-        dark: "#5f0b9e",
-        contrastText:
-          getContrastRatio("#9723ef", "#fff") > 4.5 ? "#fff" : "#111",
+        background: isDarkMode ? "#232323" : "#fff",
+        text: isDarkMode? "#fff" : "#111",
+        contrastText: getContrastRatio("#9723ef", colors.text) > 4.5 ? colors.text : colors.background,
       },
+      mode: isDarkMode ? "dark" : "light", 
     },
   });
 }

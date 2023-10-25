@@ -17,8 +17,6 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
-import { ThemeProvider } from "@emotion/react";
-import { getLoginTheme } from "./WebTheme";
 import Collapse from "@mui/material/Collapse";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -150,7 +148,6 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <ThemeProvider theme={getLoginTheme()}>
       <TableHead className="tableHead">
         <TableRow>
           <TableCell className="tableCell resizable" sx={{ width: "64px" }} />
@@ -202,7 +199,6 @@ function EnhancedTableHead(props) {
           ))}
         </TableRow>
       </TableHead>
-    </ThemeProvider>
   );
 }
 
@@ -218,7 +214,6 @@ EnhancedTableHead.propTypes = {
 function EnhancedTableToolbar(props) {
   const {
     numSelected,
-    userDetails,
     handleDelete,
     token,
     data,
@@ -519,7 +514,6 @@ export default function UserStoryTable(props) {
 
   return (
     <Box sx={{ width: "100% - 64px", marginLeft: "64px", marginTop: "64px" }}>
-      <ThemeProvider theme={getLoginTheme()}>
         <Paper sx={{ width: "100%", mb: 2 }}>
           <EnhancedTableToolbar
             numSelected={selected.length}
@@ -589,7 +583,6 @@ export default function UserStoryTable(props) {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-      </ThemeProvider>
     </Box>
   );
 }

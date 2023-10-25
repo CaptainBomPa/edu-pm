@@ -6,8 +6,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { ThemeProvider } from "@emotion/react";
-import { getLoginTheme } from "./WebTheme";
 import { useState, useEffect } from "react";
 import {
   getAllFeatures,
@@ -85,27 +83,26 @@ export default function UserStoryEditDialog(props) {
   // }
 
   useEffect(() => {
-    getAllFeatures(token)
+    getAllFeatures()
       .then((features) => {
         setFeatures(features);
       })
-      .catch((error) => {
-        console.error(error);
-      });
-    getAllTeams(token)
+    getAllTeams()
       .then((teams) => {
         setTeams(teams);
     });
-    getAllUsers(token)
+    getAllUsers()
       .then((users) => {
         setOwners(users);
-        setVisibleOwners(users.filter((user) => user.team?.id === selectedTeam?.id))
+        if (selectedTeam) {
+          setVisibleOwners(users.filter((user) => user.team?.id === selectedTeam.id))
+        }
       })
-    getAllIterations(token)
+    getAllIterations()
       .then((iterations) => {
         setIterations(iterations);
       })
-  }, [token]);
+  });
 
   const handleVisibleOwners = (team) => {
     if (selectedTeam === team) return;
@@ -186,7 +183,6 @@ export default function UserStoryEditDialog(props) {
 
   return (
     <div>
-      <ThemeProvider theme={getLoginTheme()}>
         <Dialog
           open={true}
           onClose={handleClose}
@@ -458,7 +454,6 @@ export default function UserStoryEditDialog(props) {
             </DialogActions>
           </Box>
         </Dialog>
-      </ThemeProvider>
     </div>
   );
 }

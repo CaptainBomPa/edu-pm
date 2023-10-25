@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import { useState, useEffect } from "react";
 import UserStoryTable from "./UserStoryTable";
 import { getUserStoriesIteration } from "../service/UserStoryUser";
@@ -22,15 +21,6 @@ export default function CurrentTeamIteration(props) {
 
   return (
     <div>
-      {/* <Box
-        sx={{
-          width: "calc(100% - 64px)",
-          marginLeft: "64px",
-          marginTop: "84px",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      > */}
         {data.length > 0 && (
           <UserStoryTable
             token={token}
@@ -41,7 +31,6 @@ export default function CurrentTeamIteration(props) {
             iteration={data[0]?.iteration}
           />
         )}
-      {/* </Box> */}
     </div>
   );
 }

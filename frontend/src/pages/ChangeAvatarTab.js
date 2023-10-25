@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
-import { ThemeProvider } from "@emotion/react";
-import { getLoginTheme } from "../components/WebTheme";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
@@ -80,7 +78,7 @@ export default function ChangeAvatarTab({ userAvatar, setUserAvatar, token }) {
   };
 
   return (
-    <ThemeProvider theme={getLoginTheme()}>
+    <Box>
       <Box
         sx={{
           display: "flex",
@@ -176,7 +174,6 @@ export default function ChangeAvatarTab({ userAvatar, setUserAvatar, token }) {
           Save as avatar
         </Button>
         {loading && <CircularProgress color="pmLoginTheme" />}
-      </Box>
-    </ThemeProvider>
+      </Box></Box>
   );
 }

@@ -3,8 +3,6 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ThemeProvider } from "@emotion/react";
-import { getLoginTheme } from "../components/WebTheme";
 import Alert from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import Fade from "@mui/material/Fade";
@@ -64,7 +62,6 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
 
   return (
     <form>
-      <ThemeProvider theme={getLoginTheme()}>
         <Box
           sx={{
             display: "flex",
@@ -174,7 +171,6 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
             </Box>
           )}
         </Box>
-      </ThemeProvider>
     </form>
   );
 }

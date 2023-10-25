@@ -2,9 +2,7 @@ body {
   margin: 0
 }
 
-.tableRow {
-  background-color: white;
-}
+
 
 .tableRow.Mui-selected {
   background-color: #f1dfff !important;

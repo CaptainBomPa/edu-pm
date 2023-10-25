@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import {
-  getBacklogForCurrentUser,
   getBacklogForTeam,
 } from "../service/UserStoryBacklog";
 import UserStoryTable from "./UserStoryTable";
 import { getAllTeams } from "../service/UserStoryEdit";
 import { Box } from "@mui/material";
-import { ThemeProvider } from "@emotion/react";
-import { getLoginTheme } from "./WebTheme";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -27,19 +24,19 @@ export default function BacklogSelectTeam(props) {
     });
   }, []);
 
-  const handleSelectionChanged = async () => {
-    if (selectedTeam) {
-      try {
-        const fetchData = await getBacklogForTeam(selectedTeam.id);
-        setData(fetchData);
-      } catch (error) {
-        console.error("Error while fetching data", error);
+
+  useEffect(() => { 
+    async function fetchData() {
+      if (selectedTeam) {
+        try {
+          const fetchData = await getBacklogForTeam(selectedTeam.id);
+          setData(fetchData);
+        } catch (error) {
+          console.error("Error while fetching data", error);
+        }
       }
     }
-  };
-
-  useEffect(() => {
-    handleSelectionChanged();
+    fetchData();
   }, [selectedTeam]);
 
   return (
@@ -53,7 +50,6 @@ export default function BacklogSelectTeam(props) {
           justifyContent: "center",
         }}
       >
-        <ThemeProvider theme={getLoginTheme()}>
           <FormControl sx={{ marginRight: "1%" }}>
             <InputLabel id="team-label" color="pmLoginTheme">
               Team
@@ -74,7 +70,6 @@ export default function BacklogSelectTeam(props) {
               })}
             </Select>
           </FormControl>
-        </ThemeProvider>
       </Box>
       {data && (
         <UserStoryTable

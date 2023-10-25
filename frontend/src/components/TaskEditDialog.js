@@ -5,8 +5,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { ThemeProvider } from "@emotion/react";
-import { getLoginTheme } from "./WebTheme";
 import { addTask, updateTask } from "../service/UserStoryUser";
 import { useState } from "react";
 
@@ -74,7 +72,6 @@ export default function TaskEditDialog(props) {
   };
   return (
     <div>
-      <ThemeProvider theme={getLoginTheme()}>
         <Dialog open={true} onClose={handleClose} color="pmLoginTheme">
           <DialogTitle>
             {edit ? "Edit" : "New"} Task - UserStory ID ({userStoryId})
@@ -115,7 +112,6 @@ export default function TaskEditDialog(props) {
             </Button>
           </DialogActions>
         </Dialog>
-      </ThemeProvider>
     </div>
   );
 }

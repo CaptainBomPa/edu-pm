@@ -6,19 +6,25 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Nopage from "../src/pages/NoPage";
 import UserSettings from "../src/pages/UserSettings";
 import { getUserAvatar, getUserInfo } from "./service/UsersInfo";
-import UserStoryTable from "./components/UserStoryTable";
 import axios from "axios";
 import OtherUserStoryIterations from "./components/OtherUserStoryIterations";
 import CurrentTeamIteration from "./components/CurrentTeamIteration";
 import BacklogCurrentUser from "./components/BacklogCurrentUser";
 import BacklogSelectTeam from "./components/BacklogSelectTeam";
 import BacklogProject from "./components/BacklogProject";
+import { ThemeProvider } from "@emotion/react";
+import { getLoginTheme } from "./components/WebTheme";
+import { Box } from "@mui/material";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
   const [userDetails, setUserDetails] = useState();
   const [userAvatar, setUserAvatar] = useState();
+  const [useDarkMode, setUseDarkMode] = useState(true);
   const navigate = useNavigate();
+
+  document.body.style.backgroundColor =
+    getLoginTheme(useDarkMode).palette.pmLoginTheme.background;
 
   axios.defaults.headers.common["Content-Type"] = "application/json";
   const { token, setToken } = useToken();
@@ -52,58 +58,65 @@ function App() {
   };
 
   return (
-    <div>
-      <AppNavBar
-        onClick={() => {
-          setNavOpen(!navOpen);
-        }}
-        setToken={setToken}
-        token={token}
-        userDetails={userDetails}
-        userAvatar={userAvatar}
-        handleLogout={handleLogout}
-      />
-      <Routes>
-        <Route path="home" element={<Nopage />} />
-        <Route
-          path="current-iteration"
-          element={
-            <CurrentTeamIteration token={token} userDetails={userDetails} />
-          }
+    <ThemeProvider theme={getLoginTheme(useDarkMode)}>
+      <Box>
+        <AppNavBar
+          onClick={() => {
+            setNavOpen(!navOpen);
+          }}
+          setToken={setToken}
+          token={token}
+          userDetails={userDetails}
+          userAvatar={userAvatar}
+          handleLogout={handleLogout}
+          useDarkMode={useDarkMode}
+          setUseDarkMode={setUseDarkMode}
         />
-        <Route
-          path="iterations"
-          element={
-            <OtherUserStoryIterations token={token} userDetails={userDetails} />
-          }
-        />
-        <Route
-          path="my-backlog"
-          element={<BacklogCurrentUser userDetails={userDetails} />}
-        />
-        <Route
-          path="backlogs"
-          element={<BacklogSelectTeam userDetails={userDetails} />}
-        />
-        <Route
-          path="project-backlog"
-          element={<BacklogProject userDetails={userDetails} />}
-        />
-        <Route
-          path="settings"
-          element={
-            <UserSettings
-              token={token}
-              userDetails={userDetails}
-              setUserDetails={setUserDetails}
-              userAvatar={userAvatar}
-              setUserAvatar={setUserAvatar}
-            />
-          }
-        />
-        <Route path="*" element={<Nopage />} />
-      </Routes>
-    </div>
+        <Routes>
+          <Route path="home" element={<Nopage />} />
+          <Route
+            path="current-iteration"
+            element={
+              <CurrentTeamIteration token={token} userDetails={userDetails} />
+            }
+          />
+          <Route
+            path="iterations"
+            element={
+              <OtherUserStoryIterations
+                token={token}
+                userDetails={userDetails}
+              />
+            }
+          />
+          <Route
+            path="my-backlog"
+            element={<BacklogCurrentUser userDetails={userDetails} />}
+          />
+          <Route
+            path="backlogs"
+            element={<BacklogSelectTeam userDetails={userDetails} />}
+          />
+          <Route
+            path="project-backlog"
+            element={<BacklogProject userDetails={userDetails} />}
+          />
+          <Route
+            path="settings"
+            element={
+              <UserSettings
+                token={token}
+                userDetails={userDetails}
+                setUserDetails={setUserDetails}
+                userAvatar={userAvatar}
+                setUserAvatar={setUserAvatar}
+              />
+            }
+          />
+          <Route path="*" element={<Nopage />} />
+        </Routes>
+      </Box>
+    </ThemeProvider>
   );
 }
 

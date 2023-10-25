@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
-import { ThemeProvider } from "@emotion/react";
-import { getLoginTheme } from "../components/WebTheme";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { updateUserInfo } from "../service/UsersInfo";
@@ -85,7 +83,6 @@ export default function UserInformationTab({
 
   return (
     <form>
-      <ThemeProvider theme={getLoginTheme()}>
         <Box
           sx={{
             display: "flex",
@@ -224,7 +221,6 @@ export default function UserInformationTab({
             {loading && <CircularProgress color="pmLoginTheme" />}
           </Box>
         </Box>
-      </ThemeProvider>
     </form>
   );
 }
