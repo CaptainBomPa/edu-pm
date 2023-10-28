@@ -9,4 +9,5 @@ public class TeamDTO {
 
     private Integer id;
     private String teamName;
+    private ProjectDTO project;
 }

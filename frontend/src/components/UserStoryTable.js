@@ -30,6 +30,7 @@ import {
   deleteMultipleUserStories,
   deleteTask,
 } from "../service/UserStoryUser";
+import AutoHideAlert from "./AutoHideAlert";
 
 function descendingComparator(a, b) {
   if (b < a) {
@@ -222,6 +223,7 @@ function EnhancedTableToolbar(props) {
     currentIterationId,
     iteration,
     team,
+    useDarkMode
   } = props;
 
   const [openAdd, setOpenAdd] = useState(false);
@@ -245,7 +247,7 @@ function EnhancedTableToolbar(props) {
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor: (theme) => "#f1dfff",
+          bgcolor: (theme) => useDarkMode ? "#6b02bd" : "#f1dfff",
         }),
       }}
     >
@@ -301,7 +303,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function UserStoryTable(props) {
-  const { token, userDetails, data, setData, team, iteration } = props;
+  const { token, userDetails, data, setData, team, iteration, useDarkMode } = props;
 
   const [visibleRows, setVisibleRows] = useState([]);
 
@@ -311,6 +313,20 @@ export default function UserStoryTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const dense = false;
+
+  //alert
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("info");
+  const showAutoHideAlert = (message, severity, duration) => {
+    setAlertMessage(message);
+    setAlertType(severity);
+    setAlertOpen(true);
+
+    setTimeout(() => {
+      setAlertOpen(false);
+    }, duration);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -478,7 +494,9 @@ export default function UserStoryTable(props) {
 
       setData(updatedRows);
       setSelected([]);
+      showAutoHideAlert("User Stories deleted", "success", 5000);
     } else {
+      showAutoHideAlert("Could not delete User Stories", "error", 5000);
       console.error("Not removed", selected);
     }
   };
@@ -493,8 +511,10 @@ export default function UserStoryTable(props) {
         updatedRows.splice(index, 1);
         setData(updatedRows);
         setSelected([]);
+        showAutoHideAlert("User Story deleted", "success", 5000);
       }
     } else {
+      showAutoHideAlert("Could not delete User Story", "error", 5000);
       console.error("Not removed", oneSelected);
     }
   };
@@ -506,14 +526,22 @@ export default function UserStoryTable(props) {
         row.id === updatedRow.id ? updatedRow : row
       );
       setData(updatedData);
+      showAutoHideAlert("User Story updated", "success", 5000);
     } else {
       const updatedData = data.filter((row) => row.id !== updatedRow.id);
       setData(updatedData);
+      showAutoHideAlert("User Story deleted", "success", 5000);
     }
   };
 
   return (
     <Box sx={{ width: "100% - 64px", marginLeft: "64px", marginTop: "64px" }}>
+      <AutoHideAlert
+        alertOpen={alertOpen}
+        alertType={alertType}
+        alertMessage={alertMessage}
+        setAlertOpen={setAlertOpen}
+      />
         <Paper sx={{ width: "100%", mb: 2 }}>
           <EnhancedTableToolbar
             numSelected={selected.length}
@@ -526,6 +554,7 @@ export default function UserStoryTable(props) {
             currentIterationId={iteration?.itNumber}
             team={team}
             iteration={iteration}
+            useDarkMode={useDarkMode}
           />
           <TableContainer>
             <Table
@@ -558,6 +587,8 @@ export default function UserStoryTable(props) {
                       handleClick={handleClick}
                       token={token}
                       handleUpdateRow={handleUpdateRow}
+                      showAutoHideAlert={showAutoHideAlert}
+                      useDarkMode={useDarkMode}
                     />
                   );
                 })}
@@ -588,7 +619,7 @@ export default function UserStoryTable(props) {
 }
 
 function Row(props) {
-  const { row, index, handleClick, isSelected, token, handleUpdateRow } = props;
+  const { row, index, handleClick, isSelected, token, handleUpdateRow, showAutoHideAlert, useDarkMode } = props;
   const [open, setOpen] = React.useState(false);
 
   const isItemSelected = isSelected(row.id);
@@ -601,6 +632,7 @@ function Row(props) {
   const handleUpdateTaskList = (newTask) => {
     const updatedTasks = [...tasks, newTask];
     setTasks(updatedTasks);
+    showAutoHideAlert("Task updated", "success", 5000);
   };
 
   const handleUpdateTaskFromList = (updatedTask) => {
@@ -611,6 +643,7 @@ function Row(props) {
       const updatedTasks = [...tasks];
       updatedTasks[updatedTaskIndex] = updatedTask;
       setTasks(updatedTasks);
+      showAutoHideAlert("Task updated", "success", 5000);
     } else {
       setTasks([...tasks, updatedTask]);
     }
@@ -642,11 +675,14 @@ function Row(props) {
       if (response) {
         const updatedTasks = tasks.filter((task) => task.id !== taskId);
         setTasks(updatedTasks);
+        showAutoHideAlert("Task deleted", "success", 5000);
       } else {
         console.error(`Could not remove: ${taskId}`);
+        showAutoHideAlert("Could not delete Task", "error", 5000);
       }
     } catch (error) {
       console.error(error);
+      showAutoHideAlert("Could not delete Task", "error", 5000);
     }
   };
 
@@ -688,7 +724,7 @@ function Row(props) {
         key={row.id}
         selected={isItemSelected}
         sx={{ cursor: "pointer", "& > *": { borderBottom: "unset" } }}
-        className="tableRow"
+        className={`tableRow ${useDarkMode ? 'dark-mode' : 'light-mode'}`}
       >
         <TableCell
           sx={{

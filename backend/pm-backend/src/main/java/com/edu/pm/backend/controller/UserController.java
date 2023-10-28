@@ -31,6 +31,11 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userDTO));
     }
 
+    @PostMapping(value = "/user/updateFullUserInfo")
+    public ResponseEntity<UserDTO> updateFullUserInfo(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.updateFullUser(userDTO));
+    }
+
     @GetMapping(value = "/user/get-all")
     public ResponseEntity<Collection<UserDTO>> getAll() {
         return ResponseEntity.ok(userService.getAll());
@@ -70,15 +75,5 @@ public class UserController {
     @PostMapping(value = "/user/updateTeam", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserDTO> updateTeam(@RequestBody UpdateUserDTO dto) {
         return ResponseEntity.ok(userService.updateTeam(dto.getId(), dto.getTeam()));
-    }
-
-    @PostMapping(value = "/user/addProject", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserDTO> addProject(@RequestBody UpdateUserDTO dto) {
-        return ResponseEntity.ok(userService.addProject(dto.getId(), dto.getProjectId()));
-    }
-
-    @PostMapping(value = "/user/removeProject", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserDTO> removeProject(@RequestBody UpdateUserDTO dto) {
-        return ResponseEntity.ok(userService.removeProject(dto.getId(), dto.getProjectId()));
     }
 }

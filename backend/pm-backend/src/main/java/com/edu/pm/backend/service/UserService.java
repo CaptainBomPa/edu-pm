@@ -1,6 +1,5 @@
 package com.edu.pm.backend.service;
 
-import com.edu.pm.backend.commons.dto.ProjectDTO;
 import com.edu.pm.backend.commons.dto.UserDTO;
 import com.edu.pm.backend.commons.dto.auth.ChangePasswordDTO;
 import com.edu.pm.backend.commons.mappers.UserMapper;
@@ -18,9 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 
 @Service
@@ -44,6 +41,29 @@ public class UserService {
         user.setUsername(userDTO.getUsername());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
+        return UserMapper.modelToDTO(repository.save(user));
+    }
+
+    public UserDTO updateFullUser(UserDTO userDTO) {
+        User user = repository.findById(userDTO.getId()).orElseThrow();
+        user.setUsername(userDTO.getUsername());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setRoles(userDTO.getRoles());
+        if (userDTO.getProject() != null) {
+            Project project = projectRepository.findById(userDTO.getProject().getId()).orElseThrow();
+            user.setProject(project);
+        } else {
+            user.setProject(null);
+        }
+
+        if (userDTO.getTeam() != null) {
+            Team team = teamRepository.findById(userDTO.getTeam().getId()).orElseThrow();
+            user.setTeam(team);
+        } else {
+            user.setTeam(null);
+        }
+
         return UserMapper.modelToDTO(repository.save(user));
     }
 
@@ -139,33 +159,6 @@ public class UserService {
         return UserMapper.modelToDTO(repository.save(user));
     }
 
-    public UserDTO addProject(Integer userId, Integer projectId) {
-        User user = findUserByIdOrThrow(userId);
-        Project project = projectCache.getById(projectId);
-        if (project == null) {
-            throw new IllegalArgumentException("Project not found in database");
-        }
-        if (user.getProjects() != null) {
-            user.getProjects().add(project);
-        } else {
-            user.setProjects(new ArrayList<>());
-            user.getProjects().add(project);
-        }
-        return UserMapper.modelToDTO(repository.save(user));
-    }
-
-    public UserDTO removeProject(Integer userId, Integer projectId) {
-        User user = findUserByIdOrThrow(userId);
-        Project project = projectCache.getById(projectId);
-        if (project == null) {
-            throw new IllegalArgumentException("Project not found in database");
-        }
-        if (user.getProjects() != null) {
-            user.getProjects().remove(project);
-        }
-        return UserMapper.modelToDTO(repository.save(user));
-    }
-
     private User findUserByIdOrThrow(Integer userId) {
         User user = findById(userId);
         if (user == null) {
@@ -173,6 +166,5 @@ public class UserService {
         }
         return user;
     }
-
 
 }

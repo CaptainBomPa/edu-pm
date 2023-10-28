@@ -5,37 +5,52 @@ VALUES ('Project Alpha'),
 
 INSERT INTO FEATURE (FEATURE_NAME, DESCRIPTION, PROJECT_ID)
 VALUES ('New search algorithm to beat Google', 'We need to aim high, and beat the best companies on the market', 1),
-       ('New design on most visited pages', 'New UI/UX for most visited pages. Need to refresh and make this pages younger', 2),
+       ('New design on most visited pages',
+        'New UI/UX for most visited pages. Need to refresh and make this pages younger', 2),
        ('Improvements to performance on server side', 'Backend improvements to speed up the response from server', 3);
 
-INSERT INTO TEAM (TEAM_NAME)
-VALUES ('Team Bulldogs'),
-       ('Team Lions'),
-       ('Team Eagles');
+INSERT INTO TEAM (TEAM_NAME, PROJECT_ID)
+VALUES ('Team Bulldogs', 1),
+       ('Team Lions', 1),
+       ('Team Eagles', 1);
 --        ('Team Cats'),
 --        ('Team Snakes'),
 --        ('Team Spiders');
 
 INSERT INTO ITERATION(START_DATE, END_DATE)
-VALUES ('2023-09-01T12:00:01', '2023-09-14T12:00:00'),
-       ('2023-09-14T12:00:01', '2023-09-28T12:00:00'),
-       ('2023-09-28T12:00:01', '2023-10-12T12:00:00'),
-       ('2023-10-12T12:00:01', '2023-10-26T12:00:00'),
-       ('2023-10-26T12:00:01', '2023-11-10T12:00:00');
+VALUES ('2023-10-28T00:00:00', '2023-11-11T00:00:00'),
+       ('2023-11-11T00:00:01', '2023-11-25T00:00:00'),
+       ('2023-11-25T00:00:01', '2023-12-09T00:00:00'),
+       ('2023-12-09T00:00:01', '2023-12-23T00:00:00'),
+       ('2023-12-23T00:00:01', '2024-01-06T00:00:00'),
+       ('2024-01-06T00:00:01', '2024-01-20T00:00:00'),
+       ('2024-01-20T00:00:01', '2024-02-03T00:00:00'),
+       ('2024-02-03T00:00:01', '2024-02-17T00:00:00'),
+       ('2024-02-17T00:00:01', '2024-03-02T00:00:00'),
+       ('2024-03-02T00:00:01', '2024-03-16T00:00:00'),
+       ('2024-03-16T00:00:01', '2024-03-30T00:00:00');
 
-INSERT INTO USERS (USERNAME, PASSWORD, TEAM_ID, ROLES, FIRST_NAME, LAST_NAME)
-VALUES ('admin', '$2a$10$R2rNkxslm96X9a/hOUx05..X8EmTJ89tjlyylGvBlAbN0qAQNKiAS', 1, 'ADMINISTRATOR', 'Jan', 'Kowalski'),
-       ('user', '$2a$10$.bdr4pJ94f3sAUTBzy2G9eADtbMPyohOzo397uXUhKJ6EQZ93fqAK', 1, 'USER_WRITE', 'Adam', 'Nowak'),
-       ('user1', '$2a$10$rCCbi2RNkNPycu8WIJyKCeidli6kvZEnU7XQHsUtiyz/Li7f0yp2e', 1,'USER_WRITE', 'Krzysztof', 'Nowak'),
-       ('user2', '$2a$10$QqOTJhnIGGSg/mqoxkScxutbWudW4hFTWLK0tEhHAKWGET5wHplaS', 1, 'USER_WRITE', 'John', 'Smith'),
-       ('user3', '$2a$10$AULhsFKeUaSmGH2RVzgmWOp.LVqN.GCK4Tr8QeqIGxRHwP7/m0AfC', 2, 'USER_WRITE', 'Michael', 'Anderson'),
-       ('user4', '$2a$10$Yx70ZocViQHQ/3GeBkyoae3zDCdGnig7uxRR6vaXuouc7LpLzWw.6', 2, 'USER_WRITE', 'Christopher', 'Martinez'),
-       ('user5', '$2a$10$QrjBFWm9SjwpBFFCbb.n.ujAIij8392v7Gtazf1R6YnRyI2N.Rmwy', 2, 'USER_WRITE', 'Sophia', 'Brown'),
-       ('user6', '$2a$10$.yg0sg/fPvEHTV3jqYF4VuhWY5H34IIPy.y/iWZWsWazKkemibGkq', 2, 'USER_WRITE', 'Jennifer', 'Miller'),
-       ('user7', '$2a$10$Znw2pC9ZSYy1NYiXUaYnleyLe8y6q2wvovG/J4SsZRSpiCNqtKsre', 3, 'USER_WRITE', 'Benjamin', 'Hall'),
-       ('user8', '$2a$10$6mw/SkwJwUBR/fAYL09gq.VwLqy9TotXOoO7DqCuwy0uGIao01vbi', 3, 'USER_WRITE', 'Emma', 'Clark'),
-       ('user9', '$2a$10$/ZONodOoDdOCxllx7diEnOspRuffJpjUCyIpGBi1KuosIHViCzsjO', 3, 'USER_WRITE', 'Joshua', 'Walker'),
-       ('user10', '$2a$10$gSJ2MxbT93qOk4KxpSTEPe9gZ3swguhoE5ltA608KWoLiw3OD8oOW', 3, 'USER_WRITE', 'Jacob', 'Turner');
+INSERT INTO USERS (USERNAME, PASSWORD, TEAM_ID, ROLES, FIRST_NAME, LAST_NAME, PROJECT_ID)
+VALUES ('admin', '$2a$10$R2rNkxslm96X9a/hOUx05..X8EmTJ89tjlyylGvBlAbN0qAQNKiAS', 1, 'ADMINISTRATOR', 'Jan', 'Kowalski',
+        1),
+       ('user', '$2a$10$.bdr4pJ94f3sAUTBzy2G9eADtbMPyohOzo397uXUhKJ6EQZ93fqAK', 1, 'USER_WRITE', 'Adam', 'Nowak', 1),
+       ('user1', '$2a$10$rCCbi2RNkNPycu8WIJyKCeidli6kvZEnU7XQHsUtiyz/Li7f0yp2e', 1, 'USER_WRITE', 'Krzysztof', 'Nowak',
+        1),
+       ('user2', '$2a$10$QqOTJhnIGGSg/mqoxkScxutbWudW4hFTWLK0tEhHAKWGET5wHplaS', 1, 'USER_WRITE', 'John', 'Smith', 1),
+       ('user3', '$2a$10$AULhsFKeUaSmGH2RVzgmWOp.LVqN.GCK4Tr8QeqIGxRHwP7/m0AfC', 2, 'USER_WRITE', 'Michael', 'Anderson',
+        1),
+       ('user4', '$2a$10$Yx70ZocViQHQ/3GeBkyoae3zDCdGnig7uxRR6vaXuouc7LpLzWw.6', 2, 'USER_WRITE', 'Christopher',
+        'Martinez', 1),
+       ('user5', '$2a$10$QrjBFWm9SjwpBFFCbb.n.ujAIij8392v7Gtazf1R6YnRyI2N.Rmwy', 2, 'USER_WRITE', 'Sophia', 'Brown', 1),
+       ('user6', '$2a$10$.yg0sg/fPvEHTV3jqYF4VuhWY5H34IIPy.y/iWZWsWazKkemibGkq', 2, 'USER_WRITE', 'Jennifer', 'Miller',
+        1),
+       ('user7', '$2a$10$Znw2pC9ZSYy1NYiXUaYnleyLe8y6q2wvovG/J4SsZRSpiCNqtKsre', 3, 'USER_WRITE', 'Benjamin', 'Hall',
+        1),
+       ('user8', '$2a$10$6mw/SkwJwUBR/fAYL09gq.VwLqy9TotXOoO7DqCuwy0uGIao01vbi', 3, 'USER_WRITE', 'Emma', 'Clark', 1),
+       ('user9', '$2a$10$/ZONodOoDdOCxllx7diEnOspRuffJpjUCyIpGBi1KuosIHViCzsjO', 3, 'USER_WRITE', 'Joshua', 'Walker',
+        1),
+       ('user10', '$2a$10$gSJ2MxbT93qOk4KxpSTEPe9gZ3swguhoE5ltA608KWoLiw3OD8oOW', 3, 'USER_WRITE', 'Jacob', 'Turner',
+        1);
 
 -- INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, ITERATION_IT_NUMBER, STORY_POINTS, ASSIGNED_USER_ID,
 --                         TEAM_ID)
@@ -56,54 +71,54 @@ VALUES ('admin', '$2a$10$R2rNkxslm96X9a/hOUx05..X8EmTJ89tjlyylGvBlAbN0qAQNKiAS',
 
 INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, ITERATION_IT_NUMBER, STORY_POINTS, ASSIGNED_USER_ID, TEAM_ID)
 VALUES ('Improved search result filtering',
-        'Enhancing the filtering options for search results to provide a better user experience.', 1, 4, 1, 1, 1),
+        'Enhancing the filtering options for search results to provide a better user experience.', 1, 1, 1, 1, 1),
        ('Advanced search result sorting',
-        'Implementing advanced sorting algorithms for search results to boost performance.', 1, 4, 2, 1, 1),
+        'Implementing advanced sorting algorithms for search results to boost performance.', 1, 1, 2, 1, 1),
        ('User-friendly homepage redesign',
-        'Redesigning the homepage with a user-centric approach to improve engagement.', 2, 4, 3, 2, 1),
-       ('Profile page makeover', 'Giving the profile page a fresh new look to increase user satisfaction.', 2, 4, 5, 2,
+        'Redesigning the homepage with a user-centric approach to improve engagement.', 2, 1, 3, 2, 1),
+       ('Profile page makeover', 'Giving the profile page a fresh new look to increase user satisfaction.', 2, 2, 5, 2,
         1),
        ('Optimized server-side caching', 'Implementing server-side caching techniques to speed up data retrieval.', 3,
-        4, 8, 3, 1),
-       ('Enhanced database indexing', 'Improving database indexing for faster query processing and scalability.', 3, 4,
+        1, 8, 3, 1),
+       ('Enhanced database indexing', 'Improving database indexing for faster query processing and scalability.', 3, 1,
         13, 3, 1),
        ('Streamlined registration process',
-        'Simplifying the user registration process for a smoother onboarding experience.', 1, 4, 1, 4, 1),
+        'Simplifying the user registration process for a smoother onboarding experience.', 1, 1, 1, 4, 1),
        ('Personalized user recommendations',
-        'Implementing recommendation algorithms for personalized user content suggestions.', 1, 4, 2, 4, 1),
+        'Implementing recommendation algorithms for personalized user content suggestions.', 1, 2, 2, 4, 1),
        ('Efficient data synchronization',
-        'Enhancing data synchronization processes to ensure data consistency across devices.', 2, 4, 3, 5, 2),
-       ('Mobile-friendly interface', 'Adapting the interface for mobile devices to cater to a broader user base.', 2, 4,
+        'Enhancing data synchronization processes to ensure data consistency across devices.', 2, 1, 3, 5, 2),
+       ('Mobile-friendly interface', 'Adapting the interface for mobile devices to cater to a broader user base.', 2, 2,
         5, 5, 2),
-       ('Improved notification system', 'Enhancing the notification system to keep users informed and engaged.', 3, 4,
+       ('Improved notification system', 'Enhancing the notification system to keep users informed and engaged.', 3, 2,
         8, 6, 2),
-       ('Security enhancements', 'Implementing advanced security measures to protect user data and privacy.', 3, 4, 13,
+       ('Security enhancements', 'Implementing advanced security measures to protect user data and privacy.', 3, 1, 13,
         6, 2),
        ('User feedback integration', 'Integrating a user feedback system to gather valuable insights and suggestions.',
-        1, 4, 1, 7, 2),
-       ('Content sharing options', 'Adding options for users to easily share content with their social networks.', 1, 4,
+        1, 1, 1, 7, 2),
+       ('Content sharing options', 'Adding options for users to easily share content with their social networks.', 1, 1,
         2, 7, 2),
-       ('Social media login', 'Allowing users to log in using their social media accounts for added convenience.', 2, 4,
+       ('Social media login', 'Allowing users to log in using their social media accounts for added convenience.', 2, 1,
         3, 8, 2),
-       ('Gamification elements', 'Introducing gamification elements to increase user engagement and interaction.', 2, 4,
+       ('Gamification elements', 'Introducing gamification elements to increase user engagement and interaction.', 2, 1,
         5, 8, 2),
-       ('Enhanced image uploading', 'Improving image uploading functionality for a smoother user experience.', 3, 4, 8,
+       ('Enhanced image uploading', 'Improving image uploading functionality for a smoother user experience.', 3, 2, 8,
         9, 3),
-       ('Integrated user chat', 'Implementing a real-time chat feature for users to connect and communicate.', 3, 4, 13,
+       ('Integrated user chat', 'Implementing a real-time chat feature for users to connect and communicate.', 3, 1, 13,
         9, 3),
        ('Content recommendation engine',
-        'Developing a recommendation engine to suggest content based on user preferences.', 1, 4, 1, 10, 3),
-       ('Accessibility improvements', 'Enhancing the platforms accessibility features to cater to all users.', 1, 4, 2,
+        'Developing a recommendation engine to suggest content based on user preferences.', 1, 2, 1, 10, 3),
+       ('Accessibility improvements', 'Enhancing the platforms accessibility features to cater to all users.', 1, 2, 2,
         10, 3),
-       ('Localized content support', 'Adding support for multiple languages and localized content.', 2, 4, 3, 10, 3),
+       ('Localized content support', 'Adding support for multiple languages and localized content.', 2, 1, 3, 10, 3),
        ('Interactive user tutorials', 'Creating interactive tutorials to help users make the most of the platform.', 2,
-        4, 5, 11, 3),
+        1, 5, 11, 3),
        ('Enhanced video streaming', 'Improving video streaming quality and performance for better user experience.', 3,
-        4, 8, 11, 3),
-       ('Advanced content analytics', 'Implementing analytics to track user engagement and content performance.', 3, 4,
+        2, 8, 11, 3),
+       ('Advanced content analytics', 'Implementing analytics to track user engagement and content performance.', 3, 1,
         13, 11, 3),
        ('User profile customization',
-        'Allowing users to customize their profiles with personal information and themes.', 1, 4, 1, 11, 3);
+        'Allowing users to customize their profiles with personal information and themes.', 1, 1, 1, 11, 3);
 
 -- backlog stories - team id 1
 INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, STORY_POINTS, TEAM_ID)
@@ -279,8 +294,3 @@ VALUES
     ('User Feedback Integration', 'Integrate user feedback for Feature 6', 24),
     ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 24),
     ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 24);
-
-
-INSERT INTO USERS_PROJECTS(USER_ID, PROJECTS_ID)
-VALUES (1, 1),
-       (1, 2)

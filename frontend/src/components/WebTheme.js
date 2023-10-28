@@ -17,6 +17,7 @@ export function getLoginTheme(isDarkMode) {
     palette: {
       pmLoginTheme: {
         main: "#9723ef",
+        lightMain: "#c27cf7",
         background: isDarkMode ? "#232323" : "#fff",
         text: isDarkMode? "#fff" : "#111",
         contrastText: getContrastRatio("#9723ef", colors.text) > 4.5 ? colors.text : colors.background,

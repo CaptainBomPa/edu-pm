@@ -2,10 +2,28 @@ body {
   margin: 0
 }
 
+.custom-scrollbar {
+  overflow: auto;
+  height: 800px;
+}
 
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px; /* Szerokość paska przewijania */
+  background-color: transparent;
+}
 
-.tableRow.Mui-selected {
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #9723ef; /* Kolor paska przewijania */
+  border-radius: 10px; /* Zaokrąglenie paska przewijania */
+}
+
+.Mui-selected.light-mode {
   background-color: #f1dfff !important;
+}
+
+/* Dla trybu ciemnego */
+.Mui-selected.dark-mode {
+  background-color: #6b02bd !important;
 }
 
 .table {

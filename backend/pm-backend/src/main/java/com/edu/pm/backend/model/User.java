@@ -49,10 +49,9 @@ public class User implements UserDetails {
     @Nullable
     private Team team;
 
-    @OneToMany
-    @Column
+    @ManyToOne
     @Nullable
-    private List<Project> projects;
+    private Project project;
 
     public void addRole(@NotNull Role role) {
         this.roles.add(role);

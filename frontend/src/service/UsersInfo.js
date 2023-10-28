@@ -66,3 +66,21 @@ export async function updatePassword({ token }, oldPassword, newPassword) {
     console.error(error);
   }
 }
+
+export async function updateFullUser(user) {
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/user/updateFullUserInfo",
+      user
+    );
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+

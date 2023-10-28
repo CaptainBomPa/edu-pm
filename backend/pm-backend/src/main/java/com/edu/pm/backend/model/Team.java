@@ -19,4 +19,7 @@ public class Team {
 
     @Column
     private String teamName;
+
+    @ManyToOne
+    private Project project;
 }

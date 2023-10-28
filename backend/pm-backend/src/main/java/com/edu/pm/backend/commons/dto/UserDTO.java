@@ -17,6 +17,6 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private List<Role> roles;
+    private ProjectDTO project;
     private TeamDTO team;
-    private List<ProjectDTO> projects;
 }

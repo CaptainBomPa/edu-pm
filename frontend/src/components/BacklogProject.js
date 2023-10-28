@@ -3,7 +3,7 @@ import { getBacklogProject } from "../service/UserStoryBacklog";
 import UserStoryTable from "./UserStoryTable";
 
 export default function BacklogProject(props) {
-  const { userDetails } = props;
+  const { userDetails, useDarkMode } = props;
 
   const [data, setData] = useState();
 
@@ -20,6 +20,7 @@ export default function BacklogProject(props) {
           userDetails={userDetails}
           data={data}
           setData={setData}
+          useDarkMode={useDarkMode}
         />
       )}
     </div>

@@ -32,6 +32,21 @@ export async function getAllUsers(token) {
   }
 }
 
+export async function getAllProjects(token) {
+  try {
+    const response = await axios.get(
+      "http://localhost:8080/api/project/get-all"
+    );
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error(`Error ${response.status}`);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function getAllTeams(token) {
   try {
     const response = await axios.get("http://localhost:8080/api/team/get-all");

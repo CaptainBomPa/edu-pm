@@ -15,6 +15,7 @@ import BacklogProject from "./components/BacklogProject";
 import { ThemeProvider } from "@emotion/react";
 import { getLoginTheme } from "./components/WebTheme";
 import { Box } from "@mui/material";
+import AdminPage from "./components/AdminPage";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -77,7 +78,7 @@ function App() {
           <Route
             path="current-iteration"
             element={
-              <CurrentTeamIteration token={token} userDetails={userDetails} />
+              <CurrentTeamIteration token={token} userDetails={userDetails} useDarkMode={useDarkMode} />
             }
           />
           <Route
@@ -86,20 +87,21 @@ function App() {
               <OtherUserStoryIterations
                 token={token}
                 userDetails={userDetails}
+                useDarkMode={useDarkMode}
               />
             }
           />
           <Route
             path="my-backlog"
-            element={<BacklogCurrentUser userDetails={userDetails} />}
+            element={<BacklogCurrentUser userDetails={userDetails} useDarkMode={useDarkMode} />}
           />
           <Route
             path="backlogs"
-            element={<BacklogSelectTeam userDetails={userDetails} />}
+            element={<BacklogSelectTeam userDetails={userDetails} useDarkMode={useDarkMode} />}
           />
           <Route
             path="project-backlog"
-            element={<BacklogProject userDetails={userDetails} />}
+            element={<BacklogProject userDetails={userDetails} useDarkMode={useDarkMode} />}
           />
           <Route
             path="settings"
@@ -113,6 +115,7 @@ function App() {
               />
             }
           />
+          <Route path="admin-page" element={<AdminPage userDetails={userDetails} useDarkMode={useDarkMode}/>} />
           <Route path="*" element={<Nopage />} />
         </Routes>
       </Box>

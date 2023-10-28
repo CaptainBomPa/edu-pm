@@ -3,11 +3,8 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
-import CloseIcon from "@mui/icons-material/Close";
-import Fade from "@mui/material/Fade";
-import IconButton from "@mui/material/IconButton";
 import { updatePassword } from "../service/UsersInfo";
+import AutoHideAlert from "../components/AutoHideAlert";
 
 export default function ChangePasswordTab({ token, setUserDetails }) {
   const [oldPassword, setOldPassword] = useState("");
@@ -15,9 +12,21 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [updateOk, setUpdateOk] = useState(false);
-  const [errorUpdate, setErrorUpdate] = useState(false);
   const [allFieldsFilled, setAllFieldsFilled] = useState(false);
+
+  //alert
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("info");
+  const showAutoHideAlert = (message, severity, duration) => {
+    setAlertMessage(message);
+    setAlertType(severity);
+    setAlertOpen(true);
+
+    setTimeout(() => {
+      setAlertOpen(false);
+    }, duration);
+  };
 
   const checkAllFieldsFilled = () => {
     setAllFieldsFilled(
@@ -43,16 +52,18 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
   };
 
   const handleChangePassword = () => {
-    setUpdateOk(false);
-    setErrorUpdate(false);
     if (newPassword === confirmNewPassword) {
       const dataUpdatePassword = async (e) => {
         setLoading(true);
-        const status = await updatePassword({ token }, oldPassword, newPassword);
+        const status = await updatePassword(
+          { token },
+          oldPassword,
+          newPassword
+        );
         if (status === 200) {
-          setUpdateOk(true);
+          showAutoHideAlert("Password updated successfully", "success", 5000);
         } else {
-          setErrorUpdate(true);
+          showAutoHideAlert("Error updating password", "error", 5000);
         }
         setLoading(false);
       };
@@ -62,115 +73,84 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
 
   return (
     <form>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "7ch",
-            marginTop: "2ch",
-          }}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "7ch",
+          marginTop: "2ch",
+        }}
+      >
+        <AutoHideAlert
+          alertOpen={alertOpen}
+          alertType={alertType}
+          alertMessage={alertMessage}
+          setAlertOpen={setAlertOpen}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <TextField
+          sx={{ m: 1, width: "45ch" }}
+          id="old-password"
+          label="Old Password"
+          variant="outlined"
+          type="password"
+          value={oldPassword}
+          color="pmLoginTheme"
+          onChange={handleOldPasswordChange}
+        />
+        <TextField
+          sx={{ m: 1, width: "45ch" }}
+          id="new-password"
+          label="New Password"
+          variant="outlined"
+          type="password"
+          value={newPassword}
+          color="pmLoginTheme"
+          onChange={handleNewPasswordChange}
+        />
+        <TextField
+          sx={{ m: 1, width: "45ch" }}
+          id="confirm-new-password"
+          label="Confirm New Password"
+          variant="outlined"
+          type="password"
+          color="pmLoginTheme"
+          value={confirmNewPassword}
+          onChange={handleConfirmNewPasswordChange}
+          error={!passwordsMatch}
+          helperText={!passwordsMatch && "Passwords do not match"}
+        />
+        <Button
+          variant="contained"
+          sx={{ m: 1, width: "50ch" }}
+          color="pmLoginTheme"
+          onClick={handleChangePassword}
+          disabled={!allFieldsFilled || !passwordsMatch || loading}
         >
-          <Fade in={updateOk || errorUpdate}>
-            <Alert
-              sx={{
-                m: 1,
-                width: "40ch",
-                height: "5ch",
-                alignItems: "center",
-                fontSize: "120%",
-              }}
-              severity={
-                updateOk === true
-                  ? "success"
-                  : errorUpdate === true
-                  ? "error"
-                  : "info"
-              }
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setUpdateOk(false);
-                    setErrorUpdate(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              {updateOk === true
-                ? "Personal information are updated."
-                : errorUpdate === true
-                ? "Bad credentials, try again."
-                : ""}
-            </Alert>
-          </Fade>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <TextField
-            sx={{ m: 1, width: "45ch" }}
-            id="old-password"
-            label="Old Password"
-            variant="outlined"
-            type="password"
-            value={oldPassword}
-            color="pmLoginTheme"
-            onChange={handleOldPasswordChange}
-          />
-          <TextField
-            sx={{ m: 1, width: "45ch" }}
-            id="new-password"
-            label="New Password"
-            variant="outlined"
-            type="password"
-            value={newPassword}
-            color="pmLoginTheme"
-            onChange={handleNewPasswordChange}
-          />
-          <TextField
-            sx={{ m: 1, width: "45ch" }}
-            id="confirm-new-password"
-            label="Confirm New Password"
-            variant="outlined"
-            type="password"
-            color="pmLoginTheme"
-            value={confirmNewPassword}
-            onChange={handleConfirmNewPasswordChange}
-            error={!passwordsMatch}
-            helperText={!passwordsMatch && "Passwords do not match"}
-          />
-          <Button
-            variant="contained"
-            sx={{ m: 1, width: "50ch" }}
-            color="pmLoginTheme"
-            onClick={handleChangePassword}
-            disabled={!allFieldsFilled || !passwordsMatch || loading}
+          Change Password
+        </Button>
+        {loading && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "2ch",
+            }}
           >
-            Change Password
-          </Button>
-          {loading && (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "2ch",
-              }}
-            >
-              <CircularProgress color="primary" />
-            </Box>
-          )}
-        </Box>
+            <CircularProgress color="primary" />
+          </Box>
+        )}
+      </Box>
     </form>
   );
 }

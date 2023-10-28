@@ -9,9 +9,29 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
+import { getLoginTheme } from "./WebTheme";
+
+function getStyles2(name, personName, theme) {
+  if (!personName) {
+    return {
+      backgroundColor: theme.palette.pmLoginTheme.background,
+      fontWeight: theme.typography.fontWeightRegular,
+    };
+  }
+  return {
+    backgroundColor:
+      personName.id !== name.id
+        ? theme.palette.pmLoginTheme.background
+        : theme.palette.pmLoginTheme.lightMain,
+    fontWeight:
+      personName.id !== name.id
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 export default function BacklogSelectTeam(props) {
-  const { userDetails } = props;
+  const { userDetails, useDarkMode } = props;
 
   const [data, setData] = useState();
 
@@ -66,7 +86,11 @@ export default function BacklogSelectTeam(props) {
               color="pmLoginTheme"
             >
               {teams.map((team) => {
-                return <MenuItem value={team}>{team.teamName}</MenuItem>;
+                return <MenuItem style={getStyles2(
+                  team,
+                  selectedTeam,
+                  getLoginTheme(useDarkMode)
+                )} value={team}>{team.teamName}</MenuItem>;
               })}
             </Select>
           </FormControl>
@@ -77,6 +101,7 @@ export default function BacklogSelectTeam(props) {
           data={data}
           setData={setData}
           team={selectedTeam}
+          useDarkMode={useDarkMode}
         />
       )}
     </div>

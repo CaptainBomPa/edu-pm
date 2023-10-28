@@ -2,18 +2,27 @@ import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
-import CloseIcon from "@mui/icons-material/Close";
-import Fade from "@mui/material/Fade";
-import IconButton from "@mui/material/IconButton";
+import AutoHideAlert from "../components/AutoHideAlert";
 
 export default function ChangeAvatarTab({ userAvatar, setUserAvatar, token }) {
   const [imageUrl, setImageUrl] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isFileTooLarge, setIsFileTooLarge] = useState(false);
-  const [updateOk, setUpdateOk] = useState(false);
-  const [errorUpdate, setErrorUpdate] = useState(false);
+
+  //alert
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("info");
+  const showAutoHideAlert = (message, severity, duration) => {
+    setAlertMessage(message);
+    setAlertType(severity);
+    setAlertOpen(true);
+
+    setTimeout(() => {
+      setAlertOpen(false);
+    }, duration);
+  };
 
   useEffect(() => {
     if (userAvatar?.image) {
@@ -41,12 +50,12 @@ export default function ChangeAvatarTab({ userAvatar, setUserAvatar, token }) {
 
   const handleSaveImage = () => {
     if (!file) {
-      alert("Select file first.");
+      showAutoHideAlert("Select file first.", "info", 5000)
       return;
     }
 
     if (isFileTooLarge) {
-      alert("File size exceeds 1MB. Please select a smaller file.");
+      showAutoHideAlert("File size exceeds 1MB. Please select a smaller file.", "info", 5000)
       return;
     }
 
@@ -65,11 +74,11 @@ export default function ChangeAvatarTab({ userAvatar, setUserAvatar, token }) {
       .then((response) => {
         setLoading(false);
         if (response.status === 200) {
-          setUpdateOk(true);
+          showAutoHideAlert("Avatar updated successfully", "success", 5000);
           return response.json();
         } else {
+          showAutoHideAlert("Error during saving avatar", "error", 5000);
           console.error("Error during saving avatar", response.status);
-          setErrorUpdate(true);
         }
       })
       .then((data) => {
@@ -79,6 +88,12 @@ export default function ChangeAvatarTab({ userAvatar, setUserAvatar, token }) {
 
   return (
     <Box>
+      <AutoHideAlert
+        alertOpen={alertOpen}
+        alertType={alertType}
+        alertMessage={alertMessage}
+        setAlertOpen={setAlertOpen}
+      />
       <Box
         sx={{
           display: "flex",
@@ -89,40 +104,6 @@ export default function ChangeAvatarTab({ userAvatar, setUserAvatar, token }) {
           marginTop: "2ch",
         }}
       >
-        <Fade in={updateOk || errorUpdate}>
-          <Alert
-            sx={{
-              m: 1,
-              width: "40ch",
-              height: "5ch",
-              alignItems: "center",
-              fontSize: "120%",
-            }}
-            severity={
-              updateOk === true
-                ? "success"
-                : errorUpdate === true
-                ? "error"
-                : "info"
-            }
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setUpdateOk(false);
-                  setErrorUpdate(false);
-                }}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
-          >
-            {updateOk && "Avatar has been changed."}
-            {errorUpdate && "Error during uploading avatar."}
-          </Alert>
-        </Fade>
       </Box>
       <Box
         sx={{

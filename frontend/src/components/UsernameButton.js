@@ -44,7 +44,12 @@ export default function UsernameButton({
         }}
       >
         {isAdministrator && (
-          <MenuItem onClick={handleClose}>Admin Page</MenuItem>
+          <Link
+            to="/admin-page"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <MenuItem onClick={handleClose}>Admin Page</MenuItem>
+          </Link>
         )}
         <Link
           to="/settings"

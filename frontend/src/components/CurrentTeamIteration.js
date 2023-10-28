@@ -3,7 +3,7 @@ import UserStoryTable from "./UserStoryTable";
 import { getUserStoriesIteration } from "../service/UserStoryUser";
 
 export default function CurrentTeamIteration(props) {
-  const { token, userDetails } = props;
+  const { token, userDetails, useDarkMode} = props;
 
   const [data, setData] = useState([]);
 
@@ -29,6 +29,7 @@ export default function CurrentTeamIteration(props) {
             setData={setData}
             team={userDetails?.team}
             iteration={data[0]?.iteration}
+            useDarkMode={useDarkMode}
           />
         )}
     </div>

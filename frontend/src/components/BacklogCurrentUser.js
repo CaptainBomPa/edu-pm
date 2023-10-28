@@ -3,7 +3,7 @@ import { getBacklogForCurrentUser } from "../service/UserStoryBacklog";
 import UserStoryTable from "./UserStoryTable";
 
 export default function BacklogCurrentUser(props) {
-  const { userDetails } = props;
+  const { userDetails, useDarkMode } = props;
 
   const [data, setData] = useState();
 
@@ -21,6 +21,7 @@ export default function BacklogCurrentUser(props) {
           data={data}
           setData={setData}
           team={userDetails?.team}
+          useDarkMode={useDarkMode}
         />
       )}
     </div>

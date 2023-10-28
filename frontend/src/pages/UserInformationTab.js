@@ -3,19 +3,14 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { updateUserInfo } from "../service/UsersInfo";
-import Alert from "@mui/material/Alert";
-import CloseIcon from "@mui/icons-material/Close";
-import Fade from "@mui/material/Fade";
-import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
+import AutoHideAlert from "../components/AutoHideAlert";
 
 export default function UserInformationTab({
   userDetails,
   token,
   setUserDetails,
 }) {
-  const [errorUpdate, setErrorUpdate] = useState(false);
-  const [updateOk, setUpdateOk] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
 
@@ -25,9 +20,23 @@ export default function UserInformationTab({
   );
   const [currentLastName, setCurrentLastName] = useState(userDetails?.lastName);
   const teamName = userDetails?.team?.teamName || "Team name not available";
-  const [assignedProjects, setAssginedProjects] = useState(
-    "Not assigned to any project"
+  const [assignedProject, setAssginedProject] = useState(userDetails? 
+    userDetails.project.projectName : "Not assigned to any project"
   );
+
+  //alert
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("info");
+  const showAutoHideAlert = (message, severity, duration) => {
+    setAlertMessage(message);
+    setAlertType(severity);
+    setAlertOpen(true);
+
+    setTimeout(() => {
+      setAlertOpen(false);
+    }, duration);
+  };
 
   useEffect(() => {
     const isDirty =
@@ -35,10 +44,11 @@ export default function UserInformationTab({
       currentFirstName !== userDetails?.firstName ||
       currentLastName !== userDetails?.lastName;
 
-    setAssginedProjects(
-      userDetails?.projects?.length === 0
-        ? "Not assigned to any project"
-        : userDetails?.projects?.map((project) => ` ${project.projectName}`)
+      console.log(userDetails?.project);
+      setAssginedProject(
+      userDetails?.project
+        ? userDetails.project.projectName
+        : "Not assigned to any project"
     );
 
     setIsFormDirty(isDirty);
@@ -64,10 +74,10 @@ export default function UserInformationTab({
       setLoading(true);
       const data = await updateUserInfo(userDetails, { token });
       if (data !== null) {
-        setUpdateOk(true);
         setUserDetails(data);
+        showAutoHideAlert("User information updated successfully", "success", 5000);
       } else if (data === null) {
-        setErrorUpdate(true);
+        showAutoHideAlert("Error updating user information", "error", 5000);
       }
       setLoading(false);
     };
@@ -93,43 +103,12 @@ export default function UserInformationTab({
             marginTop: "2ch",
           }}
         >
-          <Fade in={updateOk || errorUpdate}>
-            <Alert
-              sx={{
-                m: 1,
-                width: "40ch",
-                height: "5ch",
-                alignItems: "center",
-                fontSize: "120%",
-              }}
-              severity={
-                updateOk === true
-                  ? "success"
-                  : errorUpdate === true
-                  ? "error"
-                  : "info"
-              }
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setUpdateOk(false);
-                    setErrorUpdate(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              {updateOk === true
-                ? "Personal information are updated."
-                : errorUpdate === true
-                ? "Bad credentials, try again."
-                : ""}
-            </Alert>
-          </Fade>
+          <AutoHideAlert
+        alertOpen={alertOpen}
+        alertType={alertType}
+        alertMessage={alertMessage}
+        setAlertOpen={setAlertOpen}
+      />
         </Box>
         <Box
           sx={{
@@ -189,7 +168,7 @@ export default function UserInformationTab({
             variant="outlined"
             type="text"
             color="pmLoginTheme"
-            value={assignedProjects}
+            value={assignedProject}
           />
           <Button
             variant="contained"

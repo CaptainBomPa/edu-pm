@@ -7,9 +7,41 @@ import FormControl from "@mui/material/FormControl";
 import { getAllTeams, getAllIterations } from "../service/UserStoryEdit";
 import { getUserStoriesIterationTeam } from "../service/UserStoryUser";
 import UserStoryTable from "./UserStoryTable";
+import { getLoginTheme } from "./WebTheme";
+
+function getStyles2(name, personName, theme) {
+  if (!personName) {
+    return {
+      backgroundColor: theme.palette.pmLoginTheme.background,
+      fontWeight: theme.typography.fontWeightRegular,
+    };
+  }
+  if (name.itNumber) {
+    return {
+      backgroundColor:
+        personName.itNumber !== name.itNumber
+          ? theme.palette.pmLoginTheme.background
+          : theme.palette.pmLoginTheme.lightMain,
+      fontWeight:
+        personName.itNumber !== name.itNumber
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+  return {
+    backgroundColor:
+      personName.id !== name.id
+        ? theme.palette.pmLoginTheme.background
+        : theme.palette.pmLoginTheme.lightMain,
+    fontWeight:
+      personName.id !== name.id
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 
 export default function OtherUserStoryIterations(props) {
-  const { token, userDetails } = props;
+  const { token, userDetails, useDarkMode } = props;
 
   const [selectedTeam, setSelecteTeam] = useState();
   const [selectedIteration, setSelectedIteratoin] = useState();
@@ -72,7 +104,18 @@ export default function OtherUserStoryIterations(props) {
             color="pmLoginTheme"
           >
             {teams.map((team) => {
-              return <MenuItem value={team}>{team.teamName}</MenuItem>;
+              return (
+                <MenuItem
+                  style={getStyles2(
+                    team,
+                    selectedTeam,
+                    getLoginTheme(useDarkMode)
+                  )}
+                  value={team}
+                >
+                  {team.teamName}
+                </MenuItem>
+              );
             })}
           </Select>
         </FormControl>
@@ -94,7 +137,14 @@ export default function OtherUserStoryIterations(props) {
           >
             {iterations.map((iteration) => {
               return (
-                <MenuItem value={iteration}>
+                <MenuItem
+                  value={iteration}
+                  style={getStyles2(
+                    iteration,
+                    selectedIteration,
+                    getLoginTheme(useDarkMode)
+                  )}
+                >
                   Iteration {iteration.itNumber}
                 </MenuItem>
               );
@@ -110,6 +160,7 @@ export default function OtherUserStoryIterations(props) {
           setData={setData}
           team={selectedTeam}
           iteration={selectedIteration}
+          useDarkMode={useDarkMode}
         />
       )}
     </div>
