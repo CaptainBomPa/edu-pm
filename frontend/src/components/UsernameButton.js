@@ -45,10 +45,18 @@ export default function UsernameButton({
       >
         {isAdministrator && (
           <Link
-            to="/admin-page"
+            to="/request-add-user"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            <MenuItem onClick={handleClose}>Admin Page</MenuItem>
+            <MenuItem onClick={handleClose}>Requests</MenuItem>
+          </Link>
+        )}
+        {isAdministrator && (
+          <Link
+            to="/user-management"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <MenuItem onClick={handleClose}>User Management</MenuItem>
           </Link>
         )}
         <Link

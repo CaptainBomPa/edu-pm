@@ -47,6 +47,21 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllWithAvatars());
     }
 
+    @GetMapping(value = "/user/getAllBlocked")
+    public ResponseEntity<Collection<UserDTO>> getAllBlocked() {
+        return ResponseEntity.ok(userService.getAllBlocked());
+    }
+
+    @PostMapping(value = "/user/unlockAccounts")
+    public ResponseEntity<Collection<UserDTO>> unlockAccounts(@RequestBody Collection<UserDTO> users) {
+        return ResponseEntity.ok(userService.unlockUsers(users));
+    }
+
+    @PostMapping(value = "/user/removeAccounts")
+    public ResponseEntity<Collection<UserDTO>> removeAccounts(@RequestBody Collection<UserDTO> users) {
+        return ResponseEntity.ok(userService.removeAccounts(users));
+    }
+
     @PostMapping(value = "/user/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserDTO> update(@RequestBody RegisterRequest registerRequest) {
         userService.addUser(registerRequest);

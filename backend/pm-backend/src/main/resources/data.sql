@@ -54,7 +54,13 @@ VALUES ('admin', '$2a$10$R2rNkxslm96X9a/hOUx05..X8EmTJ89tjlyylGvBlAbN0qAQNKiAS',
        ('user9', '$2a$10$/ZONodOoDdOCxllx7diEnOspRuffJpjUCyIpGBi1KuosIHViCzsjO', 3, 'USER_WRITE', 'Joshua', 'Walker',
         1, true),
        ('user10', '$2a$10$gSJ2MxbT93qOk4KxpSTEPe9gZ3swguhoE5ltA608KWoLiw3OD8oOW', 3, 'USER_WRITE', 'Jacob', 'Turner',
-        1, true);
+        1, true),
+       ('user11', '$2a$10$gSJ2MxbT93qOk4KxpSTEPe9gZ3swguhoE5ltA608KWoLiw3OD8oOW', null, null, 'Jan', 'Kowalski',
+        null, false),
+       ('user12', '$2a$10$gSJ2MxbT93qOk4KxpSTEPe9gZ3swguhoE5ltA608KWoLiw3OD8oOW', null, null, 'Mariusz', 'Kowalczyk',
+        null, false),
+       ('user13', '$2a$10$gSJ2MxbT93qOk4KxpSTEPe9gZ3swguhoE5ltA608KWoLiw3OD8oOW', null, null, 'John', 'Johnson',
+        null, false);
 
 -- INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, ITERATION_IT_NUMBER, STORY_POINTS, ASSIGNED_USER_ID,
 --                         TEAM_ID)
@@ -73,7 +79,8 @@ VALUES ('admin', '$2a$10$R2rNkxslm96X9a/hOUx05..X8EmTJ89tjlyylGvBlAbN0qAQNKiAS',
 --        ('As a user I want... 3-2-7', 'Lorem ipsum 3-2....', 3, 4, 8, 1, 1),
 --        ('As a user I want... 3-2-8', 'Lorem ipsum 3-2....', 3, 4, 8, 1, 1);
 
-INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, ITERATION_IT_NUMBER, STORY_POINTS, ASSIGNED_USER_ID, TEAM_ID)
+INSERT INTO USER_STORY (USER_STORY_NAME, DESCRIPTION, FEATURE_ID, ITERATION_IT_NUMBER, STORY_POINTS, ASSIGNED_USER_ID,
+                        TEAM_ID)
 VALUES ('Improved search result filtering',
         'Enhancing the filtering options for search results to provide a better user experience.', 1, 1, 1, 1, 1),
        ('Advanced search result sorting',
@@ -165,136 +172,114 @@ VALUES ('Implement Feature 1', 'Implement new feature as specified', 1),
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
 VALUES ('Implement Feature 2', 'Implement new feature as specified', 2),
        ('QA Tests', 'Conduct quality assurance tests for Feature 2', 2),
-    ('Code Review', 'Perform a code review for Feature 2', 2);
+       ('Code Review', 'Perform a code review for Feature 2', 2);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Design Improvements', 'Make design improvements as described', 3),
-    ('Testing Updates', 'Update and conduct testing for Feature 3', 3),
-    ('User Feedback Review', 'Review and address user feedback for Feature 3', 3);
+VALUES ('Design Improvements', 'Make design improvements as described', 3),
+       ('Testing Updates', 'Update and conduct testing for Feature 3', 3),
+       ('User Feedback Review', 'Review and address user feedback for Feature 3', 3);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Performance Enhancements', 'Implement performance enhancements as outlined', 4),
-    ('Security Testing', 'Perform security testing for Feature 4', 4),
-    ('User Documentation', 'Create user documentation for Feature 4', 4);
+VALUES ('Performance Enhancements', 'Implement performance enhancements as outlined', 4),
+       ('Security Testing', 'Perform security testing for Feature 4', 4),
+       ('User Documentation', 'Create user documentation for Feature 4', 4);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Optimize Server-Side', 'Optimize server-side for improved performance', 5),
-    ('Load Testing', 'Conduct load testing on the updated server-side', 5),
-    ('Error Handling', 'Enhance error handling for Feature 5', 5);
+VALUES ('Optimize Server-Side', 'Optimize server-side for improved performance', 5),
+       ('Load Testing', 'Conduct load testing on the updated server-side', 5),
+       ('Error Handling', 'Enhance error handling for Feature 5', 5);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('User Feedback Integration', 'Integrate user feedback for Feature 6', 6),
-    ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 6),
-    ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 6);
+VALUES ('User Feedback Integration', 'Integrate user feedback for Feature 6', 6),
+       ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 6),
+       ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 6);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Implement Feature 1', 'Implement new feature as specified', 7),
-    ('QA Testing', 'Perform quality assurance testing for Feature 1', 7),
-    ('Documentation Update', 'Update documentation for Feature 1', 7);
+VALUES ('Implement Feature 1', 'Implement new feature as specified', 7),
+       ('QA Testing', 'Perform quality assurance testing for Feature 1', 7),
+       ('Documentation Update', 'Update documentation for Feature 1', 7);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Implement Feature 2', 'Implement new feature as specified', 8),
-    ('QA Tests', 'Conduct quality assurance tests for Feature 2', 8),
-    ('Code Review', 'Perform a code review for Feature 2', 8);
+VALUES ('Implement Feature 2', 'Implement new feature as specified', 8),
+       ('QA Tests', 'Conduct quality assurance tests for Feature 2', 8),
+       ('Code Review', 'Perform a code review for Feature 2', 8);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Design Improvements', 'Make design improvements as described', 9),
-    ('Testing Updates', 'Update and conduct testing for Feature 3', 9),
-    ('User Feedback Review', 'Review and address user feedback for Feature 3', 9);
+VALUES ('Design Improvements', 'Make design improvements as described', 9),
+       ('Testing Updates', 'Update and conduct testing for Feature 3', 9),
+       ('User Feedback Review', 'Review and address user feedback for Feature 3', 9);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Performance Enhancements', 'Implement performance enhancements as outlined', 10),
-    ('Security Testing', 'Perform security testing for Feature 4', 10),
-    ('User Documentation', 'Create user documentation for Feature 4', 10);
+VALUES ('Performance Enhancements', 'Implement performance enhancements as outlined', 10),
+       ('Security Testing', 'Perform security testing for Feature 4', 10),
+       ('User Documentation', 'Create user documentation for Feature 4', 10);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Optimize Server-Side', 'Optimize server-side for improved performance', 11),
-    ('Load Testing', 'Conduct load testing on the updated server-side', 11),
-    ('Error Handling', 'Enhance error handling for Feature 5', 11);
+VALUES ('Optimize Server-Side', 'Optimize server-side for improved performance', 11),
+       ('Load Testing', 'Conduct load testing on the updated server-side', 11),
+       ('Error Handling', 'Enhance error handling for Feature 5', 11);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('User Feedback Integration', 'Integrate user feedback for Feature 6', 12),
-    ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 12),
-    ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 12);
+VALUES ('User Feedback Integration', 'Integrate user feedback for Feature 6', 12),
+       ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 12),
+       ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 12);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Implement Feature 1', 'Implement new feature as specified', 13),
-    ('QA Testing', 'Perform quality assurance testing for Feature 1', 13),
-    ('Documentation Update', 'Update documentation for Feature 1', 13);
+VALUES ('Implement Feature 1', 'Implement new feature as specified', 13),
+       ('QA Testing', 'Perform quality assurance testing for Feature 1', 13),
+       ('Documentation Update', 'Update documentation for Feature 1', 13);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Implement Feature 2', 'Implement new feature as specified', 14),
-    ('QA Tests', 'Conduct quality assurance tests for Feature 2', 14),
-    ('Code Review', 'Perform a code review for Feature 2', 14);
+VALUES ('Implement Feature 2', 'Implement new feature as specified', 14),
+       ('QA Tests', 'Conduct quality assurance tests for Feature 2', 14),
+       ('Code Review', 'Perform a code review for Feature 2', 14);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Design Improvements', 'Make design improvements as described', 15),
-    ('Testing Updates', 'Update and conduct testing for Feature 3', 15),
-    ('User Feedback Review', 'Review and address user feedback for Feature 3', 15);
+VALUES ('Design Improvements', 'Make design improvements as described', 15),
+       ('Testing Updates', 'Update and conduct testing for Feature 3', 15),
+       ('User Feedback Review', 'Review and address user feedback for Feature 3', 15);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Performance Enhancements', 'Implement performance enhancements as outlined', 16),
-    ('Security Testing', 'Perform security testing for Feature 4', 16),
-    ('User Documentation', 'Create user documentation for Feature 4', 16);
+VALUES ('Performance Enhancements', 'Implement performance enhancements as outlined', 16),
+       ('Security Testing', 'Perform security testing for Feature 4', 16),
+       ('User Documentation', 'Create user documentation for Feature 4', 16);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Optimize Server-Side', 'Optimize server-side for improved performance', 17),
-    ('Load Testing', 'Conduct load testing on the updated server-side', 17),
-    ('Error Handling', 'Enhance error handling for Feature 5', 17);
+VALUES ('Optimize Server-Side', 'Optimize server-side for improved performance', 17),
+       ('Load Testing', 'Conduct load testing on the updated server-side', 17),
+       ('Error Handling', 'Enhance error handling for Feature 5', 17);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('User Feedback Integration', 'Integrate user feedback for Feature 6', 18),
-    ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 18),
-    ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 18);
+VALUES ('User Feedback Integration', 'Integrate user feedback for Feature 6', 18),
+       ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 18),
+       ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 18);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Implement Feature 1', 'Implement new feature as specified', 19),
-    ('QA Testing', 'Perform quality assurance testing for Feature 1', 19),
-    ('Documentation Update', 'Update documentation for Feature 1', 19);
+VALUES ('Implement Feature 1', 'Implement new feature as specified', 19),
+       ('QA Testing', 'Perform quality assurance testing for Feature 1', 19),
+       ('Documentation Update', 'Update documentation for Feature 1', 19);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Implement Feature 2', 'Implement new feature as specified', 20),
-    ('QA Tests', 'Conduct quality assurance tests for Feature 2', 20),
-    ('Code Review', 'Perform a code review for Feature 2', 20);
+VALUES ('Implement Feature 2', 'Implement new feature as specified', 20),
+       ('QA Tests', 'Conduct quality assurance tests for Feature 2', 20),
+       ('Code Review', 'Perform a code review for Feature 2', 20);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Design Improvements', 'Make design improvements as described', 21),
-    ('Testing Updates', 'Update and conduct testing for Feature 3', 21),
-    ('User Feedback Review', 'Review and address user feedback for Feature 3', 21);
+VALUES ('Design Improvements', 'Make design improvements as described', 21),
+       ('Testing Updates', 'Update and conduct testing for Feature 3', 21),
+       ('User Feedback Review', 'Review and address user feedback for Feature 3', 21);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Performance Enhancements', 'Implement performance enhancements as outlined', 22),
-    ('Security Testing', 'Perform security testing for Feature 4', 22),
-    ('User Documentation', 'Create user documentation for Feature 4', 22);
+VALUES ('Performance Enhancements', 'Implement performance enhancements as outlined', 22),
+       ('Security Testing', 'Perform security testing for Feature 4', 22),
+       ('User Documentation', 'Create user documentation for Feature 4', 22);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('Optimize Server-Side', 'Optimize server-side for improved performance', 23),
-    ('Load Testing', 'Conduct load testing on the updated server-side', 23),
-    ('Error Handling', 'Enhance error handling for Feature 5', 23);
+VALUES ('Optimize Server-Side', 'Optimize server-side for improved performance', 23),
+       ('Load Testing', 'Conduct load testing on the updated server-side', 23),
+       ('Error Handling', 'Enhance error handling for Feature 5', 23);
 
 INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
-VALUES
-    ('User Feedback Integration', 'Integrate user feedback for Feature 6', 24),
-    ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 24),
-    ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 24);
+VALUES ('User Feedback Integration', 'Integrate user feedback for Feature 6', 24),
+       ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 24),
+       ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 24);

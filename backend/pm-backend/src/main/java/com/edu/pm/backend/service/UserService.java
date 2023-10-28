@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -80,6 +81,14 @@ public class UserService {
         repository.save(user);
     }
 
+    public Collection<UserDTO> removeAccounts(Collection<UserDTO> userDTOS) {
+        Collection<UserDTO> removedUsers = new ArrayList<>();
+        for (UserDTO userDTO : userDTOS) {
+            removedUsers.add(removeUser(userDTO));
+        }
+        return removedUsers;
+    }
+
     public UserDTO removeUser(UserDTO userDTO) {
         User user = findById(userDTO.getId());
         if (user == null) {
@@ -102,6 +111,24 @@ public class UserService {
             }
         });
         return usersWithAvatar;
+    }
+
+    public Collection<UserDTO> getAllBlocked() {
+        return repository.findAll().stream()
+                .filter(user -> !user.isAccountActivated())
+                .map(UserMapper::modelToDTO)
+                .toList();
+    }
+
+    public Collection<UserDTO> unlockUsers(Collection<UserDTO> userDTOS) {
+        Collection<User> users = new ArrayList<>();
+        for (UserDTO userDTO : userDTOS) {
+            users.add(repository.findById(userDTO.getId()).orElseThrow());
+        }
+        for (User user : users) {
+            user.setAccountActivated(true);
+        }
+        return repository.saveAll(users).stream().map(UserMapper::modelToDTO).toList();
     }
 
     @Nullable

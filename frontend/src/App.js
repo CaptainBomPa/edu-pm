@@ -18,6 +18,7 @@ import { Box } from "@mui/material";
 import AdminPage from "./components/AdminPage";
 import Register from "./components/Register";
 import AutoHideAlert from "./components/AutoHideAlert";
+import RequestAdd from "./components/RequestAdd";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -189,9 +190,15 @@ function App() {
             }
           />
           <Route
-            path="admin-page"
+            path="user-management"
             element={
               <AdminPage userDetails={userDetails} useDarkMode={useDarkMode} />
+            }
+          />
+          <Route
+            path="request-add-user"
+            element={
+              <RequestAdd />
             }
           />
           <Route path="*" element={<Nopage />} />
