@@ -16,21 +16,69 @@ import { ThemeProvider } from "@emotion/react";
 import { getLoginTheme } from "./components/WebTheme";
 import { Box } from "@mui/material";
 import AdminPage from "./components/AdminPage";
+import Register from "./components/Register";
+import AutoHideAlert from "./components/AutoHideAlert";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
   const [userDetails, setUserDetails] = useState();
   const [userAvatar, setUserAvatar] = useState();
   const [useDarkMode, setUseDarkMode] = useState(true);
+  const [onRegisterForm, setOnRegisterForm] = useState(false);
   const navigate = useNavigate();
+
+  //alert
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("info");
+  const showAutoHideAlert = (message, severity, duration) => {
+    setAlertMessage(message);
+    setAlertType(severity);
+    setAlertOpen(true);
+
+    setTimeout(() => {
+      setAlertOpen(false);
+    }, duration);
+  };
 
   document.body.style.backgroundColor =
     getLoginTheme(useDarkMode).palette.pmLoginTheme.background;
 
   axios.defaults.headers.common["Content-Type"] = "application/json";
   const { token, setToken } = useToken();
-  if (!token) {
-    return <Login setToken={setToken} navigate={navigate} />;
+  if (!token && onRegisterForm) {
+    return (
+      <Box>
+        <AutoHideAlert
+          alertOpen={alertOpen}
+          alertType={alertType}
+          alertMessage={alertMessage}
+          setAlertOpen={setAlertOpen}
+        />
+        <Register
+          setOnRegisterForm={setOnRegisterForm}
+          useDarkMode={useDarkMode}
+          showAutoHideAlert={showAutoHideAlert}
+        />
+      </Box>
+    );
+  } else if (!token) {
+    return (
+      <Box>
+        <AutoHideAlert
+          alertOpen={alertOpen}
+          alertType={alertType}
+          alertMessage={alertMessage}
+          setAlertOpen={setAlertOpen}
+        />
+        <Login
+          setToken={setToken}
+          navigate={navigate}
+          setOnRegisterForm={setOnRegisterForm}
+          useDarkMode={useDarkMode}
+        />
+      </Box>
+    );
   } else {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
@@ -61,6 +109,12 @@ function App() {
   return (
     <ThemeProvider theme={getLoginTheme(useDarkMode)}>
       <Box>
+        <AutoHideAlert
+          alertOpen={alertOpen}
+          alertType={alertType}
+          alertMessage={alertMessage}
+          setAlertOpen={setAlertOpen}
+        />
         <AppNavBar
           onClick={() => {
             setNavOpen(!navOpen);
@@ -78,7 +132,11 @@ function App() {
           <Route
             path="current-iteration"
             element={
-              <CurrentTeamIteration token={token} userDetails={userDetails} useDarkMode={useDarkMode} />
+              <CurrentTeamIteration
+                token={token}
+                userDetails={userDetails}
+                useDarkMode={useDarkMode}
+              />
             }
           />
           <Route
@@ -93,15 +151,30 @@ function App() {
           />
           <Route
             path="my-backlog"
-            element={<BacklogCurrentUser userDetails={userDetails} useDarkMode={useDarkMode} />}
+            element={
+              <BacklogCurrentUser
+                userDetails={userDetails}
+                useDarkMode={useDarkMode}
+              />
+            }
           />
           <Route
             path="backlogs"
-            element={<BacklogSelectTeam userDetails={userDetails} useDarkMode={useDarkMode} />}
+            element={
+              <BacklogSelectTeam
+                userDetails={userDetails}
+                useDarkMode={useDarkMode}
+              />
+            }
           />
           <Route
             path="project-backlog"
-            element={<BacklogProject userDetails={userDetails} useDarkMode={useDarkMode} />}
+            element={
+              <BacklogProject
+                userDetails={userDetails}
+                useDarkMode={useDarkMode}
+              />
+            }
           />
           <Route
             path="settings"
@@ -115,7 +188,12 @@ function App() {
               />
             }
           />
-          <Route path="admin-page" element={<AdminPage userDetails={userDetails} useDarkMode={useDarkMode}/>} />
+          <Route
+            path="admin-page"
+            element={
+              <AdminPage userDetails={userDetails} useDarkMode={useDarkMode} />
+            }
+          />
           <Route path="*" element={<Nopage />} />
         </Routes>
       </Box>

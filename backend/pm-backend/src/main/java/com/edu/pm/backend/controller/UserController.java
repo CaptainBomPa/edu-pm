@@ -2,6 +2,7 @@ package com.edu.pm.backend.controller;
 
 import com.edu.pm.backend.commons.dto.UserDTO;
 import com.edu.pm.backend.commons.dto.auth.ChangePasswordDTO;
+import com.edu.pm.backend.commons.dto.auth.RegisterRequest;
 import com.edu.pm.backend.commons.dto.auth.UpdateUserDTO;
 import com.edu.pm.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +48,9 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserDTO> update(@RequestBody UserDTO dto) {
-        return ResponseEntity.ok(userService.addUser(dto));
+    public ResponseEntity<UserDTO> update(@RequestBody RegisterRequest registerRequest) {
+        userService.addUser(registerRequest);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/user/remove", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})

@@ -2,6 +2,7 @@ package com.edu.pm.backend.service;
 
 import com.edu.pm.backend.commons.dto.UserDTO;
 import com.edu.pm.backend.commons.dto.auth.ChangePasswordDTO;
+import com.edu.pm.backend.commons.dto.auth.RegisterRequest;
 import com.edu.pm.backend.commons.mappers.UserMapper;
 import com.edu.pm.backend.model.Project;
 import com.edu.pm.backend.model.Team;
@@ -67,27 +68,16 @@ public class UserService {
         return UserMapper.modelToDTO(repository.save(user));
     }
 
-    public UserDTO addUser(UserDTO userDTO) {
-        User.UserBuilder userBuilder = User.builder()
-                .username(userDTO.getUsername())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
-                .firstName(userDTO.getFirstName())
-                .lastName(userDTO.getLastName())
-                .roles(userDTO.getRoles());
-        if (userDTO.getTeam() != null) {
-            userBuilder.team(teamRepository.findById(userDTO.getTeam().getId()).orElseThrow());
-        }
-//        if (userDTO.getProjects() != null) {
-//            List<Project> projects = new ArrayList<>();
-//            for (ProjectDTO projectDTO : userDTO.getProjects()) {
-//                projectRepository.findById(projectDTO.getId()).ifPresent(projects::add);
-//            }
-//            userBuilder.projects(projects);
-//        }
-
-
-        User savedUser = repository.save(userBuilder.build());
-        return UserMapper.modelToDTO(savedUser);
+    public void addUser(RegisterRequest registerRequest) {
+        User user = User.builder()
+                .username(registerRequest.getUsername())
+                .firstName(registerRequest.getFirstName())
+                .lastName(registerRequest.getLastName())
+                .email(registerRequest.getEmail())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .accountActivated(false)
+                .build();
+        repository.save(user);
     }
 
     public UserDTO removeUser(UserDTO userDTO) {

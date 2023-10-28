@@ -18,8 +18,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import Fade from "@mui/material/Fade";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getLoginTheme } from "../components/WebTheme";
+import { Typography } from "@mui/material";
 
-export default function Login({ setToken, navigate }) {
+export default function Login({ setToken, navigate, setOnRegisterForm, useDarkMode }) {
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorResponse, setErrorResponse] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,7 +53,7 @@ export default function Login({ setToken, navigate }) {
   };
 
   return (
-    <ThemeProvider theme={getLoginTheme(true)} >
+    <ThemeProvider theme={getLoginTheme(useDarkMode)}>
       <form onSubmit={handleSubmit}>
         <Box
           color="pmLoginTheme"
@@ -103,13 +104,13 @@ export default function Login({ setToken, navigate }) {
             >
               {errorOpen
                 ? "Bad credentials, try again."
-                : "Could not establish connection to server."}
+                : "Bad credentials, or account is not activated yet."}
             </Alert>
           </Fade>
         </Box>
         <Box
-        color="pmLoginTheme"
-        backgroundColor="pmLoginTheme.background"
+          color="pmLoginTheme"
+          backgroundColor="pmLoginTheme.background"
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -174,8 +175,8 @@ export default function Login({ setToken, navigate }) {
             </Button>
             <br></br>
             <Box
-            color="pmLoginTheme"
-            backgroundColor="pmLoginTheme.background"
+              color="pmLoginTheme"
+              backgroundColor="pmLoginTheme.background"
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -188,6 +189,31 @@ export default function Login({ setToken, navigate }) {
           </div>
         </Box>
       </form>
+      <Box
+        color="pmLoginTheme"
+        backgroundColor="pmLoginTheme.background"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: "2ch",
+          flexDirection: "column",
+        }}
+      >
+        <Typography color="pmLoginTheme.text">
+          If you want to request a registration, please hit bellow button.
+        </Typography>
+        <Button
+          sx={{ m: 1, width: "35ch", height: "6ch" }}
+          variant="outlined"
+          color="pmLoginTheme"
+          onClick={() => {
+            setOnRegisterForm(true);
+          }}
+        >
+          Request Registration
+        </Button>
+      </Box>
     </ThemeProvider>
   );
 }

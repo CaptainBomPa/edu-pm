@@ -42,6 +42,9 @@ public class User implements UserDetails {
     private String password;
 
     @Column
+    private String email;
+
+    @Column
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
@@ -52,6 +55,9 @@ public class User implements UserDetails {
     @ManyToOne
     @Nullable
     private Project project;
+
+    @Column
+    private boolean accountActivated;
 
     public void addRole(@NotNull Role role) {
         this.roles.add(role);
@@ -96,6 +102,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return accountActivated;
     }
 }
