@@ -18,7 +18,7 @@ import static com.edu.pm.backend.commons.mappers.TaskMapper.modelToDTO;
 @RequiredArgsConstructor
 public class TaskService {
 
-    private final TaskRepository repository;
+    private final TaskRepository taskRepository;
 
     public TaskDTO add(TaskAddDTO dto) {
         Task task = Task.builder()
@@ -26,16 +26,16 @@ public class TaskService {
                 .description(dto.getDescription())
                 .userStory(UserStory.builder().id(dto.getUserStoryId()).build())
                 .build();
-        task = repository.save(task);
+        task = taskRepository.save(task);
         return modelToDTO(task);
     }
 
     public TaskDTO update(TaskAddDTO dto) {
-        Task taskFromDB = repository.findById(dto.getId()).orElseThrow();
+        Task taskFromDB = findById(dto.getId());
         taskFromDB.setTaskName(dto.getTaskName());
         taskFromDB.setDescription(dto.getDescription());
         taskFromDB.setUserStory(UserStory.builder().id(dto.getUserStoryId()).build());
-        return modelToDTO(repository.save(taskFromDB));
+        return modelToDTO(taskRepository.save(taskFromDB));
     }
 
     public TaskDTO remove(Integer id) {
@@ -43,13 +43,13 @@ public class TaskService {
         if (task == null) {
             throw new IllegalArgumentException("Entity not found");
         }
-        repository.delete(task);
+        taskRepository.delete(task);
         return modelToDTO(task);
     }
 
     @Nullable
     public Task findById(Integer id) {
-        return repository.findById(id).orElse(null);
+        return taskRepository.findById(id).orElse(null);
     }
 
     @Nullable
@@ -62,6 +62,6 @@ public class TaskService {
     }
 
     public Collection<TaskDTO> findAll() {
-        return repository.findAll().stream().map(TaskMapper::modelToDTO).toList();
+        return taskRepository.findAll().stream().map(TaskMapper::modelToDTO).toList();
     }
 }

@@ -11,8 +11,6 @@ import com.edu.pm.backend.model.enums.Role;
 import com.edu.pm.backend.repository.ProjectRepository;
 import com.edu.pm.backend.repository.TeamRepository;
 import com.edu.pm.backend.repository.UserRepository;
-import com.edu.pm.backend.repository.cache.ProjectCache;
-import com.edu.pm.backend.repository.cache.TeamCache;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,28 +24,26 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository repository;
-    private final TeamCache teamCache;
+    private final UserRepository userRepository;
     private final TeamRepository teamRepository;
-    private final ProjectCache projectCache;
     private final ProjectRepository projectRepository;
     private final PasswordEncoder passwordEncoder;
     private final AvatarService avatarService;
 
     public UserDTO getCurrentUser(String username) {
-        return UserMapper.modelToDTO(repository.findByUsername(username).orElseThrow());
+        return UserMapper.modelToDTO(userRepository.findByUsername(username).orElseThrow());
     }
 
     public UserDTO updateUser(UserDTO userDTO) {
-        User user = repository.findById(userDTO.getId()).orElseThrow();
+        User user = findById(userDTO.getId());
         user.setUsername(userDTO.getUsername());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
-        return UserMapper.modelToDTO(repository.save(user));
+        return UserMapper.modelToDTO(userRepository.save(user));
     }
 
     public UserDTO updateFullUser(UserDTO userDTO) {
-        User user = repository.findById(userDTO.getId()).orElseThrow();
+        User user = userRepository.findById(userDTO.getId()).orElseThrow();
         user.setUsername(userDTO.getUsername());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -66,7 +62,7 @@ public class UserService {
             user.setTeam(null);
         }
 
-        return UserMapper.modelToDTO(repository.save(user));
+        return UserMapper.modelToDTO(userRepository.save(user));
     }
 
     public void addUser(RegisterRequest registerRequest) {
@@ -78,7 +74,7 @@ public class UserService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .accountActivated(false)
                 .build();
-        repository.save(user);
+        userRepository.save(user);
     }
 
     public Collection<UserDTO> removeAccounts(Collection<UserDTO> userDTOS) {
@@ -94,12 +90,12 @@ public class UserService {
         if (user == null) {
             throw new IllegalArgumentException("Entity not found");
         }
-        repository.delete(user);
+        userRepository.delete(user);
         return UserMapper.modelToDTO(user);
     }
 
     public Collection<UserDTO> getAll() {
-        return repository.findAll().stream().map(UserMapper::modelToDTO).toList();
+        return userRepository.findAll().stream().map(UserMapper::modelToDTO).toList();
     }
 
     public Collection<UserDTO> getAllWithAvatars() {
@@ -114,7 +110,7 @@ public class UserService {
     }
 
     public Collection<UserDTO> getAllBlocked() {
-        return repository.findAll().stream()
+        return userRepository.findAll().stream()
                 .filter(user -> !user.isAccountActivated())
                 .map(UserMapper::modelToDTO)
                 .toList();
@@ -123,22 +119,22 @@ public class UserService {
     public Collection<UserDTO> unlockUsers(Collection<UserDTO> userDTOS) {
         Collection<User> users = new ArrayList<>();
         for (UserDTO userDTO : userDTOS) {
-            users.add(repository.findById(userDTO.getId()).orElseThrow());
+            users.add(userRepository.findById(userDTO.getId()).orElseThrow());
         }
         for (User user : users) {
             user.setAccountActivated(true);
         }
-        return repository.saveAll(users).stream().map(UserMapper::modelToDTO).toList();
+        return userRepository.saveAll(users).stream().map(UserMapper::modelToDTO).toList();
     }
 
     @Nullable
     private User findById(Integer id) {
-        return repository.findById(id).orElse(null);
+        return userRepository.findById(id).orElse(null);
     }
 
     @Nullable
     public User findByUsername(String username) {
-        return repository.findByUsername(username).orElse(null);
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     public void changePassword(ChangePasswordDTO changePasswordDTO, String username) {
@@ -149,7 +145,7 @@ public class UserService {
 
         if (passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
-            repository.save(user);
+            userRepository.save(user);
         } else {
             throw new IllegalArgumentException("Given old password is not matching");
         }
@@ -158,22 +154,22 @@ public class UserService {
     public UserDTO addRole(Integer userId, Role newRole) {
         User user = findUserByIdOrThrow(userId);
         user.addRole(newRole);
-        return UserMapper.modelToDTO(repository.save(user));
+        return UserMapper.modelToDTO(userRepository.save(user));
     }
 
     public UserDTO removeRole(Integer userId, Role roleToRemove) {
         User user = findUserByIdOrThrow(userId);
         user.removeRole(roleToRemove);
-        return UserMapper.modelToDTO(repository.save(user));
+        return UserMapper.modelToDTO(userRepository.save(user));
     }
 
     public UserDTO updateTeam(Integer userId, String newTeam) {
         User user = findUserByIdOrThrow(userId);
-        Team team = teamCache.getAll().stream()
+        Team team = teamRepository.findAll().stream()
                 .filter(item -> item.getTeamName().equals(newTeam)).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Team not found in database"));
         user.setTeam(team);
-        return UserMapper.modelToDTO(repository.save(user));
+        return UserMapper.modelToDTO(userRepository.save(user));
     }
 
     private User findUserByIdOrThrow(Integer userId) {

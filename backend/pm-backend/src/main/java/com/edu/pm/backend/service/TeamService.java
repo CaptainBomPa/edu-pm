@@ -3,7 +3,7 @@ package com.edu.pm.backend.service;
 import com.edu.pm.backend.commons.dto.TeamDTO;
 import com.edu.pm.backend.commons.mappers.TeamMapper;
 import com.edu.pm.backend.model.Team;
-import com.edu.pm.backend.repository.cache.TeamCache;
+import com.edu.pm.backend.repository.TeamRepository;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,21 +17,21 @@ import static com.edu.pm.backend.commons.mappers.TeamMapper.modelToDTO;
 @RequiredArgsConstructor
 public class TeamService {
 
-    private final TeamCache cache;
+    private final TeamRepository teamRepository;
 
     public TeamDTO add(TeamDTO dto) {
         Team team = TeamMapper.dtoToModel(dto);
-        team = cache.add(team);
+        team = teamRepository.save(team);
         return modelToDTO(team);
     }
 
     public TeamDTO update(TeamDTO dto) {
-        Team teamFromDB = cache.getById(dto.getId());
+        Team teamFromDB = findById(dto.getId());
         if (teamFromDB == null) {
             throw new IllegalArgumentException("Entity not found");
         }
         teamFromDB.setTeamName(dto.getTeamName());
-        return modelToDTO(cache.add(teamFromDB));
+        return modelToDTO(teamRepository.save(teamFromDB));
     }
 
     public TeamDTO remove(Integer id) {
@@ -39,13 +39,13 @@ public class TeamService {
         if (team == null) {
             throw new IllegalArgumentException("Entity not found");
         }
-        cache.remove(team);
+        teamRepository.delete(team);
         return modelToDTO(team);
     }
 
     @Nullable
     public Team findById(Integer id) {
-        return cache.getById(id);
+        return teamRepository.findById(id).orElse(null);
     }
 
     @Nullable
@@ -58,6 +58,6 @@ public class TeamService {
     }
 
     public Collection<TeamDTO> findAll() {
-        return cache.getAll().stream().map(TeamMapper::modelToDTO).toList();
+        return teamRepository.findAll().stream().map(TeamMapper::modelToDTO).toList();
     }
 }

@@ -283,3 +283,5 @@ INSERT INTO TASK (TASK_NAME, DESCRIPTION, USER_STORY_ID)
 VALUES ('User Feedback Integration', 'Integrate user feedback for Feature 6', 24),
        ('UI/UX Tweaks', 'Make UI/UX tweaks as per feedback', 24),
        ('Cross-Browser Testing', 'Conduct cross-browser testing for Feature 6', 24);
+
+COMMIT;

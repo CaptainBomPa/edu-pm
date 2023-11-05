@@ -1,5 +1,6 @@
 package com.edu.pm.backend.config;
 
+import com.edu.pm.backend.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

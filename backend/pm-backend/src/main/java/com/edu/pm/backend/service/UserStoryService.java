@@ -6,11 +6,7 @@ import com.edu.pm.backend.commons.mappers.FeatureMapper;
 import com.edu.pm.backend.commons.mappers.UserStoryMapper;
 import com.edu.pm.backend.model.Feature;
 import com.edu.pm.backend.model.UserStory;
-import com.edu.pm.backend.repository.IterationRepository;
-import com.edu.pm.backend.repository.TeamRepository;
-import com.edu.pm.backend.repository.UserRepository;
-import com.edu.pm.backend.repository.cache.FeatureCache;
-import com.edu.pm.backend.repository.cache.UserStoryCache;
+import com.edu.pm.backend.repository.*;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,20 +24,20 @@ import static com.edu.pm.backend.commons.mappers.UserStoryMapper.modelToDTO;
 @RequiredArgsConstructor
 public class UserStoryService {
 
-    private final UserStoryCache userStoryCache;
-    private final FeatureCache featureCache;
+    private final UserStoryRepository userStoryRepository;
+    private final FeatureRepository featureRepository;
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final IterationRepository iterationRepository;
 
     public UserStoryDTO add(UserStoryDTO dto) {
         UserStory userStory = dtoToModel(dto);
-        userStory = userStoryCache.add(userStory);
+        userStory = userStoryRepository.save(userStory);
         return modelToDTO(userStory);
     }
 
     public UserStoryDTO update(UserStoryDTO dto) {
-        UserStory userStoryFromDB = userStoryCache.getById(dto.getId());
+        UserStory userStoryFromDB = findById(dto.getId());
         if (userStoryFromDB == null) {
             throw new IllegalArgumentException("Entity not found");
         }
@@ -77,7 +73,7 @@ public class UserStoryService {
             userStoryFromDB.setIteration(null);
         }
 
-        return modelToDTO(userStoryCache.add(userStoryFromDB));
+        return modelToDTO(userStoryRepository.save(userStoryFromDB));
     }
 
     public List<UserStoryDTO> removeMultiple(List<Integer> ids) {
@@ -93,21 +89,21 @@ public class UserStoryService {
         if (userStory == null) {
             throw new IllegalArgumentException("Entity not found");
         }
-        userStoryCache.remove(userStory);
+        userStoryRepository.delete(userStory);
         return modelToDTO(userStory);
     }
 
     public Collection<UserStoryDTO> getAllByFeature(FeatureDTO featureDTO) {
         if (featureDTO != null) {
             if (featureDTO.getId() != null) {
-                Feature featureToFilter = featureCache.getAll().stream()
+                Feature featureToFilter = featureRepository.findAll().stream()
                         .filter(item -> item.getId().equals(featureDTO.getId())).findFirst().orElse(null);
                 if (featureToFilter != null) {
                     return filterByFeature(featureToFilter);
                 }
 
             } else if (featureDTO.getFeatureName() != null) {
-                Feature featureToFilter = featureCache.getAll().stream()
+                Feature featureToFilter = featureRepository.findAll().stream()
                         .filter(item -> item.getFeatureName().equals(featureDTO.getFeatureName())).findFirst().orElse(null);
                 if (featureToFilter != null) {
                     return filterByFeature(featureToFilter);
@@ -118,7 +114,7 @@ public class UserStoryService {
     }
 
     private List<UserStoryDTO> filterByFeature(Feature feature) {
-        return userStoryCache.getAll().stream()
+        return userStoryRepository.findAll().stream()
                 .filter(item -> item.getFeature().getId().equals(feature.getId()))
                 .map(UserStoryMapper::modelToDTO)
                 .collect(Collectors.toList());
@@ -126,7 +122,7 @@ public class UserStoryService {
 
     @Nullable
     public UserStory findById(Integer id) {
-        return userStoryCache.getById(id);
+        return userStoryRepository.findById(id).orElse(null);
     }
 
     @Nullable
@@ -139,7 +135,7 @@ public class UserStoryService {
     }
 
     public Collection<UserStoryDTO> findAll() {
-        return userStoryCache.getAll().stream().map(UserStoryMapper::modelToDTO).toList();
+        return userStoryRepository.findAll().stream().map(UserStoryMapper::modelToDTO).toList();
     }
 
 }

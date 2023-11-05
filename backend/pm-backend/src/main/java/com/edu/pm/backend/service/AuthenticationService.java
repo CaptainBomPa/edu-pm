@@ -2,7 +2,6 @@ package com.edu.pm.backend.service;
 
 import com.edu.pm.backend.commons.dto.auth.AuthenticationRequest;
 import com.edu.pm.backend.commons.dto.auth.AuthenticationResponse;
-import com.edu.pm.backend.config.JwtService;
 import com.edu.pm.backend.model.User;
 import com.edu.pm.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

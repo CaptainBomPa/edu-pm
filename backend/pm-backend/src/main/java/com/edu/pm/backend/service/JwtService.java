@@ -1,4 +1,4 @@
-package com.edu.pm.backend.config;
+package com.edu.pm.backend.service;
 
 import com.edu.pm.backend.model.User;
 import io.jsonwebtoken.Claims;

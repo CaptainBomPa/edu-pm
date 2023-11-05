@@ -3,7 +3,7 @@ package com.edu.pm.backend.service;
 import com.edu.pm.backend.commons.dto.ProjectDTO;
 import com.edu.pm.backend.commons.mappers.ProjectMapper;
 import com.edu.pm.backend.model.Project;
-import com.edu.pm.backend.repository.cache.ProjectCache;
+import com.edu.pm.backend.repository.ProjectRepository;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,21 +17,21 @@ import static com.edu.pm.backend.commons.mappers.ProjectMapper.modelToDTO;
 @RequiredArgsConstructor
 public class ProjectService {
 
-    private final ProjectCache cache;
+    private final ProjectRepository projectRepository;
 
     public ProjectDTO add(ProjectDTO dto) {
         Project project = dtoToModel(dto);
-        project = cache.add(project);
+        project = projectRepository.save(project);
         return modelToDTO(project);
     }
 
     public ProjectDTO update(ProjectDTO dto) {
-        Project projectFromDB = cache.getById(dto.getId());
+        Project projectFromDB = findById(dto.getId());
         if (projectFromDB == null) {
             throw new IllegalArgumentException("Entity not found");
         }
         projectFromDB.setProjectName(dto.getProjectName());
-        return modelToDTO(cache.add(projectFromDB));
+        return modelToDTO(projectRepository.save(projectFromDB));
     }
 
     public ProjectDTO remove(Integer id) {
@@ -39,13 +39,13 @@ public class ProjectService {
         if (project == null) {
             throw new IllegalArgumentException("Entity not found");
         }
-        cache.remove(project);
+        projectRepository.delete(project);
         return modelToDTO(project);
     }
 
     @Nullable
     public Project findById(Integer id) {
-        return cache.getById(id);
+        return projectRepository.findById(id).orElse(null);
     }
 
     @Nullable
@@ -58,6 +58,6 @@ public class ProjectService {
     }
 
     public Collection<ProjectDTO> findAll() {
-        return cache.getAll().stream().map(ProjectMapper::modelToDTO).toList();
+        return projectRepository.findAll().stream().map(ProjectMapper::modelToDTO).toList();
     }
 }

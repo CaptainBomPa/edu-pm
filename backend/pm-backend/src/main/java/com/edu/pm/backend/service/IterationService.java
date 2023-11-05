@@ -11,13 +11,14 @@ import com.edu.pm.backend.model.UserStory;
 import com.edu.pm.backend.repository.IterationRepository;
 import com.edu.pm.backend.repository.TaskRepository;
 import com.edu.pm.backend.repository.TeamRepository;
-import com.edu.pm.backend.repository.cache.UserStoryCache;
+import com.edu.pm.backend.repository.UserStoryRepository;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,11 +27,9 @@ public class IterationService {
 
     private final IterationRepository repository;
     private final UserService userService;
-    private final UserStoryCache userStoryCache;
+    private final UserStoryRepository userStoryRepository;
     private final TaskRepository taskRepository;
     private final TeamRepository teamRepository;
-
-    //TODO later maybe clean this service...
 
     public Collection<Iteration> getAll() {
         return repository.findAll();
@@ -49,22 +48,12 @@ public class IterationService {
             iterationToPass = getCurrentIteration();
         }
 
-        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
         if (forUser != null) {
             User user = userService.findByUsername(forUsername);
             assert user != null;
-            return getUserStoriesForIterationAndTeam(iterationToPass, user.getTeam())
-                    .stream()
-                    .map(UserStoryMapper::modelToDTO)
-                    .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
-                    .toList();
-        } else {
-            return getUserStoriesForIteration(iterationToPass)
-                    .stream()
-                    .map(UserStoryMapper::modelToDTO)
-                    .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
-                    .toList();
+            return formatListToDTOAndAddTasks(getUserStoriesForIterationAndTeam(iterationToPass, user.getTeam()));
         }
+        return formatListToDTOAndAddTasks(getUserStoriesForIteration(iterationToPass));
     }
 
     private Iteration getCurrentIteration() {
@@ -77,7 +66,7 @@ public class IterationService {
     }
 
     private Collection<UserStory> getUserStoriesForIteration(Iteration iteration) {
-        return userStoryCache.getAll().stream()
+        return userStoryRepository.findAll().stream()
                 .filter(userStory -> userStory.getIteration() != null)
                 .filter(userStory -> userStory.getIteration().getItNumber().equals(iteration.getItNumber()))
                 .toList();
@@ -92,60 +81,50 @@ public class IterationService {
 
     public Collection<UserStoryDTO> getCurrentIterationForTeamId(Integer teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow();
-        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
-        return getUserStoriesForIterationAndTeam(getCurrentIteration(), team)
-                .stream()
-                .map(UserStoryMapper::modelToDTO)
-                .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
-                .toList();
+        return formatListToDTOAndAddTasks(getUserStoriesForIterationAndTeam(getCurrentIteration(), team));
     }
 
     public Collection<UserStoryDTO> getStoriesForIterationAndTeam(Integer iterationId, Integer teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow();
         Iteration iteration = repository.findById(iterationId).orElseThrow();
-        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
-        return getUserStoriesForIterationAndTeam(iteration, team)
-                .stream()
-                .map(UserStoryMapper::modelToDTO)
-                .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
-                .toList();
+        return formatListToDTOAndAddTasks(getUserStoriesForIterationAndTeam(iteration, team));
     }
 
     public Collection<UserStoryDTO> getBacklogItemsForUser(String name) {
         User forUser = userService.findByUsername(name);
-        if (forUser != null) {
-            Team team = teamRepository.findById(forUser.getTeam().getId()).orElseThrow();
-            Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
-            return userStoryCache.getAll().stream()
-                    .filter(userStory -> userStory.getTeam() != null)
-                    .filter(userStory -> userStory.getTeam().getId().equals(team.getId()))
-                    .filter(userStory -> userStory.getIteration() == null)
-                    .map(UserStoryMapper::modelToDTO)
-                    .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
-                    .toList();
+        Team team = teamRepository.findById(forUser.getTeam().getId()).orElse(null);
+        if (forUser != null && team != null) {
+            return getBacklogItemsForTeamId(team.getId());
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public Collection<UserStoryDTO> getBacklogItemsForTeamId(Integer teamId) {
         Team team = teamRepository.findById(teamId).orElseThrow();
-        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
-        return userStoryCache.getAll().stream()
+        Collection<UserStory> userStories = findAll().stream()
                 .filter(userStory -> userStory.getTeam() != null)
                 .filter(userStory -> userStory.getTeam().getId().equals(team.getId()))
-                .filter(userStory -> userStory.getIteration() == null)
-                .map(UserStoryMapper::modelToDTO)
-                .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
-                .toList();
+                .filter(userStory -> userStory.getIteration() == null).toList();
+        return formatListToDTOAndAddTasks(userStories);
     }
 
     public Collection<UserStoryDTO> getProjectBacklog() {
-        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
-        return userStoryCache.getAll().stream()
+        Collection<UserStory> userStories = findAll().stream()
                 .filter(userStory -> userStory.getTeam() == null)
-                .filter(userStory -> userStory.getIteration() == null)
-                .map(UserStoryMapper::modelToDTO)
-                .peek(story -> story.setTasks(tasks.stream().filter(task -> task.getUserStory().getId().equals(story.getId())).collect(Collectors.toSet())))
+                .filter(userStory -> userStory.getIteration() == null).toList();
+        return formatListToDTOAndAddTasks(userStories);
+    }
+
+    private Collection<UserStory> findAll() {
+        return userStoryRepository.findAll();
+    }
+
+    private Collection<UserStoryDTO> formatListToDTOAndAddTasks(Collection<UserStory> userStories) {
+        Collection<TaskDTO> tasks = taskRepository.findAll().stream().map(TaskMapper::modelToDTO).collect(Collectors.toSet());
+        return userStories.stream().map(UserStoryMapper::modelToDTO)
+                .peek(story -> story.setTasks(tasks.stream()
+                        .filter(task -> task.getUserStory().getId().equals(story.getId()))
+                        .collect(Collectors.toSet())))
                 .toList();
     }
 }
