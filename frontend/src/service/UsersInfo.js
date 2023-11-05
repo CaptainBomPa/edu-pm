@@ -20,7 +20,7 @@ export async function getUserInfo(token) {
 export async function getUserAvatar(token) {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/user/my-avatar`
+      `http://localhost:8080/api/user/avatar`
     );
     if (response.status === 200) {
       return response.data;

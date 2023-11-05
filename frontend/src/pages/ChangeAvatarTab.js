@@ -64,7 +64,7 @@ export default function ChangeAvatarTab({ userAvatar, setUserAvatar, token }) {
 
     setLoading(true);
 
-    fetch("http://localhost:8080/api/user/upload-avatar", {
+    fetch("http://localhost:8080/api/user/uploadAvatar", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

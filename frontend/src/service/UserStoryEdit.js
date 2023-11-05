@@ -5,7 +5,7 @@ export default function UserStoryEdit() {}
 export async function getAllFeatures(token) {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/feature/get-all"
+      "http://localhost:8080/api/feature/all"
     );
     if (response.status === 200) {
       return response.data;
@@ -50,7 +50,7 @@ export async function getAllUsers(token) {
 export async function getAllProjects(token) {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/project/get-all"
+      "http://localhost:8080/api/project/all"
     );
     if (response.status === 200) {
       return response.data;
@@ -78,7 +78,7 @@ export async function getAllTeams(token) {
 export async function getAllIterations(token) {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/iteration/get-all"
+      "http://localhost:8080/api/iteration/all"
     );
     if (response.status === 200) {
       return response.data;

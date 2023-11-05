@@ -20,14 +20,9 @@ public class IterationController {
 
     private final IterationService iterationService;
 
-    @GetMapping(value = "/iteration/currentForUser")
+    @GetMapping(value = "/iteration/currentUser")
     public ResponseEntity<Collection<UserStoryDTO>> getUserStoriesForUser(Authentication authentication) {
         return ResponseEntity.ok(iterationService.getUserStories(authentication.getName(), null));
-    }
-
-    @GetMapping(value = "/iteration/currentForTeamId/{id}")
-    public ResponseEntity<Collection<UserStoryDTO>> getUserStoriesForTeamId(@PathVariable("id") final Integer teamId) {
-        return ResponseEntity.ok(iterationService.getCurrentIterationForTeamId(teamId));
     }
 
     @GetMapping(value = "/iteration/team/{teamId}/iteration/{iterationId}")
@@ -36,7 +31,7 @@ public class IterationController {
         return ResponseEntity.ok(iterationService.getStoriesForIterationAndTeam(iterationId, teamId));
     }
 
-    @GetMapping(value = "/iteration/backlog/currentForUser")
+    @GetMapping(value = "/iteration/backlog/currentUser")
     public ResponseEntity<Collection<UserStoryDTO>> getBacklogItemsForUser(Authentication authentication) {
         return ResponseEntity.ok(iterationService.getBacklogItemsForUser(authentication.getName()));
     }
@@ -51,22 +46,12 @@ public class IterationController {
         return ResponseEntity.ok(iterationService.getProjectBacklog());
     }
 
-    @GetMapping(value = "/iteration/currentAll")
-    public ResponseEntity<Collection<UserStoryDTO>> getAllUserStories() {
-        return ResponseEntity.ok(iterationService.getUserStories(null, null));
-    }
-
-    @PostMapping(value = "/iteration/userStoriesForId", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Collection<UserStoryDTO>> getUserStoriesForIteration(@RequestBody IdentityDTO identityDTO) {
-        return ResponseEntity.ok(iterationService.getUserStories(null, identityDTO.getId()));
-    }
-
     @PostMapping(value = "/iteration/userStoriesForIdAndUser", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Collection<UserStoryDTO>> getUserStoriesForIterationAndUser(@RequestBody IdentityDTO identityDTO, Authentication authentication) {
         return ResponseEntity.ok(iterationService.getUserStories(authentication.getName(), identityDTO.getId()));
     }
 
-    @GetMapping(value = "/iteration/get-all")
+    @GetMapping(value = "/iteration/all")
     public ResponseEntity<Collection<Iteration>> getAllIterations() {
         return ResponseEntity.ok(iterationService.getAll());
     }

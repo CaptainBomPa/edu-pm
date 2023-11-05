@@ -5,7 +5,7 @@ export default function UserStoryBacklog() {}
 export async function getBacklogForCurrentUser() {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/iteration/backlog/currentForUser"
+      "http://localhost:8080/api/iteration/backlog/currentUser"
     );
     if (response.status === 200) {
       console.log(response.data);

@@ -3,10 +3,8 @@ package com.edu.pm.backend.controller;
 import com.edu.pm.backend.commons.dto.AvatarDTO;
 import com.edu.pm.backend.model.User;
 import com.edu.pm.backend.repository.UserRepository;
-import com.edu.pm.backend.service.AvatarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.StreamUtils;
@@ -26,7 +24,7 @@ public class AvatarController {
     private final String uploadDirectory = "uploads/avatars/";
 
     @CrossOrigin(origins = "${pm.cross-origin}")
-    @PostMapping(value = "/user/upload-avatar")
+    @PostMapping(value = "/user/uploadAvatar")
     public ResponseEntity<AvatarDTO> uploadAvatar(@RequestParam("image") MultipartFile image, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -56,7 +54,7 @@ public class AvatarController {
     }
 
     @CrossOrigin(origins = "${pm.cross-origin}")
-    @GetMapping(value = "/user/my-avatar")
+    @GetMapping(value = "/user/avatar")
     public ResponseEntity<AvatarDTO> getAvatar(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);

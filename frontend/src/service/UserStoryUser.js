@@ -5,7 +5,7 @@ export default function UserStoryUser() {}
 export async function getUserStoriesIteration(token) {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/iteration/currentForUser"
+      "http://localhost:8080/api/iteration/currentUser"
     );
     const data = response.data;
     return data;
@@ -77,7 +77,7 @@ export async function deleteTask(token, id) {
 
 export async function addTask(token, taskData) {
   try {
-    const response = await axios.put(
+    const response = await axios.post(
       "http://localhost:8080/api/task/add",
       taskData
     );
@@ -93,7 +93,7 @@ export async function addTask(token, taskData) {
 
 export async function updateTask(token, taskData) {
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       "http://localhost:8080/api/task/update",
       taskData
     );
