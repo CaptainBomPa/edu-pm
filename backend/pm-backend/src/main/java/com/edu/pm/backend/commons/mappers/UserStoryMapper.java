@@ -17,7 +17,8 @@ public class UserStoryMapper {
                 .storyPoints(userStory.getStoryPoints())
                 .state(userStory.getState())
                 .blocked(userStory.isBlocked())
-                .blockReason(userStory.getBlockReason());
+                .blockReason(userStory.getBlockReason())
+                .tags(userStory.getTags());
         if (userStory.getFeature() != null) {
             builder.feature(FeatureMapper.modelToDTO(userStory.getFeature()));
         }
@@ -39,7 +40,8 @@ public class UserStoryMapper {
                 .storyPoints(dto.getStoryPoints())
                 .state(dto.getState())
                 .blocked(dto.isBlocked())
-                .blockReason(dto.getBlockReason());
+                .blockReason(dto.getBlockReason())
+                .tags(dto.getTags());
         if (dto.getFeature() != null) {
             builder.feature(FeatureMapper.dtoToModel(dto.getFeature()));
         }

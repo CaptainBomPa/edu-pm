@@ -25,6 +25,7 @@ import UserStoryEditDialog from "./UserStoryEditDialog";
 import TaskEditDialog from "./TaskEditDialog";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveIcon from "@mui/icons-material/Remove";
+import Chip from "@mui/material/Chip";
 import {
   deleteUserStory,
   deleteMultipleUserStories,
@@ -127,6 +128,13 @@ const headCells = [
     label: "State",
     field: "storyState",
   },
+  {
+    id: "tags",
+    numeric: false,
+    disablePadding: false,
+    label: "Tag(s)",
+    field: "tags",
+  },
 ];
 
 const DEFAULT_MIN_WIDTH_CELL = 75;
@@ -149,57 +157,56 @@ function EnhancedTableHead(props) {
   };
 
   return (
-      <TableHead className="tableHead">
-        <TableRow>
-          <TableCell className="tableCell resizable" sx={{ width: "64px" }} />
-          <TableCell padding="checkbox" className="tableCell resizable">
-            <Checkbox
-              color="pmLoginTheme"
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={rowCount > 0 && numSelected === rowCount}
-              onChange={onSelectAllClick}
-              inputProps={{
-                "aria-label": "select all desserts",
-              }}
+    <TableHead className="tableHead">
+      <TableRow>
+        <TableCell className="tableCell resizable" sx={{ width: "64px" }} />
+        <TableCell padding="checkbox" className="tableCell resizable">
+          <Checkbox
+            color="pmLoginTheme"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+            inputProps={{
+              "aria-label": "select all desserts",
+            }}
+          />
+        </TableCell>
+        <TableCell className="tableCell resizable" sx={{ width: "64px" }} />
+        {headCells.map((headCell, colIndex) => (
+          <TableCell
+            className="tableCell resizable"
+            key={headCell.id}
+            align={"right"}
+            padding={"normal"}
+            sortDirection={orderBy === headCell.id ? order : false}
+            sx={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <TableSortLabel
+              disabled={headCell.id === "tags"}
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+            <div
+              onMouseDown={() => onClickResizeColumn(colIndex)}
+              ref={columnRefs[colIndex]}
+              className={"resizeLine"}
             />
           </TableCell>
-          <TableCell className="tableCell resizable" sx={{ width: "64px" }} />
-          {headCells.map((headCell, colIndex) => (
-            <TableCell
-              className="tableCell resizable"
-              key={headCell.id}
-              align={"right"}
-              padding={"normal"}
-              sortDirection={orderBy === headCell.id ? order : false}
-              sx={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === "desc"
-                      ? "sorted descending"
-                      : "sorted ascending"}
-                  </Box>
-                ) : null}
-              </TableSortLabel>
-              <div
-                onMouseDown={() => onClickResizeColumn(colIndex)}
-                ref={columnRefs[colIndex]}
-                className={"resizeLine"}
-              />
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
+        ))}
+      </TableRow>
+    </TableHead>
   );
 }
 
@@ -223,7 +230,7 @@ function EnhancedTableToolbar(props) {
     currentIterationId,
     iteration,
     team,
-    useDarkMode
+    useDarkMode,
   } = props;
 
   const [openAdd, setOpenAdd] = useState(false);
@@ -233,8 +240,10 @@ function EnhancedTableToolbar(props) {
   };
 
   const handleAddUpdateRow = (newRow) => {
-    if (currentTeamId === newRow.assignedUser?.team?.id && 
-        currentIterationId === newRow.iteration.itNumber) {
+    if (
+      currentTeamId === newRow.assignedUser?.team?.id &&
+      currentIterationId === newRow.iteration.itNumber
+    ) {
       const updatedData = [...data, newRow];
       setData(updatedData);
       setOpenAdd(false);
@@ -247,7 +256,7 @@ function EnhancedTableToolbar(props) {
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor: (theme) => useDarkMode ? "#6b02bd" : "#f1dfff",
+          bgcolor: (theme) => (useDarkMode ? "#6b02bd" : "#f1dfff"),
         }),
       }}
     >
@@ -267,12 +276,11 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          {iteration ? "Iteration" : "Backlog"} {iteration?.itNumber} {team?.teamName}
+          {iteration ? "Iteration" : "Backlog"} {iteration?.itNumber}{" "}
+          {team?.teamName}
           <Tooltip title="Add new User Story">
             <IconButton onClick={() => handleAddUserStory()}>
-              <AddCircleOutlineIcon
-                sx={{ color: "green" }}
-              />
+              <AddCircleOutlineIcon sx={{ color: "green" }} />
             </IconButton>
           </Tooltip>
         </Typography>
@@ -281,7 +289,7 @@ function EnhancedTableToolbar(props) {
       {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton onClick={handleDelete}>
-            <DeleteIcon  />
+            <DeleteIcon />
           </IconButton>
         </Tooltip>
       )}
@@ -303,7 +311,8 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function UserStoryTable(props) {
-  const { token, userDetails, data, setData, team, iteration, useDarkMode } = props;
+  const { token, userDetails, data, setData, team, iteration, useDarkMode } =
+    props;
 
   const [visibleRows, setVisibleRows] = useState([]);
 
@@ -520,8 +529,10 @@ export default function UserStoryTable(props) {
   };
 
   const handleUpdateRow = (updatedRow) => {
-    if (userDetails?.team?.id === updatedRow.team?.id &&  
-        data[0]?.iteration?.itNumber === updatedRow.iteration.itNumber) {
+    if (
+      userDetails?.team?.id === updatedRow.team?.id &&
+      data[0]?.iteration?.itNumber === updatedRow.iteration.itNumber
+    ) {
       const updatedData = data.map((row) =>
         row.id === updatedRow.id ? updatedRow : row
       );
@@ -542,84 +553,93 @@ export default function UserStoryTable(props) {
         alertMessage={alertMessage}
         setAlertOpen={setAlertOpen}
       />
-        <Paper sx={{ width: "100%", mb: 2 }}>
-          <EnhancedTableToolbar
-            numSelected={selected.length}
-            userDetails={userDetails}
-            handleDelete={handleDelete}
-            token={token}
-            data={data}
-            setData={setData}
-            currentTeamId={team?.id}
-            currentIterationId={iteration?.itNumber}
-            team={team}
-            iteration={iteration}
-            useDarkMode={useDarkMode}
-          />
-          <TableContainer>
-            <Table
-              sx={{ minWidth: 750 }}
-              aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-              className={"table"}
-            >
-              <EnhancedTableHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={data?.length}
-                onClickResizeColumn={onClickResizeColumn}
-                columnRefs={columnRefs}
-                setColumnRefs={setColumnRefs}
-                iteration={iteration}
-                team={team}
-              />
-              <TableBody>
-                {visibleRows.map((row, index) => {
-                  return (
-                    <Row
-                      key={row.id}
-                      row={row}
-                      index={index}
-                      isSelected={isSelected}
-                      handleClick={handleClick}
-                      token={token}
-                      handleUpdateRow={handleUpdateRow}
-                      showAutoHideAlert={showAutoHideAlert}
-                      useDarkMode={useDarkMode}
-                    />
-                  );
-                })}
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50, 100, 200]}
-            component="div"
-            count={data?.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          userDetails={userDetails}
+          handleDelete={handleDelete}
+          token={token}
+          data={data}
+          setData={setData}
+          currentTeamId={team?.id}
+          currentIterationId={iteration?.itNumber}
+          team={team}
+          iteration={iteration}
+          useDarkMode={useDarkMode}
+        />
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size={dense ? "small" : "medium"}
+            className={"table"}
+          >
+            <EnhancedTableHead
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={data?.length}
+              onClickResizeColumn={onClickResizeColumn}
+              columnRefs={columnRefs}
+              setColumnRefs={setColumnRefs}
+              iteration={iteration}
+              team={team}
+            />
+            <TableBody>
+              {visibleRows.map((row, index) => {
+                return (
+                  <Row
+                    key={row.id}
+                    row={row}
+                    index={index}
+                    isSelected={isSelected}
+                    handleClick={handleClick}
+                    token={token}
+                    handleUpdateRow={handleUpdateRow}
+                    showAutoHideAlert={showAutoHideAlert}
+                    useDarkMode={useDarkMode}
+                  />
+                );
+              })}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: (dense ? 33 : 53) * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50, 100, 200]}
+          component="div"
+          count={data?.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </Box>
   );
 }
 
 function Row(props) {
-  const { row, index, handleClick, isSelected, token, handleUpdateRow, showAutoHideAlert, useDarkMode } = props;
+  const {
+    row,
+    index,
+    handleClick,
+    isSelected,
+    token,
+    handleUpdateRow,
+    showAutoHideAlert,
+    useDarkMode,
+  } = props;
   const [open, setOpen] = React.useState(false);
 
   const isItemSelected = isSelected(row.id);
@@ -724,7 +744,7 @@ function Row(props) {
         key={row.id}
         selected={isItemSelected}
         sx={{ cursor: "pointer", "& > *": { borderBottom: "unset" } }}
-        className={`tableRow ${useDarkMode ? 'dark-mode' : 'light-mode'}`}
+        className={`tableRow ${useDarkMode ? "dark-mode" : "light-mode"}`}
       >
         <TableCell
           sx={{
@@ -771,9 +791,7 @@ function Row(props) {
           }}
         >
           <IconButton onClick={() => handleEdit(row)}>
-            <ModeEditOutlineOutlinedIcon
-              color="pmLoginTheme"
-            />
+            <ModeEditOutlineOutlinedIcon color="pmLoginTheme" />
           </IconButton>
         </TableCell>
 
@@ -842,6 +860,24 @@ function Row(props) {
         >
           {formatUserStoryState(row?.state)}
         </TableCell>
+        <TableCell
+          align="right"
+          className="tableCell resizable"
+          sx={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            padding: "0px",
+          }}
+        >
+          {row?.tags?.map((tag) => (
+            <Chip
+              sx={{ marginRight: "5px", marginTop: "0px", marginBottom: "0px" }}
+              color="pmLoginTheme"
+              label={tag.tagName}
+              key={tag.id}
+            />
+          ))}
+        </TableCell>
         <TableCell align="right" className="tableCell resizable"></TableCell>
       </TableRow>
 
@@ -852,9 +888,7 @@ function Row(props) {
               <Typography variant="h6" gutterBottom component="div">
                 Tasks
                 <IconButton onClick={() => handleTaskAdd()}>
-                  <AddCircleOutlineIcon
-                    sx={{ color: "green" }}
-                  />
+                  <AddCircleOutlineIcon sx={{ color: "green" }} />
                 </IconButton>
               </Typography>
               <Table size="small" aria-label="purchases">
@@ -880,9 +914,7 @@ function Row(props) {
                           }}
                         >
                           <IconButton onClick={() => handleTaskEdit(task)}>
-                            <ModeEditOutlineOutlinedIcon
-                              color="pmLoginTheme"
-                            />
+                            <ModeEditOutlineOutlinedIcon color="pmLoginTheme" />
                           </IconButton>
                         </TableCell>
                         <TableCell

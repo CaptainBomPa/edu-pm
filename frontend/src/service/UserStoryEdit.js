@@ -17,6 +17,21 @@ export async function getAllFeatures(token) {
   }
 }
 
+export async function getAllTags() {
+  try {
+    const response = await axios.get(
+      "http://localhost:8080/api/tags/all"
+    );
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error(`Error ${response.status}`);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function getAllUsers(token) {
   try {
     const response = await axios.get(

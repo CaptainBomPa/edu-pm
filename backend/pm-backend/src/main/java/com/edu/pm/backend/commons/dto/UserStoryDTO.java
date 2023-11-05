@@ -1,6 +1,7 @@
 package com.edu.pm.backend.commons.dto;
 
 import com.edu.pm.backend.model.Iteration;
+import com.edu.pm.backend.model.Tag;
 import com.edu.pm.backend.model.enums.UserStoryState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.Set;
 
 @Data
 @Builder
@@ -27,4 +29,5 @@ public class UserStoryDTO {
     private TeamDTO team;
     private boolean blocked;
     private String blockReason;
+    private Set<Tag> tags;
 }

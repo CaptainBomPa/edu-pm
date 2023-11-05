@@ -46,6 +46,7 @@ public class UserStoryService {
         userStoryFromDB.setFeature(FeatureMapper.dtoToModel(dto.getFeature()));
         userStoryFromDB.setStoryPoints(dto.getStoryPoints());
         userStoryFromDB.setState(dto.getState());
+        userStoryFromDB.setTags(dto.getTags());
 
         if (dto.getAssignedUser() != null) {
             userStoryFromDB.setAssignedUser(userRepository.findById(dto.getAssignedUser().getId()).orElseThrow());

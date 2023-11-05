@@ -277,26 +277,17 @@ VALUES ('Release 1.0'),
        ('Release 1.1'),
        ('Product Stabilization');
 
-INSERT INTO TAG_USER_STORIES (TAG_ID, USER_STORIES_ID)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (1, 4),
-       (1, 5),
-       (1, 6),
-       (1, 7),
-       (1, 8),
-       (1, 9),
-       (1, 10);
-
 INSERT INTO USER_STORY_TAGS (TAGS_ID, USER_STORY_ID)
 VALUES (1, 1),
-       (1, 2),
+       (3, 1),
+       (2, 2),
        (1, 3),
        (1, 4),
+       (3, 4),
        (1, 5),
        (1, 6),
        (1, 7),
+       (3, 7),
        (1, 8),
        (1, 9),
        (1, 10);

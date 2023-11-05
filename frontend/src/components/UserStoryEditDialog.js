@@ -14,6 +14,7 @@ import {
   addUserStory,
   getAllTeams,
   getAllIterations,
+  getAllTags,
 } from "../service/UserStoryEdit";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Box, Typography } from "@mui/material";
@@ -25,6 +26,24 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import BlockIcon from "@mui/icons-material/Block";
 import Checkbox from "@mui/material/Checkbox";
+import Chip from "@mui/material/Chip";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { getLoginTheme } from "./WebTheme";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -71,44 +90,44 @@ export default function UserStoryEditDialog(props) {
   const [storyIteration, setStoryIteration] = useState(
     userStory ? userStory.iteration : null
   );
+  const [storyTags, setStoryTags] = useState(userStory ? userStory.tags : null);
+  const useDarkMode = true;
 
   const [features, setFeatures] = useState([]);
   const [owners, setOwners] = useState([]);
   const [teams, setTeams] = useState([]);
   const [iterations, setIterations] = useState([]);
   const [visibleOwners, setVisibleOwners] = useState([]);
-  
-  // if (selectedOwner && teams ) {
-  //   setVisibleOwners(owners.filter((owner) => owner.team.id === selectedTeam.id))
-  // }
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
-    getAllFeatures()
-      .then((features) => {
-        setFeatures(features);
-      })
-    getAllTeams()
-      .then((teams) => {
-        setTeams(teams);
+    getAllFeatures().then((features) => {
+      setFeatures(features);
     });
-    getAllUsers()
-      .then((users) => {
-        setOwners(users);
-        if (selectedTeam) {
-          setVisibleOwners(users.filter((user) => user.team?.id === selectedTeam.id))
-        }
-      })
-    getAllIterations()
-      .then((iterations) => {
-        setIterations(iterations);
-      })
-  });
+    getAllTeams().then((teams) => {
+      setTeams(teams);
+    });
+    getAllUsers().then((users) => {
+      setOwners(users);
+      if (selectedTeam) {
+        setVisibleOwners(
+          users.filter((user) => user.team?.id === selectedTeam.id)
+        );
+      }
+    });
+    getAllIterations().then((iterations) => {
+      setIterations(iterations);
+    });
+    getAllTags().then((tags) => {
+      setTags(tags);
+    });
+  }, []);
 
   const handleVisibleOwners = (team) => {
     if (selectedTeam === team) return;
     setSelectedOwner(null);
-    setVisibleOwners(owners.filter((owner) => owner.team.id === team.id));
-  }
+    setVisibleOwners(owners.filter((owner) => owner.team?.id === team.id));
+  };
 
   const handleUpdate = () => {
     const updatedStory = {
@@ -123,6 +142,7 @@ export default function UserStoryEditDialog(props) {
       blockReason: storyBlockReason,
       team: selectedTeam,
       iteration: storyIteration,
+      tags: storyTags,
     };
 
     updateStory(updatedStory, token)
@@ -149,6 +169,7 @@ export default function UserStoryEditDialog(props) {
       blockReason: storyBlockReason,
       team: selectedTeam,
       iteration: storyIteration,
+      tags: storyTags,
     };
 
     addUserStory(newStory, token)
@@ -170,290 +191,343 @@ export default function UserStoryEditDialog(props) {
   };
 
   const isFormValid = () => {
-    if (
-      !userStoryName.trim() ||
-      !storyPoints ||
-      !selectedFeature ||
-      !selectedOwner
-    ) {
+    if (!userStoryName.trim() || !storyPoints) {
       return false;
     }
     return true;
   };
 
+  const handleTagsChanged = (event) => {
+    const newTags = event.target.value;
+    const idCounts = {};
+    newTags.forEach((tag) => {
+      const id = tag.id;
+      idCounts[id] = (idCounts[id] || 0) + 1;
+    });
+    const uniqueTags = newTags.filter((tag) => idCounts[tag.id] === 1);
+    setStoryTags(uniqueTags);
+    console.log(uniqueTags);
+  };
+
   return (
     <div>
-        <Dialog
-          open={true}
-          onClose={handleClose}
-          color="pmLoginTheme"
-          maxWidth="md"
+      <Dialog
+        open={true}
+        onClose={handleClose}
+        color="pmLoginTheme"
+        maxWidth="md"
+      >
+        <Box
+          noValidate
+          component="form"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            m: "auto",
+            width: "fit-content",
+          }}
         >
+          <DialogTitle>{edit ? "Edit" : "Add new"} User Story</DialogTitle>
           <Box
             noValidate
             component="form"
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              m: "auto",
-              width: "fit-content",
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr", // Podział na dwie kolumny
+              gap: "16px", // Odstęp między kolumnami
             }}
           >
-            <DialogTitle>{edit ? "Edit" : "Add new"} User Story</DialogTitle>
-            <Box
-              noValidate
-              component="form"
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr", // Podział na dwie kolumny
-                gap: "16px", // Odstęp między kolumnami
-              }}
-            >
-              <DialogContent fullWidth>
-                <DialogContentText></DialogContentText>
+            <DialogContent fullWidth>
+              <DialogContentText></DialogContentText>
+              <TextField
+                autoFocus
+                margin="normal"
+                id="name"
+                label="User Story Name"
+                type="text"
+                fullWidth
+                color="pmLoginTheme"
+                value={userStoryName}
+                onChange={(e) => setUserStoryName(e.target.value)}
+              />
+              <TextField
+                margin="normal"
+                id="name"
+                label="Story Points"
+                type="number"
+                fullWidth
+                color="pmLoginTheme"
+                value={storyPoints}
+                onChange={(e) => setStoryPoints(e.target.value)}
+              />
+              <Autocomplete
+                margin="normal"
+                id="iteration-autocomplete"
+                options={iterations.sort((a, b) => {
+                  const numberA = parseInt(a.itNumber, 10);
+                  const numberB = parseInt(b.itNumber, 10);
+                  return numberB - numberA;
+                })}
+                fullWidth
+                getOptionLabel={(option) => "Iteration " + option.itNumber}
+                isOptionEqualToValue={(option, value) =>
+                  option.itNumber === value.itNumber
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Iteration"
+                    color="pmLoginTheme"
+                  />
+                )}
+                sx={{ marginTop: "12px" }}
+                color="pmLoginTheme"
+                value={storyIteration}
+                onChange={(e, newValue) => {
+                  setStoryIteration(newValue);
+                }}
+              />
+              <Autocomplete
+                margin="normal"
+                id="team-feature-autocomplete"
+                options={features}
+                fullWidth
+                getOptionLabel={(option) => option.featureName}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Team Feature"
+                    color="pmLoginTheme"
+                  />
+                )}
+                sx={{ marginTop: "12px" }}
+                color="pmLoginTheme"
+                value={selectedFeature}
+                onChange={(e, newValue) => setSelectedFeature(newValue)}
+              />
+              <Autocomplete
+                margin="normal"
+                id="team-autocomplete"
+                options={teams}
+                fullWidth
+                getOptionLabel={(option) => option.teamName}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <TextField {...params} label="Team" color="pmLoginTheme" />
+                )}
+                sx={{ marginTop: "12px" }}
+                color="pmLoginTheme"
+                value={selectedTeam}
+                onChange={(e, newValue) => {
+                  handleVisibleOwners(newValue);
+                  setSelectedTeam(newValue);
+                }}
+              />
+              <Autocomplete
+                margin="normal"
+                id="owner-autocomplete"
+                options={visibleOwners}
+                fullWidth
+                getOptionLabel={(owner) =>
+                  owner.firstName + " " + owner.lastName
+                }
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Owner"
+                    color="pmLoginTheme"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: "new-password",
+                    }}
+                  />
+                )}
+                sx={{ marginTop: "12px" }}
+                color="pmLoginTheme"
+                value={selectedOwner}
+                onChange={(e, newValue) => setSelectedOwner(newValue)}
+                renderOption={(props, option) => (
+                  <Box
+                    component="li"
+                    sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+                    {...props}
+                  >
+                    {option?.avatar ? (
+                      <Avatar
+                        sx={{ bgcolor: "gray" }}
+                        src={`data:image/png;base64,${option.avatar}`}
+                      />
+                    ) : (
+                      <Avatar sx={{ bgcolor: "gray" }}>
+                        {option.firstName.charAt(0).toUpperCase() +
+                          option.lastName.charAt(0).toUpperCase()}
+                      </Avatar>
+                    )}
+                    <span style={{ marginLeft: "12px" }}>
+                      {option.firstName + " " + option.lastName}
+                    </span>
+                  </Box>
+                )}
+              />
+              <ToggleButtonGroup
+                fullWidth
+                sx={{ marginTop: "12px" }}
+                value={storyState ? storyState : "NEW"}
+                exclusive
+                onChange={(event, newValue) => {
+                  setStoryState(newValue);
+                }}
+                color="pmLoginTheme"
+                // aria-label="text alignment"
+              >
+                <ToggleButton value="NEW">N</ToggleButton>
+                <ToggleButton value="DEFINED">D</ToggleButton>
+                <ToggleButton value="IN_PROGRESS">IP</ToggleButton>
+                <ToggleButton value="READY">R</ToggleButton>
+                <ToggleButton value="TEST">T</ToggleButton>
+                <ToggleButton value="TEST_READY">TR</ToggleButton>
+                <ToggleButton value="ACCEPTED">A</ToggleButton>
+                <ToggleButton value="CLOSED">C</ToggleButton>
+                <div
+                  style={{
+                    display: "inline-block",
+                    position: "relative",
+                    width: "24px",
+                    height: "24px",
+                  }}
+                >
+                  <HtmlTooltip title={tooltipExplainingStoriesState}>
+                    <QuestionMarkIcon
+                      style={{ fontSize: "34px", margin: "5px 0" }}
+                      color="pmLoginTheme"
+                    />
+                  </HtmlTooltip>
+                </div>
+              </ToggleButtonGroup>
+              <FormControl fullWidth margin="normal" color="pmLoginTheme">
+                <InputLabel id="tags-chip-label">Tags</InputLabel>
+                <Select
+                  color="pmLoginTheme"
+                  fullWidth
+                  labelId="tags-chip-label"
+                  id="tag-multiple-chip"
+                  multiple
+                  onChange={handleTagsChanged}
+                  value={storyTags ? storyTags : []}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
+                  input={
+                    <OutlinedInput id="select-multiple-chip" label="Tags" />
+                  }
+                  renderValue={(selectedTags) => (
+                    <Box
+                      sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                      color="pmLoginTheme"
+                    >
+                      {selectedTags.map((tag) => (
+                        <Chip
+                          key={tag.id}
+                          label={tag.tagName}
+                          color="pmLoginTheme"
+                        />
+                      ))}
+                    </Box>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {tags.map((tag) => (
+                    <MenuItem
+                      color="pmLoginTheme"
+                      key={tag.id}
+                      value={tag}
+                      style={getStyles(
+                        tag,
+                        storyTags,
+                        getLoginTheme(useDarkMode)
+                      )}
+                    >
+                      {tag.tagName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <Typography>
+                Blocked:{" "}
+                <Checkbox
+                  checked={storyBlocked}
+                  icon={<BlockIcon sx={{ color: "gray" }} />}
+                  checkedIcon={<BlockIcon sx={{ color: "red" }} />}
+                  onChange={() => {
+                    setStoryBlocked(!storyBlocked);
+                  }}
+                />
+              </Typography>
+
+              {storyBlocked && (
                 <TextField
-                  autoFocus
-                  margin="normal"
-                  id="name"
-                  label="User Story Name"
+                  margin="dense"
+                  id="blockReason"
+                  label="Block Reason"
                   type="text"
                   fullWidth
                   color="pmLoginTheme"
-                  value={userStoryName}
-                  onChange={(e) => setUserStoryName(e.target.value)}
+                  value={storyBlockReason}
+                  onChange={(e) => setStoryBlockReason(e.target.value)}
                 />
-                <TextField
-                  margin="normal"
-                  id="name"
-                  label="Story Points"
-                  type="number"
-                  fullWidth
-                  color="pmLoginTheme"
-                  value={storyPoints}
-                  onChange={(e) => setStoryPoints(e.target.value)}
-                />
-                <Autocomplete
-                  margin="normal"
-                  id="iteration-autocomplete"
-                  options={iterations.sort((a, b) => {
-                    const numberA = parseInt(a.itNumber, 10);
-                    const numberB = parseInt(b.itNumber, 10);
-                    return numberB - numberA;
-                  })}
-                  fullWidth
-                  getOptionLabel={(option) => "Iteration " + option.itNumber}
-                  isOptionEqualToValue={(option, value) =>
-                    option.itNumber === value.itNumber
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} label="Iteration" color="pmLoginTheme" />
-                  )}
-                  sx={{ marginTop: "12px" }}
-                  color="pmLoginTheme"
-                  value={storyIteration}
-                  onChange={(e, newValue) => {
-                    setStoryIteration(newValue)
-                  }}
-                />
-                <Autocomplete
-                  margin="normal"
-                  id="team-feature-autocomplete"
-                  options={features}
-                  fullWidth
-                  getOptionLabel={(option) => option.featureName}
-                  isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Team Feature"
-                      color="pmLoginTheme"
-                    />
-                  )}
-                  sx={{ marginTop: "12px" }}
-                  color="pmLoginTheme"
-                  value={selectedFeature}
-                  onChange={(e, newValue) => setSelectedFeature(newValue)}
-                />
-                <Autocomplete
-                  margin="normal"
-                  id="team-autocomplete"
-                  options={teams}
-                  fullWidth
-                  getOptionLabel={(option) => option.teamName}
-                  isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} label="Team" color="pmLoginTheme" />
-                  )}
-                  sx={{ marginTop: "12px" }}
-                  color="pmLoginTheme"
-                  value={selectedTeam}
-                  onChange={(e, newValue) => {
-                    handleVisibleOwners(newValue)
-                    setSelectedTeam(newValue)
-                  }}
-                />
-                <Autocomplete
-                  margin="normal"
-                  id="owner-autocomplete"
-                  options={visibleOwners}
-                  fullWidth
-                  getOptionLabel={(owner) =>
-                    owner.firstName + " " + owner.lastName
-                  }
-                  isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Owner"
-                      color="pmLoginTheme"
-                      inputProps={{
-                        ...params.inputProps,
-                        autoComplete: "new-password",
-                      }}
-                    />
-                  )}
-                  sx={{ marginTop: "12px" }}
-                  color="pmLoginTheme"
-                  value={selectedOwner}
-                  onChange={(e, newValue) => setSelectedOwner(newValue)}
-                  renderOption={(props, option) => (
-                    <Box
-                      component="li"
-                      sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-                      {...props}
-                    >
-                      {option?.avatar ? (
-                        <Avatar
-                          sx={{ bgcolor: "gray" }}
-                          src={`data:image/png;base64,${option.avatar}`}
-                        />
-                      ) : (
-                        <Avatar sx={{ bgcolor: "gray" }}>
-                          {option.firstName.charAt(0).toUpperCase() +
-                            option.lastName.charAt(0).toUpperCase()}
-                        </Avatar>
-                      )}
-                      <span style={{ marginLeft: "12px" }}>
-                        {option.firstName + " " + option.lastName}
-                      </span>
-                    </Box>
-                  )}
-                />
-                <ToggleButtonGroup
-                  fullWidth
-                  sx={{ marginTop: "12px" }}
-                  value={storyState ? storyState : "NEW"}
-                  exclusive
-                  onChange={(event, newValue) => {
-                    setStoryState(newValue);
-                  }}
-                  color="pmLoginTheme"
-                  // aria-label="text alignment"
-                >
-                  <ToggleButton value="NEW">N</ToggleButton>
-                  <ToggleButton value="DEFINED">D</ToggleButton>
-                  <ToggleButton value="IN_PROGRESS">IP</ToggleButton>
-                  <ToggleButton value="READY">R</ToggleButton>
-                  <ToggleButton value="TEST">T</ToggleButton>
-                  <ToggleButton value="TEST_READY">TR</ToggleButton>
-                  <ToggleButton value="ACCEPTED">A</ToggleButton>
-                  <ToggleButton value="CLOSED">C</ToggleButton>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      position: "relative",
-                      width: "24px",
-                      height: "24px",
-                    }}
-                  >
-                    <HtmlTooltip title={tooltipExplainingStoriesState}>
-                      <QuestionMarkIcon
-                        style={{ fontSize: "34px", margin: "5px 0" }}
-                        color="pmLoginTheme"
-                      />
-                    </HtmlTooltip>
-                  </div>
-                </ToggleButtonGroup>
-
-                <Typography>
-                  Blocked:{" "}
-                  <Checkbox
-                    checked={storyBlocked}
-                    icon={<BlockIcon sx={{ color: "gray" }} />}
-                    checkedIcon={<BlockIcon sx={{ color: "red" }} />}
-                    onChange={() => {
-                      setStoryBlocked(!storyBlocked);
-                    }}
-                  />
-                </Typography>
-
-                {storyBlocked && (
-                  <TextField
-                    margin="dense"
-                    id="blockReason"
-                    label="Block Reason"
-                    type="text"
-                    fullWidth
-                    color="pmLoginTheme"
-                    value={storyBlockReason}
-                    onChange={(e) => setStoryBlockReason(e.target.value)}
-                  />
-                )}
-              </DialogContent>
-              <DialogContent
-                fullWidth
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  flex: 1,
-                }}
-              >
-                <TextField
-                  label="Description"
-                  color="pmLoginTheme"
-                  margin="normal"
-                  fullWidth
-                  multiline
-                  value={storyDescription}
-                  onChange={(e) => setStoryDescription(e.target.value)}
-                  sx={{
-                    height: { sm: 1000, md: 500 },
-                    "& .MuiInputBase-root": {
-                      position: "relative",
-                      height: "100%",
-                      "& .MuiInputBase-input": {
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "93%",
-                        height: "100%",
-                        padding: "18px",
-                      },
-                    },
-                  }}
-                />
-              </DialogContent>
-            </Box>
-            <DialogActions>
-              <Button
+              )}
+            </DialogContent>
+            <DialogContent
+              fullWidth
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+              }}
+            >
+              <TextField
+                label="Description"
                 color="pmLoginTheme"
-                onClick={edit ? handleUpdate : handleAdd}
-                disabled={!isFormValid()}
-              >
-                {edit ? "Update" : "Add"}
-              </Button>
-              <Button color="pmLoginTheme" onClick={handleClose}>
-                Cancel
-              </Button>
-            </DialogActions>
+                margin="normal"
+                fullWidth
+                multiline
+                value={storyDescription}
+                onChange={(e) => setStoryDescription(e.target.value)}
+                sx={{
+                  height: { sm: 1000, md: 500 },
+                  "& .MuiInputBase-root": {
+                    position: "relative",
+                    height: "100%",
+                    "& .MuiInputBase-input": {
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "93%",
+                      height: "100%",
+                      padding: "18px",
+                    },
+                  },
+                }}
+              />
+            </DialogContent>
           </Box>
-        </Dialog>
+          <DialogActions>
+            <Button
+              color="pmLoginTheme"
+              onClick={edit ? handleUpdate : handleAdd}
+              disabled={!isFormValid()}
+            >
+              {edit ? "Update" : "Add"}
+            </Button>
+            <Button color="pmLoginTheme" onClick={handleClose}>
+              Cancel
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </div>
   );
 }
@@ -490,3 +564,20 @@ const tooltipExplainingStoriesState = (
     <br></br>
   </React.Fragment>
 );
+
+function getStyles(name, personName, theme) {
+  if (!name || !personName) {
+    return {
+      fontWeight: theme.typography.fontWeightRegular,
+    };
+  }
+
+  return {
+    backgroundColor: !personName.some((tag) => tag.id === name.id)
+      ? theme.palette.pmLoginTheme.background
+      : theme.palette.pmLoginTheme.lightMain,
+    fontWeight: !personName.some((tag) => tag.id === name.id)
+      ? theme.typography.fontWeightRegular
+      : theme.typography.fontWeightMedium,
+  };
+}
