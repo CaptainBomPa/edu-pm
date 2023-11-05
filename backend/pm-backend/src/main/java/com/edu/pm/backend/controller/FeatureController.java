@@ -3,7 +3,7 @@ package com.edu.pm.backend.controller;
 import com.edu.pm.backend.commons.dto.FeatureDTO;
 import com.edu.pm.backend.commons.dto.IdentityDTO;
 import com.edu.pm.backend.commons.dto.UserStoryDTO;
-import com.edu.pm.backend.service.FeatureService;
+import com.edu.pm.backend.service.entity.FeatureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

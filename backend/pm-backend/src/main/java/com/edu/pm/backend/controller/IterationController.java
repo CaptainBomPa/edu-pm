@@ -3,7 +3,7 @@ package com.edu.pm.backend.controller;
 import com.edu.pm.backend.commons.dto.IdentityDTO;
 import com.edu.pm.backend.commons.dto.UserStoryDTO;
 import com.edu.pm.backend.model.Iteration;
-import com.edu.pm.backend.service.IterationService;
+import com.edu.pm.backend.service.entity.IterationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

@@ -4,7 +4,7 @@ import com.edu.pm.backend.commons.dto.UserDTO;
 import com.edu.pm.backend.commons.dto.auth.ChangePasswordDTO;
 import com.edu.pm.backend.commons.dto.auth.RegisterRequest;
 import com.edu.pm.backend.commons.dto.auth.UpdateUserDTO;
-import com.edu.pm.backend.service.UserService;
+import com.edu.pm.backend.service.entity.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

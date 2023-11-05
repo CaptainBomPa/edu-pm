@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -57,5 +58,8 @@ public class UserStory {
 
     @Column
     private String blockReason;
+
+    @ManyToMany
+    private Set<Tag> tags;
 
 }

@@ -1,4 +1,4 @@
-package com.edu.pm.backend.service;
+package com.edu.pm.backend.service.entity;
 
 import com.edu.pm.backend.commons.dto.UserDTO;
 import com.edu.pm.backend.commons.dto.auth.ChangePasswordDTO;
@@ -11,6 +11,7 @@ import com.edu.pm.backend.model.enums.Role;
 import com.edu.pm.backend.repository.ProjectRepository;
 import com.edu.pm.backend.repository.TeamRepository;
 import com.edu.pm.backend.repository.UserRepository;
+import com.edu.pm.backend.service.AvatarService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

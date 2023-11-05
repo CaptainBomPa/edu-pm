@@ -1,4 +1,4 @@
-package com.edu.pm.backend.service;
+package com.edu.pm.backend.service.entity;
 
 import com.edu.pm.backend.commons.dto.TaskDTO;
 import com.edu.pm.backend.commons.dto.UserStoryDTO;
