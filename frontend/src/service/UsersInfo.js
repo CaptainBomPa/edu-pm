@@ -34,7 +34,7 @@ export async function getUserAvatar(token) {
 
 export async function updateUserInfo(userDetails, { token }) {
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       `http://localhost:8080/api/user/updateUserInfo`,
       userDetails
     );
@@ -86,7 +86,7 @@ export async function updateFullUser(user) {
 export async function getAllBlocked(token) {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/user/getAllBlocked"
+      "http://localhost:8080/api/user/allBlocked"
     );
     if (response.status === 200) {
       return response.data;
@@ -100,7 +100,7 @@ export async function getAllBlocked(token) {
 
 export async function unlockUsers(users) {
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       "http://localhost:8080/api/user/unlockAccounts",
       users
     );
@@ -116,7 +116,7 @@ export async function unlockUsers(users) {
 
 export async function removeUsers(users) {
   try {
-    const response = await axios.post(
+    const response = await axios.delete(
       "http://localhost:8080/api/user/removeAccounts",
       users
     );

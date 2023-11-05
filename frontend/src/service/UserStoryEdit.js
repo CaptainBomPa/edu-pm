@@ -35,7 +35,7 @@ export async function getAllTags() {
 export async function getAllUsers(token) {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/user/get-all-avatars"
+      "http://localhost:8080/api/user/allWithAvatars"
     );
     if (response.status === 200) {
       return response.data;
@@ -64,7 +64,7 @@ export async function getAllProjects(token) {
 
 export async function getAllTeams(token) {
   try {
-    const response = await axios.get("http://localhost:8080/api/team/get-all");
+    const response = await axios.get("http://localhost:8080/api/team/all");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -108,7 +108,7 @@ export async function updateStory(story, token) {
 
 export async function addUserStory(userStory, token) {
   try {
-    const response = await axios.put(
+    const response = await axios.post(
       "http://localhost:8080/api/userStory/add",
       userStory
     );

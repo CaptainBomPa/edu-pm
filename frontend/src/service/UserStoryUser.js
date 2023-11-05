@@ -46,7 +46,7 @@ export async function deleteUserStory(token, id) {
 
 export async function deleteMultipleUserStories(token, ids) {
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       "http://localhost:8080/api/userStory/deleteMultiple",
       ids
     );
