@@ -44,7 +44,6 @@ export default function Register(props) {
   };
 
   const validateConfirmPassword = (newConfirmPassword) => {
-    console.log("conf passw", password, newConfirmPassword);
     if (password === newConfirmPassword) {
       setConfirmPasswordError("");
     } else {

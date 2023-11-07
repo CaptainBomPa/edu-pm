@@ -30,6 +30,7 @@ import BackpackTwoToneIcon from "@mui/icons-material/BackpackTwoTone";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { useUserRoles } from "../service/UserRolesProvider";
 
 const drawerWidth = 240;
 
@@ -104,6 +105,8 @@ export default function AppNavBar({
   useDarkMode,
   setUseDarkMode,
 }) {
+  const { userRoles } = useUserRoles();
+
   const [avatar, setAvatar] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const theme = getLoginTheme();
@@ -189,8 +192,11 @@ export default function AppNavBar({
           <UsernameButton
             firstName={userDetails?.firstName}
             lastName={userDetails?.lastName}
-            isAdministrator={userDetails?.roles.some((element) => {
+            isAdministrator={userRoles?.some((element) => {
               return element === "ADMINISTRATOR";
+            })}
+            isProjectSupervisor={userRoles?.some((element) => {
+              return element === "PROJECT_SUPERVISOR";
             })}
             handleLogout={handleLogout}
           />

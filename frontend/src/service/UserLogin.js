@@ -12,7 +12,6 @@ export async function loginUser(credentials, setErrorOpen, setLoading, setErrorR
     const response = await axios.post(
       "http://localhost:8080/api/auth/authenticate", credentials
     );
-    console.log(response);
     if (response.status === 200) {
       return response.data;
     } else if (response.status === 401) {

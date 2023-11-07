@@ -19,6 +19,7 @@ import AdminPage from "./components/AdminPage";
 import Register from "./components/Register";
 import AutoHideAlert from "./components/AutoHideAlert";
 import RequestAdd from "./components/RequestAdd";
+import { UserRolesProvider } from "./service/UserRolesProvider";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -86,8 +87,9 @@ function App() {
 
   if (!userDetails) {
     const fetchUserData = async (e) => {
-      const data = await getUserInfo({ token });
-      setUserDetails(data);
+      await getUserInfo({ token }).then((res) => {
+        setUserDetails(res);
+      });
     };
     fetchUserData.apply();
   }
@@ -106,105 +108,104 @@ function App() {
     setToken(null);
     sessionStorage.removeItem("token");
   };
-
   return (
-    <ThemeProvider theme={getLoginTheme(useDarkMode)}>
-      <Box>
-        <AutoHideAlert
-          alertOpen={alertOpen}
-          alertType={alertType}
-          alertMessage={alertMessage}
-          setAlertOpen={setAlertOpen}
-        />
-        <AppNavBar
-          onClick={() => {
-            setNavOpen(!navOpen);
-          }}
-          setToken={setToken}
-          token={token}
-          userDetails={userDetails}
-          userAvatar={userAvatar}
-          handleLogout={handleLogout}
-          useDarkMode={useDarkMode}
-          setUseDarkMode={setUseDarkMode}
-        />
-        <Routes>
-          <Route path="home" element={<Nopage />} />
-          <Route
-            path="current-iteration"
-            element={
-              <CurrentTeamIteration
-                token={token}
-                userDetails={userDetails}
-                useDarkMode={useDarkMode}
-              />
-            }
+    <UserRolesProvider>
+      <ThemeProvider theme={getLoginTheme(useDarkMode)}>
+        <Box>
+          <AutoHideAlert
+            alertOpen={alertOpen}
+            alertType={alertType}
+            alertMessage={alertMessage}
+            setAlertOpen={setAlertOpen}
           />
-          <Route
-            path="iterations"
-            element={
-              <OtherUserStoryIterations
-                token={token}
-                userDetails={userDetails}
-                useDarkMode={useDarkMode}
-              />
-            }
+          <AppNavBar
+            onClick={() => {
+              setNavOpen(!navOpen);
+            }}
+            setToken={setToken}
+            token={token}
+            userDetails={userDetails}
+            userAvatar={userAvatar}
+            handleLogout={handleLogout}
+            useDarkMode={useDarkMode}
+            setUseDarkMode={setUseDarkMode}
           />
-          <Route
-            path="my-backlog"
-            element={
-              <BacklogCurrentUser
-                userDetails={userDetails}
-                useDarkMode={useDarkMode}
-              />
-            }
-          />
-          <Route
-            path="backlogs"
-            element={
-              <BacklogSelectTeam
-                userDetails={userDetails}
-                useDarkMode={useDarkMode}
-              />
-            }
-          />
-          <Route
-            path="project-backlog"
-            element={
-              <BacklogProject
-                userDetails={userDetails}
-                useDarkMode={useDarkMode}
-              />
-            }
-          />
-          <Route
-            path="settings"
-            element={
-              <UserSettings
-                token={token}
-                userDetails={userDetails}
-                setUserDetails={setUserDetails}
-                userAvatar={userAvatar}
-                setUserAvatar={setUserAvatar}
-              />
-            }
-          />
-          <Route
-            path="user-management"
-            element={
-              <AdminPage userDetails={userDetails} useDarkMode={useDarkMode} />
-            }
-          />
-          <Route
-            path="request-add-user"
-            element={
-              <RequestAdd />
-            }
-          />
-          <Route path="*" element={<Nopage />} />
-        </Routes>
-      </Box>
-    </ThemeProvider>
+          <Routes>
+            <Route path="home" element={<Nopage />} />
+            <Route
+              path="current-iteration"
+              element={
+                <CurrentTeamIteration
+                  token={token}
+                  userDetails={userDetails}
+                  useDarkMode={useDarkMode}
+                />
+              }
+            />
+            <Route
+              path="iterations"
+              element={
+                <OtherUserStoryIterations
+                  token={token}
+                  userDetails={userDetails}
+                  useDarkMode={useDarkMode}
+                />
+              }
+            />
+            <Route
+              path="my-backlog"
+              element={
+                <BacklogCurrentUser
+                  userDetails={userDetails}
+                  useDarkMode={useDarkMode}
+                />
+              }
+            />
+            <Route
+              path="backlogs"
+              element={
+                <BacklogSelectTeam
+                  userDetails={userDetails}
+                  useDarkMode={useDarkMode}
+                />
+              }
+            />
+            <Route
+              path="project-backlog"
+              element={
+                <BacklogProject
+                  userDetails={userDetails}
+                  useDarkMode={useDarkMode}
+                />
+              }
+            />
+            <Route
+              path="settings"
+              element={
+                <UserSettings
+                  token={token}
+                  userDetails={userDetails}
+                  setUserDetails={setUserDetails}
+                  userAvatar={userAvatar}
+                  setUserAvatar={setUserAvatar}
+                />
+              }
+            />
+            <Route
+              path="user-management"
+              element={
+                <AdminPage
+                  userDetails={userDetails}
+                  useDarkMode={useDarkMode}
+                />
+              }
+            />
+            <Route path="request-add-user" element={<RequestAdd />} />
+            <Route path="*" element={<Nopage />} />
+          </Routes>
+        </Box>
+      </ThemeProvider>
+    </UserRolesProvider>
   );
 }
 

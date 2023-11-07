@@ -44,7 +44,6 @@ export default function UserInformationTab({
       currentFirstName !== userDetails?.firstName ||
       currentLastName !== userDetails?.lastName;
 
-      console.log(userDetails?.project);
       setAssginedProject(
       userDetails?.project
         ? userDetails.project.projectName

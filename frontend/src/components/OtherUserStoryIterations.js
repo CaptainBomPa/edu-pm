@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import { useState, useEffect } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -8,6 +7,9 @@ import { getAllTeams, getAllIterations } from "../service/UserStoryEdit";
 import { getUserStoriesIterationTeam } from "../service/UserStoryUser";
 import UserStoryTable from "./UserStoryTable";
 import { getLoginTheme } from "./WebTheme";
+import { Box, Fade } from "@mui/material";
+import { CircularProgress } from "@mui/material";
+import React from "react";
 
 function getStyles2(name, personName, theme) {
   if (!personName) {
@@ -152,16 +154,47 @@ export default function OtherUserStoryIterations(props) {
           </Select>
         </FormControl>
       </Box>
-      {data && (
-        <UserStoryTable
-          token={token}
-          userDetails={userDetails}
-          data={data}
-          setData={setData}
-          team={selectedTeam}
-          iteration={selectedIteration}
-          useDarkMode={useDarkMode}
-        />
+      {selectedTeam && selectedIteration ? (
+        <div>
+          {data ? (
+            <Box
+              sx={{
+                width: "100% - 64px",
+                marginLeft: "64px",
+                marginTop: "10px",
+              }}
+            >
+              <Fade in={true} timeout={750}>
+                <div>
+                  <UserStoryTable
+                    token={token}
+                    userDetails={userDetails}
+                    data={data}
+                    setData={setData}
+                    team={selectedTeam}
+                    iteration={selectedIteration}
+                    useDarkMode={useDarkMode}
+                  />
+                </div>
+              </Fade>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                width: "100% - 64px",
+                marginLeft: "64px",
+                marginTop: "164px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <CircularProgress color="pmLoginTheme" size={125} />
+            </Box>
+          )}
+        </div>
+      ) : (
+        <div></div>
       )}
     </div>
   );

@@ -206,7 +206,6 @@ export default function UserStoryEditDialog(props) {
     });
     const uniqueTags = newTags.filter((tag) => idCounts[tag.id] === 1);
     setStoryTags(uniqueTags);
-    console.log(uniqueTags);
   };
 
   return (

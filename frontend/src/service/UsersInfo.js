@@ -69,7 +69,7 @@ export async function updatePassword({ token }, oldPassword, newPassword) {
 
 export async function updateFullUser(user) {
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       "http://localhost:8080/api/user/updateFullUserInfo",
       user
     );

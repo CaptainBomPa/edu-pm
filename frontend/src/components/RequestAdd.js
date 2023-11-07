@@ -24,7 +24,6 @@ export default function RequestAdd() {
   }, []);
 
   const handleUnlockAccounts = () => {
-    console.log(selectedRows);
     unlockUsers(selectedRows)
       .then((response) => {
         const unlockedUserIds = response.map((user) => user.id);

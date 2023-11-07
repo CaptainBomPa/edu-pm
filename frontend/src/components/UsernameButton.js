@@ -9,6 +9,7 @@ export default function UsernameButton({
   lastName,
   isAdministrator,
   handleLogout,
+  isProjectSupervisor,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -43,6 +44,14 @@ export default function UsernameButton({
           "aria-labelledby": "basic-button",
         }}
       >
+        {isProjectSupervisor && (
+          <Link
+            to="/manage-project"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <MenuItem onClick={handleClose}>Manage project</MenuItem>
+          </Link>
+        )}
         {isAdministrator && (
           <Link
             to="/request-add-user"

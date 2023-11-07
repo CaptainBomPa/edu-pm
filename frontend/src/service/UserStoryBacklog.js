@@ -8,7 +8,6 @@ export async function getBacklogForCurrentUser() {
       "http://localhost:8080/api/iteration/backlog/currentUser"
     );
     if (response.status === 200) {
-      console.log(response.data);
       return response.data;
     } else {
       console.error(`Error ${response.status}`);

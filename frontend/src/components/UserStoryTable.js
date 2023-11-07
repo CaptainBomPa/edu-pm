@@ -32,6 +32,7 @@ import {
   deleteTask,
 } from "../service/UserStoryUser";
 import AutoHideAlert from "./AutoHideAlert";
+import { useUserRoles } from "../service/UserRolesProvider";
 
 function descendingComparator(a, b) {
   if (b < a) {
@@ -150,6 +151,7 @@ function EnhancedTableHead(props) {
     onRequestSort,
     onClickResizeColumn,
     columnRefs,
+    isPermitted,
   } = props;
 
   const createSortHandler = (property) => (event) => {
@@ -162,6 +164,7 @@ function EnhancedTableHead(props) {
         <TableCell className="tableCell resizable" sx={{ width: "64px" }} />
         <TableCell padding="checkbox" className="tableCell resizable">
           <Checkbox
+            disabled = {!isPermitted()}
             color="pmLoginTheme"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -231,6 +234,7 @@ function EnhancedTableToolbar(props) {
     iteration,
     team,
     useDarkMode,
+    isPermitted,
   } = props;
 
   const [openAdd, setOpenAdd] = useState(false);
@@ -279,8 +283,8 @@ function EnhancedTableToolbar(props) {
           {iteration ? "Iteration" : "Backlog"} {iteration?.itNumber}{" "}
           {team?.teamName}
           <Tooltip title="Add new User Story">
-            <IconButton onClick={() => handleAddUserStory()}>
-              <AddCircleOutlineIcon sx={{ color: "green" }} />
+            <IconButton disabled={!isPermitted()} onClick={() => handleAddUserStory()}>
+              <AddCircleOutlineIcon sx={{color: isPermitted() ? "green" : "gray"}} />
             </IconButton>
           </Tooltip>
         </Typography>
@@ -288,7 +292,7 @@ function EnhancedTableToolbar(props) {
 
       {numSelected > 0 && (
         <Tooltip title="Delete">
-          <IconButton onClick={handleDelete}>
+          <IconButton disabled={!isPermitted()} onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -545,8 +549,13 @@ export default function UserStoryTable(props) {
     }
   };
 
+  const { userRoles } = useUserRoles();
+  const isPermitted = () => {
+    return userRoles?.includes("EDITING") || userRoles?.includes("ADMINISTRATOR") || userRoles?.includes("PROJECT_SUPERVISOR")
+  }
+
   return (
-    <Box sx={{ width: "100% - 64px", marginLeft: "64px", marginTop: "64px" }}>
+    <Box>
       <AutoHideAlert
         alertOpen={alertOpen}
         alertType={alertType}
@@ -566,6 +575,7 @@ export default function UserStoryTable(props) {
           team={team}
           iteration={iteration}
           useDarkMode={useDarkMode}
+          isPermitted={isPermitted}
         />
         <TableContainer>
           <Table
@@ -586,6 +596,7 @@ export default function UserStoryTable(props) {
               setColumnRefs={setColumnRefs}
               iteration={iteration}
               team={team}
+              isPermitted={isPermitted}
             />
             <TableBody>
               {visibleRows.map((row, index) => {
@@ -600,6 +611,7 @@ export default function UserStoryTable(props) {
                     handleUpdateRow={handleUpdateRow}
                     showAutoHideAlert={showAutoHideAlert}
                     useDarkMode={useDarkMode}
+                    isPermitted={isPermitted}
                   />
                 );
               })}
@@ -639,6 +651,7 @@ function Row(props) {
     handleUpdateRow,
     showAutoHideAlert,
     useDarkMode,
+    isPermitted,
   } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -773,6 +786,7 @@ function Row(props) {
           }}
         >
           <Checkbox
+            disabled={!isPermitted()}
             onClick={(event) => handleClick(event, row.id)}
             color="pmLoginTheme"
             checked={isItemSelected}
@@ -790,8 +804,8 @@ function Row(props) {
             verticalAlign: "middle",
           }}
         >
-          <IconButton onClick={() => handleEdit(row)}>
-            <ModeEditOutlineOutlinedIcon color="pmLoginTheme" />
+          <IconButton disabled={!isPermitted()} onClick={() => handleEdit(row)}>
+            <ModeEditOutlineOutlinedIcon color={isPermitted() ? "pmLoginTheme" : "gray"} />
           </IconButton>
         </TableCell>
 
@@ -887,8 +901,8 @@ function Row(props) {
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
                 Tasks
-                <IconButton onClick={() => handleTaskAdd()}>
-                  <AddCircleOutlineIcon sx={{ color: "green" }} />
+                <IconButton disabled={!isPermitted()} onClick={() => handleTaskAdd()}>
+                  <AddCircleOutlineIcon sx={{color: isPermitted() ? "green" : "gray"}} />
                 </IconButton>
               </Typography>
               <Table size="small" aria-label="purchases">
@@ -913,7 +927,7 @@ function Row(props) {
                             verticalAlign: "middle",
                           }}
                         >
-                          <IconButton onClick={() => handleTaskEdit(task)}>
+                          <IconButton disabled={!isPermitted()} onClick={() => handleTaskEdit(task)}>
                             <ModeEditOutlineOutlinedIcon color="pmLoginTheme" />
                           </IconButton>
                         </TableCell>
@@ -926,8 +940,8 @@ function Row(props) {
                             verticalAlign: "middle",
                           }}
                         >
-                          <IconButton onClick={() => handleTaskDelete(task.id)}>
-                            <RemoveIcon sx={{ color: "red" }} />
+                          <IconButton disabled={!isPermitted()} onClick={() => handleTaskDelete(task.id)}>
+                            <RemoveIcon sx={{color: isPermitted() ? "red" : "gray"}} />
                           </IconButton>
                         </TableCell>
 
