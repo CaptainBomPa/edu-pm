@@ -46,10 +46,10 @@ export default function UsernameButton({
       >
         {isProjectSupervisor && (
           <Link
-            to="/manage-project"
+            to="/manage-tags"
             style={{ textDecoration: "none", color: "inherit" }}
           >
-            <MenuItem onClick={handleClose}>Manage project</MenuItem>
+            <MenuItem onClick={handleClose}>Manage tags</MenuItem>
           </Link>
         )}
         {isAdministrator && (

@@ -20,6 +20,7 @@ import Register from "./components/Register";
 import AutoHideAlert from "./components/AutoHideAlert";
 import RequestAdd from "./components/RequestAdd";
 import { UserRolesProvider } from "./service/UserRolesProvider";
+import ManageTags from "./components/ManageTags";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -78,6 +79,7 @@ function App() {
           navigate={navigate}
           setOnRegisterForm={setOnRegisterForm}
           useDarkMode={useDarkMode}
+          setUseDarkMode={setUseDarkMode}
         />
       </Box>
     );
@@ -200,6 +202,7 @@ function App() {
                 />
               }
             />
+            <Route path="manage-tags" element={<ManageTags />} />
             <Route path="request-add-user" element={<RequestAdd />} />
             <Route path="*" element={<Nopage />} />
           </Routes>

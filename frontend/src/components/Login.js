@@ -19,8 +19,17 @@ import Fade from "@mui/material/Fade";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getLoginTheme } from "../components/WebTheme";
 import { Typography } from "@mui/material";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { MaterialUISwitch } from "./AppNavBar";
 
-export default function Login({ setToken, navigate, setOnRegisterForm, useDarkMode }) {
+export default function Login({
+  setToken,
+  navigate,
+  setOnRegisterForm,
+  useDarkMode,
+  setUseDarkMode,
+}) {
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorResponse, setErrorResponse] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -63,10 +72,24 @@ export default function Login({ setToken, navigate, setOnRegisterForm, useDarkMo
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "10ch",
+            marginTop: "2ch",
           }}
         >
-          <img src="logo.png" alt="no logo :("></img>
+          {useDarkMode ? (
+            <img
+              src="agile-zone_2.png"
+              alt="no logo :("
+              width="400"
+              height="400"
+            ></img>
+          ) : (
+            <img
+              src="agile-zone_1.png"
+              alt="no logo :("
+              width="400"
+              height="400"
+            ></img>
+          )}
         </Box>
         <Box
           sx={{
@@ -79,6 +102,17 @@ export default function Login({ setToken, navigate, setOnRegisterForm, useDarkMo
           color="pmLoginTheme"
           backgroundColor="pmLoginTheme.background"
         >
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <MaterialUISwitch
+                  sx={{ m: 1 }}
+                  defaultChecked={useDarkMode}
+                  onClick={() => setUseDarkMode(!useDarkMode)}
+                />
+              }
+            />
+          </FormGroup>
           <Fade in={errorOpen || errorResponse}>
             <Alert
               sx={{
