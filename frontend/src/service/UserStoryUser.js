@@ -29,7 +29,7 @@ export async function getUserStoriesIterationTeam(teamId, iterationId) {
   }
 }
 
-export async function deleteUserStory(token, id) {
+export async function deleteUserStory(id) {
   try {
     const response = await axios.delete(
       `http://localhost:8080/api/userStory/delete/${id}`

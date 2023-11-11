@@ -21,6 +21,7 @@ import AutoHideAlert from "./components/AutoHideAlert";
 import RequestAdd from "./components/RequestAdd";
 import { UserRolesProvider } from "./service/UserRolesProvider";
 import ManageTags from "./components/ManageTags";
+import FeatureTable from "./components/FeaturesTable";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -200,6 +201,12 @@ function App() {
                   userDetails={userDetails}
                   useDarkMode={useDarkMode}
                 />
+              }
+            />
+            <Route
+              path="features"
+              element={
+                <FeatureTable userDetails={userDetails}/>
               }
             />
             <Route path="manage-tags" element={<ManageTags />} />

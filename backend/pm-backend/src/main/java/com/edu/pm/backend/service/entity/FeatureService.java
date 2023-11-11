@@ -1,6 +1,7 @@
 package com.edu.pm.backend.service.entity;
 
 import com.edu.pm.backend.commons.dto.FeatureDTO;
+import com.edu.pm.backend.commons.dto.FeatureFullDTO;
 import com.edu.pm.backend.commons.dto.UserStoryDTO;
 import com.edu.pm.backend.commons.mappers.FeatureMapper;
 import com.edu.pm.backend.commons.mappers.ProjectMapper;
@@ -13,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.edu.pm.backend.commons.mappers.FeatureMapper.dtoToModel;
 import static com.edu.pm.backend.commons.mappers.FeatureMapper.modelToDTO;
@@ -69,11 +71,34 @@ public class FeatureService {
         return featureRepository.findAll().stream().map(FeatureMapper::modelToDTO).toList();
     }
 
-    public List<UserStoryDTO> getUserStories(Integer featureId) {
+    public Collection<FeatureFullDTO> findAllWithStories() {
+        Collection<FeatureFullDTO> featureFullDTOS = featureRepository.findAll().stream().map(this::mapToFullDTO).toList();
+        featureFullDTOS.forEach(featureFullDTO -> {
+            Set<UserStoryDTO> userStoryDTOS = getUserStories(featureFullDTO.getId());
+            featureFullDTO.setUserStories(userStoryDTOS);
+            int total = 0;
+            for (UserStoryDTO userStoryDTO : userStoryDTOS) {
+                total += userStoryDTO.getStoryPoints();
+            }
+            featureFullDTO.setAllStoryPoints(total);
+        });
+        return featureFullDTOS;
+    }
+
+    private FeatureFullDTO mapToFullDTO(Feature feature) {
+        return FeatureFullDTO.builder()
+                .id(feature.getId())
+                .featureName(feature.getFeatureName())
+                .description(feature.getDescription())
+                .project(ProjectMapper.modelToDTO(feature.getProject()))
+                .build();
+    }
+
+    public Set<UserStoryDTO> getUserStories(Integer featureId) {
         return userStoryRepository.findAll().stream()
-                .filter(userStory -> userStory.getFeature().getId().equals(featureId))
+                .filter(userStory -> userStory.getFeature() != null && userStory.getFeature().getId().equals(featureId))
                 .map(UserStoryMapper::modelToDTO)
-                .toList();
+                .collect(Collectors.toSet());
     }
 
 }

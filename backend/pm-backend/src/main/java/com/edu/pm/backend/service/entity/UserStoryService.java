@@ -11,10 +11,7 @@ import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.edu.pm.backend.commons.mappers.UserStoryMapper.dtoToModel;
@@ -91,6 +88,7 @@ public class UserStoryService {
             throw new IllegalArgumentException("Entity not found");
         }
         userStoryRepository.delete(userStory);
+        userStory.setTags(new HashSet<>());
         return modelToDTO(userStory);
     }
 

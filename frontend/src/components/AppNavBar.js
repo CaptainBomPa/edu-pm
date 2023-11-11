@@ -25,12 +25,13 @@ import TipsAndUpdatesOutlinedIcon from "@mui/icons-material/TipsAndUpdatesOutlin
 import BackpackIcon from "@mui/icons-material/Backpack";
 import BackpackOutlinedIcon from "@mui/icons-material/BackpackOutlined";
 import AssessmentIcon from "@mui/icons-material/Assessment";
-import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import BackpackTwoToneIcon from "@mui/icons-material/BackpackTwoTone";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useUserRoles } from "../service/UserRolesProvider";
+import StyleOutlinedIcon from '@mui/icons-material/StyleOutlined';
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 
 const drawerWidth = 240;
 
@@ -264,18 +265,19 @@ export default function AppNavBar({
         />
         <Divider />
         <DrawerItem
-          linkTo="/team-stats"
-          itemText="Team Statistics"
+          linkTo="/plan-poker"
+          itemText="Plan Poker"
           handleDrawerClose={handleDrawerClose}
           open={open}
-          icon={<AssessmentOutlinedIcon />}
+          icon={<StyleOutlinedIcon />}
         />
+        <Divider />
         <DrawerItem
-          linkTo="/project-stats"
-          itemText="Project Statistics"
+          linkTo="/chat"
+          itemText="Chat"
           handleDrawerClose={handleDrawerClose}
           open={open}
-          icon={<AssessmentIcon />}
+          icon={<ChatOutlinedIcon />}
         />
         <Divider />
       </Drawer>

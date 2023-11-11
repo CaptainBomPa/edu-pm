@@ -500,7 +500,7 @@ export default function UserStoryTable(props) {
   };
 
   const multipleDeleteUserStory = async () => {
-    const responseData = await deleteMultipleUserStories(token, selected);
+    const responseData = await deleteMultipleUserStories(selected);
     if (responseData) {
       const removedIds = responseData.map((item) => item.id);
       const updatedRows = data.filter((row) => !removedIds.includes(row.id));
@@ -516,7 +516,7 @@ export default function UserStoryTable(props) {
 
   const singleDeleteUserStory = async () => {
     const oneSelected = selected[0];
-    const responseData = await deleteUserStory(token, oneSelected);
+    const responseData = await deleteUserStory(oneSelected);
     if (responseData?.id === oneSelected) {
       const index = data.findIndex((row) => row.id === oneSelected);
       if (index !== -1) {
