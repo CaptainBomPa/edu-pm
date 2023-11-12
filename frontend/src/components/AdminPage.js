@@ -55,6 +55,11 @@ function getStyles(name, personName, theme) {
 }
 
 function getStyles2(name, personName, theme) {
+  if (!personName || !name) {
+    return {
+      fontWeight: theme.typography.fontWeightRegular,
+    };
+  }
   return {
     backgroundColor:
       personName.id !== name.id
@@ -486,8 +491,7 @@ export default function AdminPage(props) {
 }
 
 const names = [
-  "USER_READ",
-  "USER_WRITE",
+  "EDITING",
   "PROJECT_SUPERVISOR",
   "ADMINISTRATOR",
 ];

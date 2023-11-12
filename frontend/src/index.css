@@ -2,19 +2,47 @@ body {
   margin: 0
 }
 
-.custom-scrollbar {
+.custom-scrollbar-text-field textarea {
+  overflow: auto !important;;
+}
+
+.custom-scrollbar .custom-scrollbar-table {
   overflow: auto;
   height: 800px;
 }
 
+.custom-scrollbar-table {
+  overflow: auto;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
-  width: 10px; /* Szerokość paska przewijania */
+  width: 10px;
+  background-color: transparent;
+}
+
+.custom-scrollbar-table::-webkit-scrollbar {
+  height: 10px;
   background-color: transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #9723ef; /* Kolor paska przewijania */
-  border-radius: 10px; /* Zaokrąglenie paska przewijania */
+  background-color: #9723ef;
+  border-radius: 10px;
+}
+
+.custom-scrollbar-table::-webkit-scrollbar-thumb {
+  background-color: #9723ef;
+  border-radius: 10px;
+}
+
+.custom-scrollbar-text-field textarea::-webkit-scrollbar  {
+  width: 10px !important;;
+  background-color: transparent !important;;
+}
+
+.custom-scrollbar-text-field textarea::-webkit-scrollbar-thumb {
+  background-color: #9723ef !important;;
+  border-radius: 10px !important;; 
 }
 
 .Mui-selected.light-mode {

@@ -164,7 +164,7 @@ function EnhancedTableHead(props) {
         <TableCell className="tableCell resizable" sx={{ width: "64px" }} />
         <TableCell padding="checkbox" className="tableCell resizable">
           <Checkbox
-            disabled = {!isPermitted()}
+            disabled={!isPermitted()}
             color="pmLoginTheme"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -283,8 +283,13 @@ function EnhancedTableToolbar(props) {
           {iteration ? "Iteration" : "Backlog"} {iteration?.itNumber}{" "}
           {team?.teamName}
           <Tooltip title="Add new User Story">
-            <IconButton disabled={!isPermitted()} onClick={() => handleAddUserStory()}>
-              <AddCircleOutlineIcon sx={{color: isPermitted() ? "green" : "gray"}} />
+            <IconButton
+              disabled={!isPermitted()}
+              onClick={() => handleAddUserStory()}
+            >
+              <AddCircleOutlineIcon
+                sx={{ color: isPermitted() ? "green" : "gray" }}
+              />
             </IconButton>
           </Tooltip>
         </Typography>
@@ -551,8 +556,12 @@ export default function UserStoryTable(props) {
 
   const { userRoles } = useUserRoles();
   const isPermitted = () => {
-    return userRoles?.includes("EDITING") || userRoles?.includes("ADMINISTRATOR") || userRoles?.includes("PROJECT_SUPERVISOR")
-  }
+    return (
+      userRoles?.includes("EDITING") ||
+      userRoles?.includes("ADMINISTRATOR") ||
+      userRoles?.includes("PROJECT_SUPERVISOR")
+    );
+  };
 
   return (
     <Box>
@@ -577,7 +586,7 @@ export default function UserStoryTable(props) {
           useDarkMode={useDarkMode}
           isPermitted={isPermitted}
         />
-        <TableContainer>
+        <TableContainer className="custom-scrollbar-table">
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
@@ -598,10 +607,11 @@ export default function UserStoryTable(props) {
               team={team}
               isPermitted={isPermitted}
             />
-            <TableBody>
+            <TableBody className="custom-scrollbar">
               {visibleRows.map((row, index) => {
                 return (
                   <Row
+                    className="custom-scrollbar"
                     key={row.id}
                     row={row}
                     index={index}
@@ -617,6 +627,7 @@ export default function UserStoryTable(props) {
               })}
               {emptyRows > 0 && (
                 <TableRow
+                  className="custom-scrollbar"
                   style={{
                     height: (dense ? 33 : 53) * emptyRows,
                   }}
@@ -663,9 +674,14 @@ function Row(props) {
   const [tasks, setTasks] = useState(row.tasks);
 
   const handleUpdateTaskList = (newTask) => {
-    const updatedTasks = [...tasks, newTask];
-    setTasks(updatedTasks);
-    showAutoHideAlert("Task updated", "success", 5000);
+    if (!tasks) {
+      setTasks([newTask]);
+      showAutoHideAlert("Task updated", "success", 5000);
+    } else {
+      const updatedTasks = [...tasks, newTask];
+      setTasks(updatedTasks);
+      showAutoHideAlert("Task updated", "success", 5000);
+    }
   };
 
   const handleUpdateTaskFromList = (updatedTask) => {
@@ -760,6 +776,7 @@ function Row(props) {
         className={`tableRow ${useDarkMode ? "dark-mode" : "light-mode"}`}
       >
         <TableCell
+          className="tableCell"
           sx={{
             width: "64px",
             padding: "0",
@@ -805,7 +822,9 @@ function Row(props) {
           }}
         >
           <IconButton disabled={!isPermitted()} onClick={() => handleEdit(row)}>
-            <ModeEditOutlineOutlinedIcon color={isPermitted() ? "pmLoginTheme" : "gray"} />
+            <ModeEditOutlineOutlinedIcon
+              color={isPermitted() ? "pmLoginTheme" : "gray"}
+            />
           </IconButton>
         </TableCell>
 
@@ -901,8 +920,13 @@ function Row(props) {
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
                 Tasks
-                <IconButton disabled={!isPermitted()} onClick={() => handleTaskAdd()}>
-                  <AddCircleOutlineIcon sx={{color: isPermitted() ? "green" : "gray"}} />
+                <IconButton
+                  disabled={!isPermitted()}
+                  onClick={() => handleTaskAdd()}
+                >
+                  <AddCircleOutlineIcon
+                    sx={{ color: isPermitted() ? "green" : "gray" }}
+                  />
                 </IconButton>
               </Typography>
               <Table size="small" aria-label="purchases">
@@ -919,7 +943,6 @@ function Row(props) {
                     return (
                       <TableRow key={task.id}>
                         <TableCell
-                          className="tableCell resizable"
                           sx={{
                             width: "64px",
                             padding: "0",
@@ -927,12 +950,16 @@ function Row(props) {
                             verticalAlign: "middle",
                           }}
                         >
-                          <IconButton disabled={!isPermitted()} onClick={() => handleTaskEdit(task)}>
-                            <ModeEditOutlineOutlinedIcon color="pmLoginTheme" />
+                          <IconButton
+                            disabled={!isPermitted()}
+                            onClick={() => handleTaskEdit(task)}
+                          >
+                            <ModeEditOutlineOutlinedIcon
+                              color={isPermitted() ? "pmLoginTheme" : "gray"}
+                            />
                           </IconButton>
                         </TableCell>
                         <TableCell
-                          className="tableCell resizable"
                           sx={{
                             width: "64px",
                             padding: "0",
@@ -940,8 +967,13 @@ function Row(props) {
                             verticalAlign: "middle",
                           }}
                         >
-                          <IconButton disabled={!isPermitted()} onClick={() => handleTaskDelete(task.id)}>
-                            <RemoveIcon sx={{color: isPermitted() ? "red" : "gray"}} />
+                          <IconButton
+                            disabled={!isPermitted()}
+                            onClick={() => handleTaskDelete(task.id)}
+                          >
+                            <RemoveIcon
+                              sx={{ color: isPermitted() ? "red" : "gray" }}
+                            />
                           </IconButton>
                         </TableCell>
 

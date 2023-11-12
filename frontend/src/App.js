@@ -22,6 +22,7 @@ import RequestAdd from "./components/RequestAdd";
 import { UserRolesProvider } from "./service/UserRolesProvider";
 import ManageTags from "./components/ManageTags";
 import FeatureTable from "./components/FeaturesTable";
+import FeatureWrapper from "./components/FeatureWrapper";
 
 function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -81,6 +82,7 @@ function App() {
           setOnRegisterForm={setOnRegisterForm}
           useDarkMode={useDarkMode}
           setUseDarkMode={setUseDarkMode}
+          showAutoHideAlert={showAutoHideAlert}
         />
       </Box>
     );
@@ -206,7 +208,10 @@ function App() {
             <Route
               path="features"
               element={
-                <FeatureTable userDetails={userDetails}/>
+                <FeatureWrapper
+                  userDetails={userDetails}
+                  useDarkMode={useDarkMode}
+                />
               }
             />
             <Route path="manage-tags" element={<ManageTags />} />

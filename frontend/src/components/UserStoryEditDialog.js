@@ -208,9 +208,12 @@ export default function UserStoryEditDialog(props) {
     setStoryTags(uniqueTags);
   };
 
+  const [width, setWidth] = useState(window.innerWidth);
+
   return (
     <div>
       <Dialog
+        className="custom-scrollbar"
         open={true}
         onClose={handleClose}
         color="pmLoginTheme"
@@ -219,7 +222,10 @@ export default function UserStoryEditDialog(props) {
         <Box
           noValidate
           component="form"
+          className="custom-scrollbar"
           sx={{
+            maxHeight: 800,
+            overflow: "auto",
             display: "flex",
             flexDirection: "column",
             m: "auto",
@@ -232,15 +238,14 @@ export default function UserStoryEditDialog(props) {
             component="form"
             sx={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr", // Podział na dwie kolumny
-              gap: "16px", // Odstęp między kolumnami
+              gridTemplateColumns: "2fr",
+              gap: "16px",
             }}
           >
             <DialogContent fullWidth>
               <DialogContentText></DialogContentText>
               <TextField
                 autoFocus
-                margin="normal"
                 id="name"
                 label="User Story Name"
                 type="text"
@@ -249,18 +254,24 @@ export default function UserStoryEditDialog(props) {
                 value={userStoryName}
                 onChange={(e) => setUserStoryName(e.target.value)}
               />
-              <TextField
-                margin="normal"
-                id="name"
-                label="Story Points"
-                type="number"
+              <Autocomplete
+                id="storyPoints"
+                options={possibleValuesStoryPoints}
                 fullWidth
+                isOptionEqualToValue={(option, value) => option === value}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Story Points"
+                    color="pmLoginTheme"
+                  />
+                )}
+                sx={{ marginTop: "12px" }}
                 color="pmLoginTheme"
                 value={storyPoints}
-                onChange={(e) => setStoryPoints(e.target.value)}
+                onChange={(e, newValue) => setStoryPoints(newValue)}
               />
               <Autocomplete
-                margin="normal"
                 id="iteration-autocomplete"
                 options={iterations.sort((a, b) => {
                   const numberA = parseInt(a.itNumber, 10);
@@ -279,12 +290,12 @@ export default function UserStoryEditDialog(props) {
                     color="pmLoginTheme"
                   />
                 )}
-                sx={{ marginTop: "12px" }}
                 color="pmLoginTheme"
                 value={storyIteration}
                 onChange={(e, newValue) => {
                   setStoryIteration(newValue);
                 }}
+                sx={{ marginTop: "12px" }}
               />
               <Autocomplete
                 margin="normal"
@@ -379,7 +390,6 @@ export default function UserStoryEditDialog(props) {
                   setStoryState(newValue);
                 }}
                 color="pmLoginTheme"
-                // aria-label="text alignment"
               >
                 <ToggleButton value="NEW">N</ToggleButton>
                 <ToggleButton value="DEFINED">D</ToggleButton>
@@ -478,15 +488,6 @@ export default function UserStoryEditDialog(props) {
                   onChange={(e) => setStoryBlockReason(e.target.value)}
                 />
               )}
-            </DialogContent>
-            <DialogContent
-              fullWidth
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                flex: 1,
-              }}
-            >
               <TextField
                 label="Description"
                 color="pmLoginTheme"
@@ -495,20 +496,9 @@ export default function UserStoryEditDialog(props) {
                 multiline
                 value={storyDescription}
                 onChange={(e) => setStoryDescription(e.target.value)}
-                sx={{
-                  height: { sm: 1000, md: 500 },
-                  "& .MuiInputBase-root": {
-                    position: "relative",
-                    height: "100%",
-                    "& .MuiInputBase-input": {
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "93%",
-                      height: "100%",
-                      padding: "18px",
-                    },
-                  },
+                maxRows={5}
+                InputProps={{
+                  className: "custom-scrollbar-text-field",
                 }}
               />
             </DialogContent>
@@ -530,6 +520,8 @@ export default function UserStoryEditDialog(props) {
     </div>
   );
 }
+
+const possibleValuesStoryPoints = [1, 2, 3, 5, 8, 13];
 
 const tooltipExplainingStoriesState = (
   <React.Fragment>

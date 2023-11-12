@@ -84,11 +84,11 @@ function getComparator(order, orderBy) {
       ? (a, b) => descendingComparator(b.id, a.id)
       : (a, b) => descendingComparator(a.id, b.id);
   }
-    if (orderBy === "featureName") {
-      return order === "desc"
-        ? (a, b) => alphanumSort(b.featureName, a.featureName)
-        : (a, b) => alphanumSort(a.featureName, b.featureName);
-    }
+  if (orderBy === "featureName") {
+    return order === "desc"
+      ? (a, b) => alphanumSort(b.featureName, a.featureName)
+      : (a, b) => alphanumSort(a.featureName, b.featureName);
+  }
 }
 
 function stableSort(array, comparator) {
@@ -191,14 +191,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function FeatureTable(props) {
-  const { userDetails, useDarkMode } = props;
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    getAllWithStories().then((data) => {
-      setData(data);
-    });
-  }, []);
+  const { userDetails, useDarkMode, data, setData } = props;
 
   const [visibleRows, setVisibleRows] = useState([]);
   const [order, setOrder] = React.useState("desc");
@@ -352,7 +345,7 @@ export default function FeatureTable(props) {
   const [editOpen, setEditOpen] = useState(false);
 
   return (
-    <Box sx={{ width: "100% - 64px", marginLeft: "64px", marginTop: "64px" }}>
+    <Box>
       {editOpen && (
         <FeatureDialog
           data={data}
@@ -499,6 +492,7 @@ function Row(props) {
         className={`tableRow ${useDarkMode ? "dark-mode" : "light-mode"}`}
       >
         <TableCell
+          className="tableCell resizable"
           sx={{
             width: "64px",
             padding: "0",
@@ -585,7 +579,6 @@ function Row(props) {
                     return (
                       <TableRow key={userStory.id}>
                         <TableCell
-                          className="tableCell resizable"
                           sx={{
                             width: "64px",
                             padding: "0",
@@ -605,16 +598,10 @@ function Row(props) {
                           </IconButton>
                         </TableCell>
 
-                        <TableCell
-                          className="tableCell resizable"
-                          component="th"
-                          scope="row"
-                        >
+                        <TableCell component="th" scope="row">
                           {userStory.id}
                         </TableCell>
-                        <TableCell className="tableCell resizable">
-                          {userStory.userStoryName}
-                        </TableCell>
+                        <TableCell>{userStory.userStoryName}</TableCell>
                       </TableRow>
                     );
                   })}

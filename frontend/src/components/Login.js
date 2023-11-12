@@ -29,9 +29,8 @@ export default function Login({
   setOnRegisterForm,
   useDarkMode,
   setUseDarkMode,
+  showAutoHideAlert,
 }) {
-  const [errorOpen, setErrorOpen] = useState(false);
-  const [errorResponse, setErrorResponse] = useState(false);
   const [loading, setLoading] = useState(false);
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
@@ -43,13 +42,17 @@ export default function Login({
         username,
         password,
       },
-      setErrorOpen,
-      setLoading,
-      setErrorResponse
+      setLoading
     );
     if (data?.token) {
       setToken(data.token);
       navigate("/home");
+    } else {
+      showAutoHideAlert(
+        "Failed to login. Check your credentials",
+        "error",
+        5000
+      );
     }
   };
 
@@ -73,6 +76,7 @@ export default function Login({
             justifyContent: "center",
             alignItems: "center",
             marginTop: "2ch",
+            marginBottom: "0",
           }}
         >
           {useDarkMode ? (
@@ -95,9 +99,8 @@ export default function Login({
           sx={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            justifyContent: "start",
             alignItems: "center",
-            height: "10ch",
           }}
           color="pmLoginTheme"
           backgroundColor="pmLoginTheme.background"
@@ -113,34 +116,6 @@ export default function Login({
               }
             />
           </FormGroup>
-          <Fade in={errorOpen || errorResponse}>
-            <Alert
-              sx={{
-                m: 1,
-                width: "32ch",
-                height: "7ch",
-                alignItems: "center",
-              }}
-              severity="error"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setErrorOpen(false);
-                    setErrorResponse(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-            >
-              {errorOpen
-                ? "Bad credentials, try again."
-                : "Bad credentials, or account is not activated yet."}
-            </Alert>
-          </Fade>
         </Box>
         <Box
           color="pmLoginTheme"

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 import java.util.Set;
@@ -51,6 +52,7 @@ public class UserStory {
     private Iteration iteration;
 
     @Column
+    @Length(max = 2000)
     private String description;
 
     @Column(columnDefinition = "boolean default false")
