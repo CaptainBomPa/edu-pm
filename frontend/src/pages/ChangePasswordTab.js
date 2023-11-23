@@ -99,7 +99,8 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
         }}
       >
         <TextField
-          sx={{ m: 1, width: "45ch" }}
+          sx={{ m: 1, width: window.innerWidth > 450 ? "45ch" : "100%" }}
+          fullWidth={!(window.innerWidth > 450)}
           id="old-password"
           label="Old Password"
           variant="outlined"
@@ -109,7 +110,8 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
           onChange={handleOldPasswordChange}
         />
         <TextField
-          sx={{ m: 1, width: "45ch" }}
+          sx={{ m: 1, width: window.innerWidth > 450 ? "45ch" : "100%" }}
+          fullWidth={!(window.innerWidth > 450)}
           id="new-password"
           label="New Password"
           variant="outlined"
@@ -119,7 +121,8 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
           onChange={handleNewPasswordChange}
         />
         <TextField
-          sx={{ m: 1, width: "45ch" }}
+          sx={{ m: 1, width: window.innerWidth > 450 ? "45ch" : "100%" }}
+          fullWidth={!(window.innerWidth > 450)}
           id="confirm-new-password"
           label="Confirm New Password"
           variant="outlined"
@@ -132,7 +135,8 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
         />
         <Button
           variant="contained"
-          sx={{ m: 1, width: "50ch" }}
+          sx={{ m: 1, width: window.innerWidth > 450 ? "50ch" : "100%" }}
+          fullWidth={!(window.innerWidth > 450)}
           color="pmLoginTheme"
           onClick={handleChangePassword}
           disabled={!allFieldsFilled || !passwordsMatch || loading}

@@ -228,6 +228,7 @@ export default function AdminPage(props) {
         marginLeft: "64px",
         marginTop: "84px",
         display: "flex",
+        flexDirection: window.innerWidth < 450 ? "column" : "row",
         justifyContent: "center",
         height: "100%",
       }}
@@ -238,7 +239,7 @@ export default function AdminPage(props) {
         alertMessage={alertMessage}
         setAlertOpen={setAlertOpen}
       />
-      <Box sx={{ width: "40%", marginRight: "10ch" }}>
+      <Box sx={{ width: window.innerWidth < 450 ? "100%" : "40%", marginRight: "10ch" }}>
         <div className="custom-scrollbar">
           <TableContainer
             className="custom-scrollbar"
@@ -305,7 +306,7 @@ export default function AdminPage(props) {
           </TableContainer>
         </div>
       </Box>
-      <Box sx={{ width: "40%" }}>
+      <Box sx={{ width: window.innerWidth < 450 ? "95%" : "40%" }}>
         <form>
           <TextField
             margin="normal"

@@ -46,7 +46,7 @@ export default function Login({
     );
     if (data?.token) {
       setToken(data.token);
-      navigate("/home");
+      navigate("/current-iteration");
     } else {
       showAutoHideAlert(
         "Failed to login. Check your credentials",

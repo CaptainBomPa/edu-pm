@@ -208,8 +208,6 @@ export default function UserStoryEditDialog(props) {
     setStoryTags(uniqueTags);
   };
 
-  const [width, setWidth] = useState(window.innerWidth);
-
   return (
     <div>
       <Dialog
@@ -217,7 +215,6 @@ export default function UserStoryEditDialog(props) {
         open={true}
         onClose={handleClose}
         color="pmLoginTheme"
-        maxWidth="md"
       >
         <Box
           noValidate
@@ -242,7 +239,7 @@ export default function UserStoryEditDialog(props) {
               gap: "16px",
             }}
           >
-            <DialogContent fullWidth>
+            <DialogContent sx={{width: window.innerWidth > 450 ? 580 : 320}}>
               <DialogContentText></DialogContentText>
               <TextField
                 autoFocus
@@ -419,7 +416,7 @@ export default function UserStoryEditDialog(props) {
                 <InputLabel id="tags-chip-label">Tags</InputLabel>
                 <Select
                   color="pmLoginTheme"
-                  fullWidth
+                  // fullWidth
                   labelId="tags-chip-label"
                   id="tag-multiple-chip"
                   multiple
@@ -433,7 +430,7 @@ export default function UserStoryEditDialog(props) {
                   }
                   renderValue={(selectedTags) => (
                     <Box
-                      sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                      sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, maxWidth: 580 }}
                       color="pmLoginTheme"
                     >
                       {selectedTags.map((tag) => (

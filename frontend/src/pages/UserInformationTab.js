@@ -118,7 +118,8 @@ export default function UserInformationTab({
           }}
         >
           <TextField
-            sx={{ m: 1, width: "45ch" }}
+            sx={{m: 1, width: window.innerWidth > 450 ? "45ch" : "100%"}}
+            fullWidth={!(window.innerWidth > 450)}
             id="outlined-basic"
             label="Username"
             variant="outlined"
@@ -128,7 +129,8 @@ export default function UserInformationTab({
             onChange={handleUsernameChange}
           />
           <TextField
-            sx={{ m: 1, width: "45ch" }}
+            sx={{m: 1, width: window.innerWidth > 450 ? "45ch" : "100%"}}
+            fullWidth={!(window.innerWidth > 450)}
             id="outlined-basic"
             label="First Name"
             variant="outlined"
@@ -138,7 +140,8 @@ export default function UserInformationTab({
             onChange={handleFirstNameChange}
           />
           <TextField
-            sx={{ m: 1, width: "45ch" }}
+            sx={{m: 1, width: window.innerWidth > 450 ? "45ch" : "100%"}}
+            fullWidth={!(window.innerWidth > 450)}
             id="outlined-basic"
             label="Last Name"
             variant="outlined"
@@ -149,7 +152,8 @@ export default function UserInformationTab({
           />
           <TextField
             disabled
-            sx={{ m: 1, width: "45ch" }}
+            sx={{m: 1, width: window.innerWidth > 450 ? "45ch" : "100%"}}
+            fullWidth={!(window.innerWidth > 450)}
             id="outlined-basic"
             label="Team Name"
             variant="outlined"
@@ -161,7 +165,8 @@ export default function UserInformationTab({
             disabled
             multiline
             rows={2}
-            sx={{ m: 1, width: "45ch" }}
+            sx={{m: 1, width: window.innerWidth > 450 ? "45ch" : "100%"}}
+            fullWidth={!(window.innerWidth > 450)}
             id="outlined-basic"
             label="Assigned Projects"
             variant="outlined"
@@ -171,7 +176,8 @@ export default function UserInformationTab({
           />
           <Button
             variant="contained"
-            sx={{ m: 1, width: "50ch" }}
+            sx={{m: 1, width: window.innerWidth > 450 ? "50ch" : "100%"}}
+            fullWidth={!(window.innerWidth > 450)}
             color="pmLoginTheme"
             onClick={handleUpdate}
             disabled={!isFormDirty}
@@ -180,7 +186,8 @@ export default function UserInformationTab({
           </Button>
           <Button
             variant="outlined"
-            sx={{ m: 1, width: "50ch" }}
+            sx={{m: 1, width: window.innerWidth > 450 ? "50ch" : "100%"}}
+            fullWidth={!(window.innerWidth > 450)}
             color="pmLoginTheme"
             onClick={handleRestore}
             disabled={!isFormDirty}

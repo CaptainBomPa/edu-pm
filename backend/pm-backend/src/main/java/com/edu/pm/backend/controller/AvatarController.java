@@ -17,13 +17,11 @@ import java.util.Objects;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
-@CrossOrigin(origins = "${pm.cross-origin}")
 public class AvatarController {
 
     private final UserRepository userRepository;
     private final String uploadDirectory = "uploads/avatars/";
 
-    @CrossOrigin(origins = "${pm.cross-origin}")
     @PostMapping(value = "/user/uploadAvatar")
     public ResponseEntity<AvatarDTO> uploadAvatar(@RequestParam("image") MultipartFile image, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -53,7 +51,6 @@ public class AvatarController {
         }
     }
 
-    @CrossOrigin(origins = "${pm.cross-origin}")
     @GetMapping(value = "/user/avatar")
     public ResponseEntity<AvatarDTO> getAvatar(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {

@@ -88,9 +88,10 @@ export default function OtherUserStoryIterations(props) {
           marginTop: "84px",
           display: "flex",
           justifyContent: "center",
+          flexDirection: window.innerWidth > 450 ? "column" : "row", 
         }}
       >
-        <FormControl sx={{ marginRight: "1%" }}>
+        <FormControl sx={{ marginRight: "1%"}}>
           <InputLabel id="team-label" color="pmLoginTheme">
             Team
           </InputLabel>
@@ -102,7 +103,7 @@ export default function OtherUserStoryIterations(props) {
             onChange={(e) => {
               setSelecteTeam(e.target.value);
             }}
-            sx={{ minWidth: "200px" }}
+            sx={{ minWidth: window.innerWidth > 450 ? "200px" : "130px", }}
             color="pmLoginTheme"
           >
             {teams.map((team) => {
@@ -134,7 +135,7 @@ export default function OtherUserStoryIterations(props) {
             onChange={(e) => {
               setSelectedIteratoin(e.target.value);
             }}
-            sx={{ minWidth: "200px" }}
+            sx={{ minWidth: window.innerWidth > 450 ? "200px" : "130px", }}
             color="pmLoginTheme"
           >
             {iterations.map((iteration) => {

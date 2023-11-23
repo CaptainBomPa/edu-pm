@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api")
-@CrossOrigin(origins = "${pm.cross-origin}")
 public class UserStoryController {
 
     private final UserStoryService userStoryService;

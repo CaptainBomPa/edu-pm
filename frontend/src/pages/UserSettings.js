@@ -49,7 +49,7 @@ export default function UserSettings({
   };
 
   return (
-    <Box sx={{ width: "100%", marginTop: "64px" }}>
+    <Box sx={{  marginTop: "64px", marginLeft: "64px" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}

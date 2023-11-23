@@ -149,9 +149,9 @@ export default function AppNavBar({
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+        { window.innerWidth > 450 && <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             <Link
-              to="/home"
+              to="/current-iteration"
               style={{ textDecoration: "none", color: "inherit" }}
             >
               <div
@@ -167,7 +167,7 @@ export default function AppNavBar({
               </div>
             </Link>{" "}
             - {userDetails?.team.teamName}
-          </Typography>
+          </Typography>}
           <FormGroup sx={{ paddingRight: "50px" }}>
             <FormControlLabel
               control={
