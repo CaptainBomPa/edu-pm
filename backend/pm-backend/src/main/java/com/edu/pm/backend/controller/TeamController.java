@@ -17,7 +17,7 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    @GetMapping(value = "/team/all")
+    @GetMapping(value = "/team")
     public ResponseEntity<Collection<TeamDTO>> getAll() {
         return ResponseEntity.ok(teamService.findAll());
     }

@@ -19,53 +19,53 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping(value = "/user/currentUserInfo")
+    @GetMapping(value = "/user/myInfo")
     public ResponseEntity<UserDTO> getCurrentUserInfo(Authentication authentication) {
         return ResponseEntity.ok(userService.getCurrentUser(authentication.getName()));
     }
 
-    @PutMapping(value = "/user/updateUserInfo")
+    @PutMapping(value = "/user")
     public ResponseEntity<UserDTO> updateUserInfo(@RequestBody UserDTO userDTO, Authentication authentication) {
         return ResponseEntity.ok(userService.updateUser(userDTO));
     }
 
-    @PutMapping(value = "/user/updateFullUserInfo")
+    @PutMapping(value = "/user/full")
     public ResponseEntity<UserDTO> updateFullUserInfo(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.updateFullUser(userDTO));
     }
 
-    @GetMapping(value = "/user/all")
+    @GetMapping(value = "/user")
     public ResponseEntity<Collection<UserDTO>> getAll() {
         return ResponseEntity.ok(userService.getAll());
     }
 
-    @GetMapping(value = "/user/allWithAvatars")
+    @GetMapping(value = "/user/avatars")
     public ResponseEntity<Collection<UserDTO>> getAllWithAvatars() {
         return ResponseEntity.ok(userService.getAllWithAvatars());
     }
 
-    @GetMapping(value = "/user/allBlocked")
+    @GetMapping(value = "/user/blocked")
     public ResponseEntity<Collection<UserDTO>> getAllBlocked() {
         return ResponseEntity.ok(userService.getAllBlocked());
     }
 
-    @PutMapping(value = "/user/unlockAccounts")
+    @PutMapping(value = "/user/unlock")
     public ResponseEntity<Collection<UserDTO>> unlockAccounts(@RequestBody Collection<UserDTO> users) {
         return ResponseEntity.ok(userService.unlockUsers(users));
     }
 
-    @DeleteMapping(value = "/user/removeAccounts")
+    @DeleteMapping(value = "/user")
     public ResponseEntity<Collection<UserDTO>> removeAccounts(@RequestBody Collection<UserDTO> users) {
         return ResponseEntity.ok(userService.removeAccounts(users));
     }
 
-    @PostMapping(value = "/user/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/user", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserDTO> update(@RequestBody RegisterRequest registerRequest) {
         userService.addUser(registerRequest);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/user/changePassword", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/user/password", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserDTO> changePassword(@RequestBody ChangePasswordDTO dto, Authentication authentication) {
         userService.changePassword(dto, authentication.getName());
         return ResponseEntity.ok().build();

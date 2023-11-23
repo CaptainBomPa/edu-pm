@@ -56,7 +56,6 @@ export default function ChangePasswordTab({ token, setUserDetails }) {
       const dataUpdatePassword = async (e) => {
         setLoading(true);
         const status = await updatePassword(
-          { token },
           oldPassword,
           newPassword
         );

@@ -2,10 +2,10 @@ import axios from "axios";
 
 export default function UserStoryUser() {}
 
-export async function getUserStoriesIteration(token) {
+export async function getUserStoriesIteration() {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/iteration/currentUser"
+      "http://localhost:8080/api/iteration/current"
     );
     const data = response.data;
     return data;
@@ -32,7 +32,7 @@ export async function getUserStoriesIterationTeam(teamId, iterationId) {
 export async function deleteUserStory(id) {
   try {
     const response = await axios.delete(
-      `http://localhost:8080/api/userStory/delete/${id}`
+      `http://localhost:8080/api/userStory/${id}`
     );
     if (response.status === 200) {
       return response.data;
@@ -44,10 +44,10 @@ export async function deleteUserStory(id) {
   }
 }
 
-export async function deleteMultipleUserStories(token, ids) {
+export async function deleteMultipleUserStories(ids) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/userStory/deleteMultiple",
+      "http://localhost:8080/api/userStory/multiple",
       ids
     );
     if (response.status === 200) {
@@ -60,10 +60,10 @@ export async function deleteMultipleUserStories(token, ids) {
   }
 }
 
-export async function deleteTask(token, id) {
+export async function deleteTask(id) {
   try {
     const response = await axios.delete(
-      `http://localhost:8080/api/task/delete/${id}`
+      `http://localhost:8080/api/task/${id}`
     );
     if (response.status === 200) {
       return response.data;
@@ -75,10 +75,10 @@ export async function deleteTask(token, id) {
   }
 }
 
-export async function addTask(token, taskData) {
+export async function addTask(taskData) {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/task/add",
+      "http://localhost:8080/api/task",
       taskData
     );
     if (response.status === 200) {
@@ -91,10 +91,10 @@ export async function addTask(token, taskData) {
   }
 }
 
-export async function updateTask(token, taskData) {
+export async function updateTask(taskData) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/task/update",
+      "http://localhost:8080/api/task",
       taskData
     );
     if (response.status === 200) {

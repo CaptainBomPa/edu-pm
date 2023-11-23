@@ -720,7 +720,7 @@ function Row(props) {
 
   const handleTaskDelete = async (taskId) => {
     try {
-      const response = await deleteTask(token, taskId);
+      const response = await deleteTask(taskId);
       if (response) {
         const updatedTasks = tasks.filter((task) => task.id !== taskId);
         setTasks(updatedTasks);

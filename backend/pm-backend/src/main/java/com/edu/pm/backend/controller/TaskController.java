@@ -15,17 +15,17 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    @PostMapping(value = "/task/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/task", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TaskDTO> add(@RequestBody TaskAddDTO dto) {
         return ResponseEntity.ok(taskService.add(dto));
     }
 
-    @PutMapping(value = "/task/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/task", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TaskDTO> update(@RequestBody TaskAddDTO dto) {
         return ResponseEntity.ok(taskService.update(dto));
     }
 
-    @DeleteMapping(value = "/task/delete/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @DeleteMapping(value = "/task/{id}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TaskDTO> delete(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(taskService.remove(id));
     }

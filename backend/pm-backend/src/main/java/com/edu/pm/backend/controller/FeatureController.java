@@ -17,12 +17,12 @@ public class FeatureController {
 
     private final FeatureService featureService;
 
-    @GetMapping(value = "/feature/all")
+    @GetMapping(value = "/feature")
     public ResponseEntity<Collection<FeatureDTO>> getAll() {
         return ResponseEntity.ok(featureService.findAll());
     }
 
-    @PutMapping(value = "/feature/update", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PutMapping(value = "/feature", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<FeatureDTO> update(@RequestBody FeatureDTO dto) {
         if (dto.getId() != null) {
             return ResponseEntity.ok(featureService.update(dto));
@@ -30,7 +30,7 @@ public class FeatureController {
         return ResponseEntity.ok(featureService.add(dto));
     }
 
-    @GetMapping(value = "/feature/allWithStories")
+    @GetMapping(value = "/feature/stories")
     public ResponseEntity<Collection<FeatureFullDTO>> getAllWithStories() {
         return ResponseEntity.ok(featureService.findAllWithStories());
     }

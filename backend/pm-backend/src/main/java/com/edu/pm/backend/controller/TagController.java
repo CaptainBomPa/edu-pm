@@ -16,22 +16,22 @@ public class TagController {
 
     private final TagService tagService;
 
-    @GetMapping(value = "/tags/all")
+    @GetMapping(value = "/tags")
     public ResponseEntity<Collection<Tag>> getAll() {
         return ResponseEntity.ok(tagService.getAll());
     }
 
-    @GetMapping(value = "/tags/allWithStats")
+    @GetMapping(value = "/tags/stats")
     public ResponseEntity<Collection<TagService.TagWithStats>> getAllWithStats() {
         return ResponseEntity.ok(tagService.getAllWithStats());
     }
 
-    @PostMapping(value = "/tags/add")
+    @PostMapping(value = "/tags")
     public ResponseEntity<TagService.TagWithStats> addTag(@RequestBody TagDTO tag) {
         return ResponseEntity.ok(tagService.add(tag));
     }
 
-    @DeleteMapping(value = "/tags/delete/{id}")
+    @DeleteMapping(value = "/tags/{id}")
     public ResponseEntity<Tag> deleteTag(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(tagService.removeById(id));
     }

@@ -2,9 +2,9 @@ import axios from "axios";
 
 export default function UserStoryEdit() {}
 
-export async function getAllFeatures(token) {
+export async function getAllFeatures() {
   try {
-    const response = await axios.get("http://localhost:8080/api/feature/all");
+    const response = await axios.get("http://localhost:8080/api/feature");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -17,7 +17,7 @@ export async function getAllFeatures(token) {
 
 export async function getAllTags() {
   try {
-    const response = await axios.get("http://localhost:8080/api/tags/all");
+    const response = await axios.get("http://localhost:8080/api/tags");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -28,10 +28,10 @@ export async function getAllTags() {
   }
 }
 
-export async function getAllUsers(token) {
+export async function getAllUsers() {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/user/allWithAvatars"
+      "http://localhost:8080/api/user/avatars"
     );
     if (response.status === 200) {
       return response.data;
@@ -43,9 +43,9 @@ export async function getAllUsers(token) {
   }
 }
 
-export async function getAllProjects(token) {
+export async function getAllProjects() {
   try {
-    const response = await axios.get("http://localhost:8080/api/project/all");
+    const response = await axios.get("http://localhost:8080/api/project");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -56,9 +56,9 @@ export async function getAllProjects(token) {
   }
 }
 
-export async function getAllTeams(token) {
+export async function getAllTeams() {
   try {
-    const response = await axios.get("http://localhost:8080/api/team/all");
+    const response = await axios.get("http://localhost:8080/api/team");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -69,9 +69,9 @@ export async function getAllTeams(token) {
   }
 }
 
-export async function getAllIterations(token) {
+export async function getAllIterations() {
   try {
-    const response = await axios.get("http://localhost:8080/api/iteration/all");
+    const response = await axios.get("http://localhost:8080/api/iteration");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -82,10 +82,10 @@ export async function getAllIterations(token) {
   }
 }
 
-export async function updateStory(story, token) {
+export async function updateStory(story) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/userStory/update",
+      "http://localhost:8080/api/userStory",
       story
     );
     if (response.status === 200) {
@@ -98,10 +98,10 @@ export async function updateStory(story, token) {
   }
 }
 
-export async function addUserStory(userStory, token) {
+export async function addUserStory(userStory) {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/userStory/add",
+      "http://localhost:8080/api/userStory",
       userStory
     );
     if (response.status === 200) {

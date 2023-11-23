@@ -74,7 +74,7 @@ export default function Register(props) {
     };
 
     axios
-      .post("http://localhost:8080/api/user/add", registerRequest)
+      .post("http://localhost:8080/api/user", registerRequest)
       .then((response) => {
         if (response.status === 200) {
           showAutoHideAlert(

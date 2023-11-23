@@ -101,7 +101,7 @@ function App() {
 
   if (userAvatar === null || userDetails === undefined) {
     const fetchUserAvatar = async (e) => {
-      const data = await getUserAvatar({ token });
+      const data = await getUserAvatar();
       setUserAvatar(data);
     };
     fetchUserAvatar.apply();

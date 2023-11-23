@@ -39,7 +39,7 @@ export default function TaskEditDialog(props) {
     };
 
     try {
-      const updatedTask = await updateTask(token, taskData);
+      const updatedTask = await updateTask(taskData);
       if (updatedTask) {
         handleUpdateTaskFromList(updatedTask)
         setOpenEdit(false);
@@ -59,7 +59,7 @@ export default function TaskEditDialog(props) {
     };
 
     try {
-      const newTask = await addTask(token, taskData);
+      const newTask = await addTask(taskData);
       if (newTask) {
         setOpenEdit(false);
         handleUpdateTaskList(newTask);

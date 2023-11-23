@@ -71,7 +71,7 @@ export default function UserInformationTab({
     userDetails.lastName = currentLastName;
     const updateUserData = async (e) => {
       setLoading(true);
-      const data = await updateUserInfo(userDetails, { token });
+      const data = await updateUserInfo(userDetails);
       if (data !== null) {
         setUserDetails(data);
         showAutoHideAlert("User information updated successfully", "success", 5000);

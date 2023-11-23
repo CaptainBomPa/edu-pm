@@ -145,7 +145,7 @@ export default function UserStoryEditDialog(props) {
       tags: storyTags,
     };
 
-    updateStory(updatedStory, token)
+    updateStory(updatedStory)
       .then((newStory) => {
         handleChangeUpdateRow(newStory);
       })
@@ -172,7 +172,7 @@ export default function UserStoryEditDialog(props) {
       tags: storyTags,
     };
 
-    addUserStory(newStory, token)
+    addUserStory(newStory)
       .then((addedStory) => {
         if (addedStory) {
           handleChangeUpdateRow(addedStory);

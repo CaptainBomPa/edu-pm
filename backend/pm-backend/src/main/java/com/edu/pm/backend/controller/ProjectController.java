@@ -17,7 +17,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    @GetMapping(value = "/project/all")
+    @GetMapping(value = "/project")
     public ResponseEntity<Collection<ProjectDTO>> getAll() {
         return ResponseEntity.ok(projectService.findAll());
     }

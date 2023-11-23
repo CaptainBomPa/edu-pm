@@ -22,7 +22,7 @@ public class AvatarController {
     private final UserRepository userRepository;
     private final String uploadDirectory = "uploads/avatars/";
 
-    @PostMapping(value = "/user/uploadAvatar")
+    @PostMapping(value = "/user/avatar")
     public ResponseEntity<AvatarDTO> uploadAvatar(@RequestParam("image") MultipartFile image, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

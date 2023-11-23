@@ -2,10 +2,10 @@ import axios from "axios";
 
 export default function UserInfo() {}
 
-export async function getUserInfo(token) {
+export async function getUserInfo() {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/user/currentUserInfo`
+      `http://localhost:8080/api/user/myInfo`
     );
     if (response.status === 200) {
       return response.data;
@@ -17,7 +17,7 @@ export async function getUserInfo(token) {
   }
 }
 
-export async function getUserAvatar(token) {
+export async function getUserAvatar() {
   try {
     const response = await axios.get(
       `http://localhost:8080/api/user/avatar`
@@ -32,10 +32,10 @@ export async function getUserAvatar(token) {
   }
 }
 
-export async function updateUserInfo(userDetails, { token }) {
+export async function updateUserInfo(userDetails) {
   try {
     const response = await axios.put(
-      `http://localhost:8080/api/user/updateUserInfo`,
+      `http://localhost:8080/api/user`,
       userDetails
     );
     if (response.status === 200) {
@@ -48,10 +48,10 @@ export async function updateUserInfo(userDetails, { token }) {
   }
 }
 
-export async function updatePassword({ token }, oldPassword, newPassword) {
+export async function updatePassword(oldPassword, newPassword) {
   try {
-    const response = await axios.post(
-      "http://localhost:8080/api/user/changePassword",
+    const response = await axios.put(
+      "http://localhost:8080/api/user/password",
       {
         oldPassword: oldPassword,
         newPassword: newPassword,
@@ -70,7 +70,7 @@ export async function updatePassword({ token }, oldPassword, newPassword) {
 export async function updateFullUser(user) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/user/updateFullUserInfo",
+      "http://localhost:8080/api/user/full",
       user
     );
     if (response.status === 200) {
@@ -83,10 +83,10 @@ export async function updateFullUser(user) {
   }
 }
 
-export async function getAllBlocked(token) {
+export async function getAllBlocked() {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/user/allBlocked"
+      "http://localhost:8080/api/user/blocked"
     );
     if (response.status === 200) {
       return response.data;
@@ -101,7 +101,7 @@ export async function getAllBlocked(token) {
 export async function unlockUsers(users) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/user/unlockAccounts",
+      "http://localhost:8080/api/user/unlock",
       users
     );
     if (response.status === 200) {
@@ -117,7 +117,7 @@ export async function unlockUsers(users) {
 export async function removeUsers(users) {
   try {
     const response = await axios.delete(
-      "http://localhost:8080/api/user/removeAccounts",
+      "http://localhost:8080/api/user",
       users
     );
     if (response.status === 200) {
