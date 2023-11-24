@@ -226,7 +226,6 @@ function EnhancedTableToolbar(props) {
   const {
     numSelected,
     handleDelete,
-    token,
     data,
     setData,
     currentTeamId,
@@ -307,7 +306,6 @@ function EnhancedTableToolbar(props) {
         <UserStoryEditDialog
           setOpen={setOpenAdd}
           edit={false}
-          token={token}
           handleChangeUpdateRow={handleAddUpdateRow}
         />
       )}
@@ -320,7 +318,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function UserStoryTable(props) {
-  const { token, userDetails, data, setData, team, iteration, useDarkMode } =
+  const { userDetails, data, setData, team, iteration, useDarkMode } =
     props;
 
   const [visibleRows, setVisibleRows] = useState([]);
@@ -576,7 +574,6 @@ export default function UserStoryTable(props) {
           numSelected={selected.length}
           userDetails={userDetails}
           handleDelete={handleDelete}
-          token={token}
           data={data}
           setData={setData}
           currentTeamId={team?.id}
@@ -617,7 +614,6 @@ export default function UserStoryTable(props) {
                     index={index}
                     isSelected={isSelected}
                     handleClick={handleClick}
-                    token={token}
                     handleUpdateRow={handleUpdateRow}
                     showAutoHideAlert={showAutoHideAlert}
                     useDarkMode={useDarkMode}
@@ -658,7 +654,6 @@ function Row(props) {
     index,
     handleClick,
     isSelected,
-    token,
     handleUpdateRow,
     showAutoHideAlert,
     useDarkMode,
@@ -741,7 +736,6 @@ function Row(props) {
         <TaskEditDialog
           setOpenEdit={setTaskOpenEdit}
           edit={true}
-          token={token}
           userStoryId={row.id}
           previousTask={taskToEdit}
           handleUpdateTaskFromList={handleUpdateTaskFromList}
@@ -751,7 +745,6 @@ function Row(props) {
         <TaskEditDialog
           setOpenEdit={setTaskOpenAdd}
           edit={false}
-          token={token}
           userStoryId={row.id}
           handleUpdateTaskList={handleUpdateTaskList}
         />
@@ -761,7 +754,6 @@ function Row(props) {
           setOpen={setOpenEdit}
           edit={true}
           userStory={row}
-          token={token}
           handleChangeUpdateRow={handleChangeUpdateRow}
         />
       )}

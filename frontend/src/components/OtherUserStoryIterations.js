@@ -43,7 +43,7 @@ function getStyles2(name, personName, theme) {
 }
 
 export default function OtherUserStoryIterations(props) {
-  const { token, userDetails, useDarkMode } = props;
+  const { userDetails, useDarkMode } = props;
 
   const [selectedTeam, setSelecteTeam] = useState();
   const [selectedIteration, setSelectedIteratoin] = useState();
@@ -168,7 +168,6 @@ export default function OtherUserStoryIterations(props) {
               <Fade in={true} timeout={750}>
                 <div>
                   <UserStoryTable
-                    token={token}
                     userDetails={userDetails}
                     data={data}
                     setData={setData}

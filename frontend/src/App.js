@@ -21,7 +21,6 @@ import AutoHideAlert from "./components/AutoHideAlert";
 import RequestAdd from "./components/RequestAdd";
 import { UserRolesProvider } from "./service/UserRolesProvider";
 import ManageTags from "./components/ManageTags";
-import FeatureTable from "./components/FeaturesTable";
 import FeatureWrapper from "./components/FeatureWrapper";
 
 function App() {
@@ -151,7 +150,6 @@ function App() {
               path="iterations"
               element={
                 <OtherUserStoryIterations
-                  token={token}
                   userDetails={userDetails}
                   useDarkMode={useDarkMode}
                 />

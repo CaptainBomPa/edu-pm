@@ -116,8 +116,8 @@ export async function unlockUsers(users) {
 
 export async function removeUsers(users) {
   try {
-    const response = await axios.delete(
-      "http://localhost:8080/api/user",
+    const response = await axios.put(
+      "http://localhost:8080/api/user/block",
       users
     );
     if (response.status === 200) {

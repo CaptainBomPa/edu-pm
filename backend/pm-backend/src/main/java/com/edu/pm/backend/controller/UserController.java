@@ -54,7 +54,7 @@ public class UserController {
         return ResponseEntity.ok(userService.unlockUsers(users));
     }
 
-    @DeleteMapping(value = "/user")
+    @PutMapping(value = "/user/block")
     public ResponseEntity<Collection<UserDTO>> removeAccounts(@RequestBody Collection<UserDTO> users) {
         return ResponseEntity.ok(userService.removeAccounts(users));
     }

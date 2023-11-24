@@ -1,7 +1,7 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { getAllBlocked } from "../service/UsersInfo";
 import { unlockUsers, removeUsers } from "../service/UsersInfo";
 

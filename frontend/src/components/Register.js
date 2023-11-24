@@ -14,7 +14,6 @@ export default function Register(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isFormValid, setIsFormValid] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -54,14 +53,6 @@ export default function Register(props) {
   const handleConfirmPasswordChange = (newConfirmPassword) => {
     setConfirmPassword(newConfirmPassword);
     validateConfirmPassword(newConfirmPassword);
-  };
-
-  const validateForm = () => {
-    validateEmail();
-    validatePassword();
-    validateConfirmPassword();
-
-    setIsFormValid(!emailError && !passwordError && !confirmPasswordError);
   };
 
   const handleRegister = () => {

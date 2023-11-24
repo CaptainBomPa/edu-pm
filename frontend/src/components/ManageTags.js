@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Box, Button, IconButton } from "@mui/material";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { getAllTagsWithStats, addNewTag, removeTag } from "../service/Tags";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
@@ -11,16 +11,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import RemoveIcon from "@mui/icons-material/Remove";
-
-const columns = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "tagName", headerName: "Tag Name", width: 250 },
-  {
-    field: "relatedItemCount",
-    headerName: "Related UserStories count",
-    width: 230,
-  },
-];
 
 export default function ManageTags() {
   const [data, setData] = useState([]);

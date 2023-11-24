@@ -24,7 +24,6 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import TipsAndUpdatesOutlinedIcon from "@mui/icons-material/TipsAndUpdatesOutlined";
 import BackpackIcon from "@mui/icons-material/Backpack";
 import BackpackOutlinedIcon from "@mui/icons-material/BackpackOutlined";
-import AssessmentIcon from "@mui/icons-material/Assessment";
 import BackpackTwoToneIcon from "@mui/icons-material/BackpackTwoTone";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";

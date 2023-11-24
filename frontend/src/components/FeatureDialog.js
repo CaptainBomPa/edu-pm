@@ -34,7 +34,7 @@ export default function FeatureDialog(props) {
     };
 
     try {
-      const updatedFeature = await addNewFeature(updateFeature).then(
+      await addNewFeature(updateFeature).then(
         (response) => {
           const index = data.findIndex((feature) => feature.id === response.id);
           const newData = [...data];
@@ -60,7 +60,7 @@ export default function FeatureDialog(props) {
     };
 
     try {
-      const feature = await addNewFeature(newFeature).then((response) => {
+      await addNewFeature(newFeature).then((response) => {
         const newData = [...data];
         response.allStoryPoints = 0;
         newData.push(response);

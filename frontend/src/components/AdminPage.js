@@ -21,7 +21,7 @@ import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import { updateFullUser, updateUserInfo } from "../service/UsersInfo";
+import { updateFullUser } from "../service/UsersInfo";
 import AutoHideAlert from "./AutoHideAlert";
 
 const ITEM_HEIGHT = 48;
@@ -160,7 +160,7 @@ export default function AdminPage(props) {
     } else {
       setFilteredTeams(null);
     }
-  }, [project]);
+  }, [project, allTeams]);
 
   const handleClear = () => {
     setSelectedRow(null);

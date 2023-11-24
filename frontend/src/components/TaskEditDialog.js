@@ -13,7 +13,6 @@ export default function TaskEditDialog(props) {
     setOpenEdit,
     edit,
     userStoryId,
-    token,
     handleUpdateTaskList,
     handleUpdateTaskFromList,
     previousTask,

@@ -12,28 +12,18 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import Collapse from "@mui/material/Collapse";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import UserStoryEditDialog from "./UserStoryEditDialog";
-import TaskEditDialog from "./TaskEditDialog";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveIcon from "@mui/icons-material/Remove";
-import Chip from "@mui/material/Chip";
-import {
-  deleteUserStory,
-  deleteMultipleUserStories,
-  deleteTask,
-} from "../service/UserStoryUser";
+import { deleteUserStory } from "../service/UserStoryUser";
 import AutoHideAlert from "./AutoHideAlert";
 import { useUserRoles } from "../service/UserRolesProvider";
-import { getAllWithStories } from "../service/Features";
 import FeatureDialog from "./FeatureDialog";
 
 const headCells = [

@@ -58,7 +58,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 }));
 
 export default function UserStoryEditDialog(props) {
-  const { setOpen, edit, userStory, token, handleChangeUpdateRow } = props;
+  const { setOpen, edit, userStory, handleChangeUpdateRow } = props;
 
   const [userStoryName, setUserStoryName] = useState(
     userStory ? userStory.userStoryName : ""
@@ -121,7 +121,7 @@ export default function UserStoryEditDialog(props) {
     getAllTags().then((tags) => {
       setTags(tags);
     });
-  }, []);
+  });
 
   const handleVisibleOwners = (team) => {
     if (selectedTeam === team) return;
