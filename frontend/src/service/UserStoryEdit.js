@@ -4,7 +4,7 @@ export default function UserStoryEdit() {}
 
 export async function getAllFeatures() {
   try {
-    const response = await axios.get("http://localhost:8080/api/feature");
+    const response = await axios.get("http://10.0.1.64:8080/api/feature");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -17,7 +17,7 @@ export async function getAllFeatures() {
 
 export async function getAllTags() {
   try {
-    const response = await axios.get("http://localhost:8080/api/tags");
+    const response = await axios.get("http://10.0.1.64:8080/api/tags");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -31,7 +31,7 @@ export async function getAllTags() {
 export async function getAllUsers() {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/user/avatars"
+      "http://10.0.1.64:8080/api/user/avatars"
     );
     if (response.status === 200) {
       return response.data;
@@ -45,7 +45,7 @@ export async function getAllUsers() {
 
 export async function getAllProjects() {
   try {
-    const response = await axios.get("http://localhost:8080/api/project");
+    const response = await axios.get("http://10.0.1.64:8080/api/project");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -58,7 +58,7 @@ export async function getAllProjects() {
 
 export async function getAllTeams() {
   try {
-    const response = await axios.get("http://localhost:8080/api/team");
+    const response = await axios.get("http://10.0.1.64:8080/api/team");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -71,7 +71,7 @@ export async function getAllTeams() {
 
 export async function getAllIterations() {
   try {
-    const response = await axios.get("http://localhost:8080/api/iteration");
+    const response = await axios.get("http://10.0.1.64:8080/api/iteration");
     if (response.status === 200) {
       return response.data;
     } else {
@@ -85,7 +85,7 @@ export async function getAllIterations() {
 export async function updateStory(story) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/userStory",
+      "http://10.0.1.64:8080/api/userStory",
       story
     );
     if (response.status === 200) {
@@ -101,7 +101,7 @@ export async function updateStory(story) {
 export async function addUserStory(userStory) {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/userStory",
+      "http://10.0.1.64:8080/api/userStory",
       userStory
     );
     if (response.status === 200) {

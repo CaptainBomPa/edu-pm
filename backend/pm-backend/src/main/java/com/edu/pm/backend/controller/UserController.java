@@ -1,8 +1,10 @@
 package com.edu.pm.backend.controller;
 
+import com.edu.pm.backend.commons.dto.MessageByUsersId;
 import com.edu.pm.backend.commons.dto.UserDTO;
 import com.edu.pm.backend.commons.dto.auth.ChangePasswordDTO;
 import com.edu.pm.backend.commons.dto.auth.RegisterRequest;
+import com.edu.pm.backend.model.Message;
 import com.edu.pm.backend.service.entity.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -11,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -69,5 +72,10 @@ public class UserController {
     public ResponseEntity<UserDTO> changePassword(@RequestBody ChangePasswordDTO dto, Authentication authentication) {
         userService.changePassword(dto, authentication.getName());
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/user/messages", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Message>> messagesForUsers(@RequestBody MessageByUsersId messageByUsersId) {
+        return ResponseEntity.ok(userService.getMessagesByUsers(messageByUsersId));
     }
 }

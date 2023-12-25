@@ -1,13 +1,16 @@
 package com.edu.pm.backend.service.entity;
 
+import com.edu.pm.backend.commons.dto.MessageByUsersId;
 import com.edu.pm.backend.commons.dto.UserDTO;
 import com.edu.pm.backend.commons.dto.auth.ChangePasswordDTO;
 import com.edu.pm.backend.commons.dto.auth.RegisterRequest;
 import com.edu.pm.backend.commons.mappers.UserMapper;
+import com.edu.pm.backend.model.Message;
 import com.edu.pm.backend.model.Project;
 import com.edu.pm.backend.model.Team;
 import com.edu.pm.backend.model.User;
 import com.edu.pm.backend.model.enums.Role;
+import com.edu.pm.backend.repository.MessageRepository;
 import com.edu.pm.backend.repository.ProjectRepository;
 import com.edu.pm.backend.repository.TeamRepository;
 import com.edu.pm.backend.repository.UserRepository;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -30,6 +34,7 @@ public class UserService {
     private final ProjectRepository projectRepository;
     private final PasswordEncoder passwordEncoder;
     private final AvatarService avatarService;
+    private final MessageRepository messageRepository;
 
     public UserDTO getCurrentUser(String username) {
         return UserMapper.modelToDTO(userRepository.findByUsername(username).orElseThrow());
@@ -181,4 +186,12 @@ public class UserService {
         return user;
     }
 
+    public List<Message> getMessagesByUsers(MessageByUsersId usersId) {
+        final User user1 = userRepository.findById(usersId.getUser1Id()).orElseThrow();
+        final User user2 = userRepository.findById(usersId.getUser2Id()).orElseThrow();
+        return messageRepository.findAll().stream()
+                .filter(message -> (message.getSender().getId().equals(user1.getId()) && message.getReceiver().getId().equals(user2.getId())) ||
+                        (message.getSender().getId().equals(user2.getId()) && message.getReceiver().getId().equals(user1.getId())))
+                .toList();
+    }
 }

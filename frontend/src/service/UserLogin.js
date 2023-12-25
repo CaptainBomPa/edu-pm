@@ -8,7 +8,7 @@ export async function loginUser(credentials, setLoading) {
   
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/auth/authenticate", credentials
+      "http://10.0.1.64:8080/api/auth/authenticate", credentials
     );
     if (response.status === 200) {
       return response.data;

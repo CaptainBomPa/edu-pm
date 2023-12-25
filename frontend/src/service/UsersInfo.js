@@ -5,7 +5,7 @@ export default function UserInfo() {}
 export async function getUserInfo() {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/user/myInfo`
+      `http://10.0.1.64:8080/api/user/myInfo`
     );
     if (response.status === 200) {
       return response.data;
@@ -20,7 +20,7 @@ export async function getUserInfo() {
 export async function getUserAvatar() {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/user/avatar`
+      `http://10.0.1.64:8080/api/user/avatar`
     );
     if (response.status === 200) {
       return response.data;
@@ -35,7 +35,7 @@ export async function getUserAvatar() {
 export async function updateUserInfo(userDetails) {
   try {
     const response = await axios.put(
-      `http://localhost:8080/api/user`,
+      `http://10.0.1.64:8080/api/user`,
       userDetails
     );
     if (response.status === 200) {
@@ -51,7 +51,7 @@ export async function updateUserInfo(userDetails) {
 export async function updatePassword(oldPassword, newPassword) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/user/password",
+      "http://10.0.1.64:8080/api/user/password",
       {
         oldPassword: oldPassword,
         newPassword: newPassword,
@@ -70,7 +70,7 @@ export async function updatePassword(oldPassword, newPassword) {
 export async function updateFullUser(user) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/user/full",
+      "http://10.0.1.64:8080/api/user/full",
       user
     );
     if (response.status === 200) {
@@ -86,7 +86,7 @@ export async function updateFullUser(user) {
 export async function getAllBlocked() {
   try {
     const response = await axios.get(
-      "http://localhost:8080/api/user/blocked"
+      "http://10.0.1.64:8080/api/user/blocked"
     );
     if (response.status === 200) {
       return response.data;
@@ -101,7 +101,7 @@ export async function getAllBlocked() {
 export async function unlockUsers(users) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/user/unlock",
+      "http://10.0.1.64:8080/api/user/unlock",
       users
     );
     if (response.status === 200) {
@@ -117,7 +117,7 @@ export async function unlockUsers(users) {
 export async function removeUsers(users) {
   try {
     const response = await axios.put(
-      "http://localhost:8080/api/user/block",
+      "http://10.0.1.64:8080/api/user/block",
       users
     );
     if (response.status === 200) {

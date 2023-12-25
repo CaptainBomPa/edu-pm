@@ -38,6 +38,8 @@ public class SecurityConfig {
         http.csrf().disable();
 
         http.authorizeHttpRequests()
+                .requestMatchers("/chat").permitAll()
+                .requestMatchers("/chat/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/user/add").permitAll()
                 .anyRequest().authenticated()
